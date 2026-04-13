@@ -1,0 +1,26 @@
+<Solution>
+  <Folder Name="/Share/">
+    <Project Path="Share/Application/Application.csproj" />
+    <Project Path="Share/Domain/Domain.csproj" />
+    <Project Path="Share/Infrastructure/Infrastructure.csproj" />
+    <Project Path="Share/Web/Web.csproj" />
+  </Folder>
+  <Folder Name="/User.API/" />
+  <Folder Name="/User.API/User.Application/">
+    <Project Path="User.API/User.Application/Users.Application.csproj" />
+  </Folder>
+  <Folder Name="/User.API/User.Domain/">
+    <Project Path="User.API/User.Domain/Users.Domain.csproj" />
+  </Folder>
+  <Folder Name="/User.API/User.Infrastructure/">
+    <Project Path="User.API/User.Infrastructure/Users.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/User.API/User.Web/">
+    <Project Path="User.API/User.Web/Users.Web.csproj" />
+  </Folder>
+  <Project Path="Application/AskDate.Application.csproj" />
+  <Project Path="Domain/AskDate.Domain.csproj" />
+  <Project Path="Helpers/Helpers.csproj" />
+  <Project Path="Infra/AskDate.Infra.csproj" />
+  <Project Path="Web/AskDate.Web.csproj" />
+</Solution>

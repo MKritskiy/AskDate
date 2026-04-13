@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Npgsql" Version="8.0.5" />
+  </ItemGroup>
+<ItemGroup>
+  <ProjectReference Include="..\Share\Infrastructure\Infrastructure.csproj" />
+  <ProjectReference Include="..\Application\AskDate.Application.csproj" />
+  <ProjectReference Include="..\Domain\AskDate.Domain.csproj" />
+</ItemGroup>
+</Project>

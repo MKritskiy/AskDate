@@ -1,0 +1,21 @@
+services:
+  users.web:
+    image: ${DOCKER_REGISTRY-}usersweb
+    build:
+      context: .
+      dockerfile: User.API/User.Web/Dockerfile
+    environment:
+      - ConnectionStrings__ConnectionString=Host=users.db;Port=5432;Database=UsersDB;Username=postgres;Password=postgres
+    depends_on:
+      - users.db
+    ports:
+      - "50002:8080"
+
+  users.db:
+    image: postgres
+    environment:
+      POSTGRES_DB: UserDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
