@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AskDate</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-brand">AskDate</div>
+    <div id="navMenu" class="hidden">
+         <button class="btn btn-outline" onclick="logoutUser()">Logout</button>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Login View -->
+    <section id="loginView" class="auth-container">
+        <div class="card">
+            <h2>Login</h2>
+            <input type="email" id="loginEmail" placeholder="Email">
+            <input type="password" id="loginPassword" placeholder="Password">
+            <button class="btn w-full mb-var" onclick="loginUser()">Login</button>
+            <p class="text-small">Don't have an account? <a href="#" onclick="showView('registerView')">Register</a></p>
+        </div>
+    </section>
+
+    <!-- Register View -->
+    <section id="registerView" class="auth-container hidden">
+        <div class="card">
+            <h2>Register</h2>
+            <input type="email" id="regEmail" placeholder="Email">
+            <input type="password" id="regPassword" placeholder="Password">
+            <input type="text" id="regFirstName" placeholder="First Name">
+            <input type="text" id="regLastName" placeholder="Last Name">
+            <button class="btn w-full mb-var" onclick="registerUser()">Register</button>
+            <p class="text-small">Already have an account? <a href="#" onclick="showView('loginView')">Login</a></p>
+        </div>
+    </section>
+
+    <!-- Main App Section -->
+    <section id="mainView" class="hidden">
+        <div class="layout-grid">
+            <aside class="sidebar">
+                <div class="card">
+                    <h3>My Groups</h3>
+                    <button class="btn btn-outline w-full mb-var" onclick="fetchGroups()">Refresh Groups</button>
+                    <ul id="groupsList" class="list mb-var"></ul>
+
+                    <hr class="mb-var" style="border-color: var(--bg-elevated); margin-top: var(--spacing);">
+                    <h4>Create Group</h4>
+                    <input type="text" id="newGroupName" placeholder="Group Name">
+                    <button class="btn w-full mb-var" onclick="createGroup()">Create Group</button>
+
+                    <hr class="mb-var" style="border-color: var(--bg-elevated);">
+                    <h4>Join Group</h4>
+                    <input type="text" id="inviteLinkInput" placeholder="Invite Link (e.g. 1a2b3c4d...)">
+                    <button class="btn btn-outline w-full" onclick="joinGroup()">Join</button>
+                </div>
+            </aside>
+
+            <section class="content">
+                <div class="card hidden" id="groupDetails">
+                    <div style="display:flex; justify-content: space-between; align-items:center;">
+                        <h2 id="groupTitle">Group Title</h2>
+                        <button class="btn btn-danger btn-small" id="deleteGroupBtn" onclick="deleteCurrentGroup()">Delete Group</button>
+                    </div>
+                    <p class="text-small mb-var">Invite Link: <strong id="groupInviteLink"></strong></p>
+
+                    <div class="mb-var">
+                        <h3>Participants</h3>
+                        <ul id="participantsList" class="list mb-var"></ul>
+                    </div>
+
+                    <div class="calendar-layout mt-var" style="position: relative;">
+                        <div id="calendarWrapper" style="flex: 1;">
+                            <div id="calendar"></div>
+                        </div>
+
+                        <div id="dayPanel" class="hidden">
+                            <span class="close-btn" onclick="closeDayPanel()">✕</span>
+                            <h3 id="dayTitle">Date</h3>
+                            <div id="dayActions"></div>
+
+                            <div class="mb-var mt-var">
+                                <h4>Participants</h4>
+                                <ul id="dayParticipantsList" class="list" style="max-height: 120px; overflow-y: auto;"></ul>
+                            </div>
+
+                            <div class="mb-var">
+                                <h4>Comments</h4>
+                                <div id="dayCommentsList"></div>
+                                <div class="flex-row mt-var">
+                                    <input type="text" id="newCommentText" placeholder="Add a comment..." style="margin:0;">
+                                    <button class="btn btn-small" onclick="addCommentToCurrentDay()">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

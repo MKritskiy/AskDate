@@ -1,7 +1,7 @@
 namespace AskDate.Domain.Entities;
 public class Comment : BaseEntity
 {
-    public string Text {get; set;} = string.Empty;
-    public int UserId {get;set;}
+    public string Content {get; set;} = string.Empty;
+    public int AuthorProfileId {get;set;}
     public int NoteId {get; set;}
 }

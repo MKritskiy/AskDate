@@ -4,10 +4,11 @@ using Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using AskDate.Infra.Data;
 
 namespace AskDate.Infra.Repositories;
 
-public class CommentRepo(DbContext context) : BaseRepository<Comment>(context), ICommentRepository
+public class CommentRepo(ApplicationDbContext context) : BaseRepository<Comment>(context), ICommentRepository
 {
     protected override int? GetId(Comment entity)
     {
