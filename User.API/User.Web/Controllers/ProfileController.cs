@@ -23,8 +23,8 @@ public class ProfileController(IProfileService ProfileService) : ControllerBase
         }
     }
 
-    [HttpPut("update")]
-    public async Task<IActionResult> UpdateProfile([FromQuery] int profileId, [FromBody] Profile updatedProfile)
+    [HttpPut("{profileId:int}")]
+    public async Task<IActionResult> UpdateProfile(int profileId, [FromBody] Profile updatedProfile)
     {
         try
         {
@@ -63,7 +63,7 @@ public class ProfileController(IProfileService ProfileService) : ControllerBase
         }
     }
 
-    [HttpGet("{profileId}")]
+    [HttpGet("{profileId:int}")]
     public async Task<ActionResult<Profile?>> GetProfileById(int profileId)
     {
         try
