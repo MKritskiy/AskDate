@@ -23,6 +23,28 @@ public class ProfileController(IProfileService ProfileService) : ControllerBase
         }
     }
 
+    [HttpPut("update")]
+    public async Task<IActionResult> UpdateProfile([FromQuery] int profileId, [FromBody] Profile updatedProfile)
+    {
+        try
+        {
+            var current = await ProfileService.GetProfileById(profileId);
+            if (current == null || current.Id == null) return NotFound();
+
+            current.FirstName = updatedProfile.FirstName;
+            current.LastName = updatedProfile.LastName;
+            // update age, gender, about are removed per user request, but backend keeps them as is if needed, or we just don't set them
+            // leaving them as they are or setting to defaults is fine, we'll just not update them if we want to remove them.
+
+            await ProfileService.UpdateProfile(current);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     [HttpDelete("delete/{profileId}")]
     public async Task<IActionResult> DeleteProfile(int profileId)
     {

@@ -78,19 +78,19 @@ namespace Users.Web.Controllers
         //    }
         //}
 
-        //[HttpPut("update")]
-        //public async Task<IActionResult> UpdateUser(int userId, [FromBody] UpdateUserDto updateUserDto)
-        //{
-        //    try
-        //    {
-        //        var result = await UserService.UpdateUser(userId, updateUserDto.PhoneNumber, updateUserDto.Password);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateUser([FromQuery] int userId, [FromBody] UpdateUserDto updateUserDto)
+        {
+            try
+            {
+                var result = await UserService.UpdateUser(userId, updateUserDto.PhoneNumber, updateUserDto.Password);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
         [HttpDelete("delete/{userId}")]
         public async Task<IActionResult> DeleteUser(int userId)

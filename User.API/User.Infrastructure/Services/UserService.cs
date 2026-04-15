@@ -106,9 +106,22 @@ namespace Users.Infrastructure.Services
             if (user.Id != null && (DateTimeOffset.UtcNow.Subtract(user.Created) <= TimeSpan.FromMinutes(10) || user.Verified)) throw new DuplicateEmailException();
         }
        
-        public Task<int> UpdateUser(int userId, string phoneNumber, string password)
+        public async Task<int> UpdateUser(int userId, string phoneNumber, string password)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null) return 0;
+
+            if (!string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                user.PhoneNumber = phoneNumber;
+            }
+            if (!string.IsNullOrWhiteSpace(password))
+            {
+                user.Salt = Guid.NewGuid().ToString();
+                user.Password = _encrypt.HashPassword(password, user.Salt);
+            }
+            await _userRepository.UpdateAsync(user);
+            return user.Id ?? 0;
         }
 
         public Task<int> DeleteUser(int userId)

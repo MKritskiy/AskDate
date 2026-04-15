@@ -37,12 +37,14 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
         };
 
         await noteRepository.AddAsync(note);
+        await noteConfirmationRepository.AddAsync(new NoteConfirmation { NoteId = note.Id ?? 0, ProfileId = profileId });
+
         var res = Map(note);
-        res.ConfirmedProfileIds = new List<int>();
+        res.ConfirmedProfileIds = new List<int> { profileId };
 
         var names = await profileApiClient.GetProfileNamesAsync(new[] { profileId });
         res.CreatorName = names.GetValueOrDefault(profileId, "Unknown");
-        res.ConfirmedProfileNames = new List<string>();
+        res.ConfirmedProfileNames = new List<string> { res.CreatorName };
 
         return res;
     }

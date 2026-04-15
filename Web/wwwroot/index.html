@@ -4,15 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AskDate</title>
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 </head>
 <body>
 
 <nav class="navbar">
-    <div class="nav-brand">AskDate</div>
-    <div id="navMenu" class="hidden">
-         <button class="btn btn-outline" onclick="logoutUser()">Logout</button>
+    <div class="flex-row">
+        <div class="nav-brand" style="margin-right:16px;">AskDate</div>
+        <button class="btn btn-outline btn-small hide-mobile" onclick="openModal('createGroupModal')">Create Group</button>
+        <button class="btn btn-outline btn-small hide-mobile" onclick="openModal('joinGroupModal')">Join Group</button>
+    </div>
+    <div id="navMenu" class="hidden flex-row">
+        <span id="headerUserName" class="text-small" style="margin: 0 12px; color: var(--text-primary); font-weight: bold;"></span>
+        <button class="btn btn-outline btn-small hide-mobile" onclick="openProfileModal()">Profile</button>
+        <button class="btn btn-small hide-mobile" onclick="logoutUser()">Logout</button>
+        <div class="hamburger-menu show-mobile">
+            <button class="btn btn-outline btn-small" onclick="toggleMobileMenu()">Menu</button>
+            <div id="mobileMenuDropdown" class="dropdown-menu hidden">
+                <a href="#" onclick="openModal('createGroupModal'); toggleMobileMenu();">Create Group</a>
+                <a href="#" onclick="openModal('joinGroupModal'); toggleMobileMenu();">Join Group</a>
+                <a href="#" onclick="openProfileModal(); toggleMobileMenu();">Profile</a>
+                <a href="#" onclick="logoutUser(); toggleMobileMenu();">Logout</a>
+            </div>
+        </div>
     </div>
 </nav>
 
@@ -48,33 +64,21 @@
             <aside class="sidebar">
                 <div class="card">
                     <h3>My Groups</h3>
-                    <button class="btn btn-outline w-full mb-var" onclick="fetchGroups()">Refresh Groups</button>
-                    <ul id="groupsList" class="list mb-var"></ul>
-
-                    <hr class="mb-var" style="border-color: var(--bg-elevated); margin-top: var(--spacing);">
-                    <h4>Create Group</h4>
-                    <input type="text" id="newGroupName" placeholder="Group Name">
-                    <button class="btn w-full mb-var" onclick="createGroup()">Create Group</button>
-
-                    <hr class="mb-var" style="border-color: var(--bg-elevated);">
-                    <h4>Join Group</h4>
-                    <input type="text" id="inviteLinkInput" placeholder="Invite Link (e.g. 1a2b3c4d...)">
-                    <button class="btn btn-outline w-full" onclick="joinGroup()">Join</button>
+                    <button class="btn btn-outline w-full mb-var" onclick="fetchGroups()">Refresh</button>
+                    <ul id="groupsList" class="list"></ul>
                 </div>
             </aside>
 
             <section class="content">
                 <div class="card hidden" id="groupDetails">
-                    <div style="display:flex; justify-content: space-between; align-items:center;">
-                        <h2 id="groupTitle">Group Title</h2>
-                        <button class="btn btn-danger btn-small" id="deleteGroupBtn" onclick="deleteCurrentGroup()">Delete Group</button>
+                    <div style="cursor: pointer; padding: 4px; border-radius: 4px; transition: background-color 0.2s;" onclick="openModal('groupEditModal')">
+                        <h2 id="groupTitle" style="margin-bottom:4px;">Group Title</h2>
+                        <span id="groupParticipantCount" class="text-small" style="color: var(--accent);">0 participants</span>
                     </div>
-                    <p class="text-small mb-var">Invite Link: <strong id="groupInviteLink"></strong></p>
-
-                    <div class="mb-var">
-                        <h3>Participants</h3>
-                        <ul id="participantsList" class="list mb-var"></ul>
-                    </div>
+                    <p class="text-small mb-var mt-var" style="display:flex; align-items:center; gap:8px;">
+                        Invite: <strong id="groupInviteLink"></strong> 
+                        <button class="btn btn-outline btn-small" onclick="copyInviteLink()">Copy Link</button>
+                    </p>
 
                     <div class="calendar-layout mt-var" style="position: relative;">
                         <div id="calendarWrapper" style="flex: 1;">
@@ -82,22 +86,32 @@
                         </div>
 
                         <div id="dayPanel" class="hidden">
-                            <span class="close-btn" onclick="closeDayPanel()">✕</span>
-                            <h3 id="dayTitle">Date</h3>
-                            <div id="dayActions"></div>
+                            <div id="dayViewDetails">
+                                <span class="close-btn" onclick="closeDayPanel()">X</span>
+                                <h3 id="dayTitle">Date</h3>
+                                <div id="dayActions" class="mb-var mt-var"></div>
 
-                            <div class="mb-var mt-var">
-                                <h4>Participants</h4>
-                                <ul id="dayParticipantsList" class="list" style="max-height: 120px; overflow-y: auto;"></ul>
+                                <button class="btn btn-outline btn-small w-full mb-var" onclick="showDayParticipants()">View Participants</button>
+
+                                <div class="mb-var">
+                                    <div class="flex-row" style="margin-top: 16px; margin-bottom: 8px; justify-content: space-between; align-items: center;">
+                                        <h4 style="margin: 0;">Comments</h4>
+                                        <button class="btn btn-outline btn-small" onclick="fetchComments(window.selectedNote.id)">Refresh</button>
+                                    </div>
+                                    <div id="dayCommentsList" style="max-height:200px; overflow-y:auto;"></div>
+                                    <div id="newCommentContainer" class="flex-row mt-var">
+                                        <input type="text" id="newCommentText" placeholder="Add a comment..." style="margin:0;">
+                                        <button class="btn btn-small" onclick="addCommentToCurrentDay()">Send</button>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="mb-var">
-                                <h4>Comments</h4>
-                                <div id="dayCommentsList"></div>
-                                <div class="flex-row mt-var">
-                                    <input type="text" id="newCommentText" placeholder="Add a comment..." style="margin:0;">
-                                    <button class="btn btn-small" onclick="addCommentToCurrentDay()">Send</button>
+                            <div id="dayViewParticipants" class="hidden">
+                                <div class="flex-row mb-var">
+                                    <button class="btn btn-small" onclick="showDayDetails()" style="padding: 0 8px;">Back</button>
+                                    <h3 style="margin:0;">Participants</h3>
                                 </div>
+                                <ul id="dayParticipantsList" class="list" style="max-height: 250px; overflow-y: auto;"></ul>
                             </div>
                         </div>
                     </div>
@@ -106,6 +120,55 @@
         </div>
     </section>
 
+</div>
+
+<!-- Modals -->
+<div id="appOverlay" class="overlay hidden" onclick="closeAllModals()"></div>
+
+<div id="createGroupModal" class="modal hidden">
+    <span class="close-btn" onclick="closeAllModals()">X</span>
+    <h3>Create Group</h3>
+    <input type="text" id="newGroupName" placeholder="Group Name">
+    <button class="btn w-full" onclick="createGroup()">Create</button>
+</div>
+
+<div id="joinGroupModal" class="modal hidden">
+    <span class="close-btn" onclick="closeAllModals()">X</span>
+    <h3>Join Group</h3>
+    <input type="text" id="inviteLinkInput" placeholder="Invite Link or URL">
+    <button class="btn w-full" onclick="joinGroupFromModal()">Join</button>
+</div>
+
+<div id="groupEditModal" class="modal hidden">
+    <span class="close-btn" onclick="closeAllModals()">X</span>
+    <h3 style="margin-bottom: 16px;">Group Settings</h3>
+    <div class="flex-row mb-var">
+        <input type="text" id="editGroupNameInput" oninput="document.getElementById('saveGroupNameBtn').style.display='block'" style="margin:0; flex:1;">
+        <button class="btn btn-small" id="saveGroupNameBtn" onclick="saveGroupName()" style="display:none;">Save</button>
+    </div>
+    <h4 class="mb-var">Participants</h4>
+    <ul id="modalGroupParticipantsList" class="list mb-var" style="max-height: 200px; overflow-y: auto;"></ul>
+    <button class="btn w-full hidden" id="deleteGroupBtn" style="background-color: #CF6679; color: #fff;" onclick="deleteCurrentGroup()">Delete Group</button>
+</div>
+
+<div id="profileModal" class="modal hidden">
+    <span class="close-btn" onclick="closeAllModals()">X</span>
+    <h3 style="margin-bottom: 16px;">Edit Profile</h3>
+    <input type="text" id="profFirstName" placeholder="First Name">
+    <input type="text" id="profLastName" placeholder="Last Name">
+    <h4 style="margin-bottom: 16px; margin-top: 16px; border-top: 1px solid var(--bg-surface); padding-top: 16px;">Update Password</h4>
+    <input type="password" id="profNewPassword" placeholder="New Password (leave blank to keep current)">
+    <button class="btn w-full" onclick="saveProfile()">Save</button>
+</div>
+
+<div id="customDialogOverlay" class="overlay hidden" style="z-index: 9999;">
+    <div class="modal" id="customDialogBox" style="background:#2A2A2A; border-radius:12px; padding:24px; text-align:center; color: #fff; z-index: 10000;">
+        <p id="customDialogText" style="margin-bottom: 20px; font-size: 16px;"></p>
+        <div class="flex-row" style="justify-content: center; gap: 16px;">
+            <button id="customDialogOk" class="btn">OK</button>
+            <button id="customDialogCancel" class="btn btn-outline hidden">Cancel</button>
+        </div>
+    </div>
 </div>
 
 <script src="app.js"></script>

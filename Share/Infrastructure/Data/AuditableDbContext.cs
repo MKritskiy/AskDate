@@ -26,16 +26,18 @@ public abstract class AuditableDbContext : DbContext
     {
         var entries = ChangeTracker.Entries<BaseEntity>();
 
+        var now = DateTimeOffset.UtcNow;
+
         foreach (var entry in entries)
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.Created = DateTimeOffset.UtcNow;
+                entry.Entity.Created = now;
+                entry.Entity.LastModified = now;
             }
-
-            if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+            else if (entry.State == EntityState.Modified)
             {
-                entry.Entity.LastModified = DateTimeOffset.UtcNow;
+                entry.Entity.LastModified = now;
             }
         }
     }

@@ -7,6 +7,8 @@ public class CommentDto
     public int AuthorProfileId { get; set; }
     public string AuthorName { get; set; } = string.Empty;
     public int NoteId { get; set; }
+    public DateTimeOffset Created { get; set; }
+    public DateTimeOffset LastModified { get; set; }
 }
 
 public class CommentCreateDto

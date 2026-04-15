@@ -17,6 +17,11 @@ namespace Users.Infrastructure.Services
             return await _profileRepository.AddAsync(profile) ?? 0;
         }
 
+        public async Task<bool> UpdateProfile(Profile profile)
+        {
+            return await _profileRepository.UpdateAsync(profile);
+        }
+
         public async Task DeleteProfile(int profileId)
         {
             bool res = await _profileRepository.DeleteByIdAsync(profileId);

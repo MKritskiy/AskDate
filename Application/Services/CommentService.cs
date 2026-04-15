@@ -37,6 +37,9 @@ public class CommentService(ICommentRepository commentRepository, INoteRepositor
             AuthorProfileId = profileId,
             NoteId = noteId
         };
+        comment.Created = DateTimeOffset.UtcNow;
+        comment.LastModified = comment.Created;
+
         await commentRepository.AddAsync(comment);
         var res = Map(comment);
 
@@ -53,6 +56,7 @@ public class CommentService(ICommentRepository commentRepository, INoteRepositor
         if (comment.AuthorProfileId != profileId) throw new Exception("Forbidden");
 
         comment.Content = dto.Content;
+        comment.LastModified = DateTimeOffset.UtcNow; // ensure updated
         await commentRepository.UpdateAsync(comment);
     }
 
@@ -84,7 +88,9 @@ public class CommentService(ICommentRepository commentRepository, INoteRepositor
             Id = comment.Id ?? 0,
             Content = comment.Content,
             AuthorProfileId = comment.AuthorProfileId,
-            NoteId = comment.NoteId
+            NoteId = comment.NoteId,
+            Created = comment.Created,
+            LastModified = comment.LastModified
         };
     }
 }
