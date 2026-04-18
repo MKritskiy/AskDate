@@ -13,7 +13,7 @@ public class ProfileApiClient(HttpClient httpClient) : IProfileApiClient
         var query = string.Join("&", ids.Select(id => $"ids={id}"));
         try 
         {
-            var response = await httpClient.GetAsync($"http://localhost:50002/api/Profile/profiles?{query}");
+            var response = await httpClient.GetAsync($"http://users.web:8080/api/Profile/profiles?{query}");
             if (response.IsSuccessStatusCode)
             {
                 var profiles = await response.Content.ReadFromJsonAsync<List<ProfileResponse>>();

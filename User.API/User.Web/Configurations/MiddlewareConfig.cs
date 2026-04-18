@@ -2,6 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Users.Domain.Constants;
 using Users.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Users.Web.Configurations;
 
@@ -33,9 +34,7 @@ public static class MiddlewareConfig
         try
         {
             var context = services.GetRequiredService<ApplicationDbContext>();
-            //          context.Database.Migrate();
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
+            await context.Database.MigrateAsync();
         }
         catch (Exception ex)
         {

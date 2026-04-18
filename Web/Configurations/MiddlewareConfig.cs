@@ -1,4 +1,5 @@
 ﻿using AskDate.Infra.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace AskDate.Web.Configurations;
 
@@ -30,8 +31,7 @@ public static class MiddlewareConfig
         try
         {
             var context = services.GetRequiredService<ApplicationDbContext>();
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
+            await context.Database.MigrateAsync();
         }
         catch (Exception ex)
         {

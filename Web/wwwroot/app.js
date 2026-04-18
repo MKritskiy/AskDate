@@ -1,5 +1,197 @@
+let currentLang = localStorage.getItem('askdate_lang') || 'ru';
+const translations = {
+    'ru': {
+        'nav.createGroup': 'Создать группу',
+        'nav.joinGroup': 'Присоединиться',
+        'nav.profile': 'Профиль',
+        'nav.logout': 'Выйти',
+        'nav.menu': 'Меню',
+        'login.title': 'Вход',
+        'login.email': 'Email',
+        'login.password': 'Пароль',
+        'login.submit': 'Войти',
+        'login.noAccount': 'Нет аккаунта?',
+        'login.toRegister': 'Регистрация',
+        'reg.title': 'Регистрация',
+        'reg.email': 'Email',
+        'reg.password': 'Пароль',
+        'reg.firstName': 'Имя',
+        'reg.lastName': 'Фамилия',
+        'reg.submit': 'Зарегистрироваться',
+        'reg.hasAccount': 'Уже есть аккаунт?',
+        'reg.toLogin': 'Войти',
+        'sidebar.title': 'Мои группы',
+        'group.invite': 'Приглашение:',
+        'group.copyLink': 'Копировать ссылку',
+        'day.participants': 'Участники',
+        'day.comments': 'Комментарии',
+        'day.addComment': 'Добавить комментарий...',
+        'day.send': 'Отправить',
+        'modal.createTitle': 'Создать группу',
+        'modal.createName': 'Имя группы',
+        'modal.createBtn': 'Создать',
+        'modal.joinTitle': 'Присоединиться',
+        'modal.joinLink': 'Ссылка или код',
+        'modal.joinBtn': 'Вступить',
+        'modal.editTitle': 'Настройки группы',
+        'modal.editSave': 'Сохранить',
+        'modal.editParticipants': 'Участники',
+        'modal.editDelete': 'Удалить группу',
+        'modal.profTitle': 'Настройки профиля',
+        'modal.profFirst': 'Имя',
+        'modal.profLast': 'Фамилия',
+        'modal.profPassTitle': 'Обновить пароль',
+        'modal.profPass': 'Новый пароль (оставьте пустым для сохранения текущего)',
+        'modal.profSave': 'Сохранить',
+        'dialog.ok': 'ОК',
+        'dialog.cancel': 'Отмена',
+        'js.participants': 'участников',
+        'js.creator': 'Создатель',
+        'js.member': 'Участник',
+        'js.remove': 'Удалить',
+        'js.deleteConfirm': 'Вы уверены, что хотите удалить эту группу?',
+        'js.enterLink': 'Введите код или ссылку-приглашение',
+        'js.joined': 'Присоединились к группе:',
+        'js.removeConfirm': 'Удалить этого участника?',
+        'js.noDiscussions': 'На этот день нет отметок.',
+        'js.addNote': '+ Добавить отметку на этот день',
+        'js.convenient': 'Удобно',
+        'js.markConvenient': '+ Отметить удобным',
+        'js.deleteNote': 'Удалить отметку',
+        'js.noParticipants': 'Пока нет участников.',
+        'js.deleteNoteConfirm': 'Удалить отметку?',
+        'js.edited': '(изменено)',
+        'js.edit': 'Изменить',
+        'js.deleteCommentConfirm': 'Удалить комментарий?',
+        'js.cancel': 'Отмена',
+        'js.save': 'Сохранить',
+        'js.linkCopied': 'Ссылка скопирована!',
+        'js.fillReg': 'Заполните все поля регистрации',
+        'js.regError': 'Ошибка регистрации: ',
+        'js.fillLogin': 'Заполните поля входа',
+        'js.loginError': 'Ошибка входа',
+        'js.profNotFound': 'Профили не найдены',
+        'js.profReq': 'Имя и фамилия обязательны.',
+        'js.profUpdated': 'Профиль обновлен!',
+        'js.profFail': 'Ошибка сохранения профиля',
+        'js.profLoadFail': 'Не удалось получить профиль'
+    },
+    'en': {
+        'nav.createGroup': 'Create Group',
+        'nav.joinGroup': 'Join Group',
+        'nav.profile': 'Profile',
+        'nav.logout': 'Logout',
+        'nav.menu': 'Menu',
+        'login.title': 'Login',
+        'login.email': 'Email',
+        'login.password': 'Password',
+        'login.submit': 'Login',
+        'login.noAccount': 'Don\'t have an account?',
+        'login.toRegister': 'Register',
+        'reg.title': 'Register',
+        'reg.email': 'Email',
+        'reg.password': 'Password',
+        'reg.firstName': 'First Name',
+        'reg.lastName': 'Last Name',
+        'reg.submit': 'Register',
+        'reg.hasAccount': 'Already have an account?',
+        'reg.toLogin': 'Login',
+        'sidebar.title': 'My Groups',
+        'group.invite': 'Invite:',
+        'group.copyLink': 'Copy Link',
+        'day.participants': 'Participants',
+        'day.comments': 'Comments',
+        'day.addComment': 'Add a comment...',
+        'day.send': 'Send',
+        'modal.createTitle': 'Create Group',
+        'modal.createName': 'Group Name',
+        'modal.createBtn': 'Create',
+        'modal.joinTitle': 'Join Group',
+        'modal.joinLink': 'Invite Link or URL',
+        'modal.joinBtn': 'Join',
+        'modal.editTitle': 'Group Settings',
+        'modal.editSave': 'Save',
+        'modal.editParticipants': 'Participants',
+        'modal.editDelete': 'Delete Group',
+        'modal.profTitle': 'Edit Profile',
+        'modal.profFirst': 'First Name',
+        'modal.profLast': 'Last Name',
+        'modal.profPassTitle': 'Update Password',
+        'modal.profPass': 'New Password (leave blank to keep current)',
+        'modal.profSave': 'Save',
+        'dialog.ok': 'OK',
+        'dialog.cancel': 'Cancel',
+        'js.participants': 'participants',
+        'js.creator': 'Creator',
+        'js.member': 'Member',
+        'js.remove': 'Remove',
+        'js.deleteConfirm': 'Are you sure you want to delete this group?',
+        'js.enterLink': 'Enter valid invite link',
+        'js.joined': 'Joined group: ',
+        'js.removeConfirm': 'Remove this participant?',
+        'js.noDiscussions': 'No discussions for this day.',
+        'js.addNote': '+ Add Note for this day',
+        'js.convenient': 'Marked Convenient',
+        'js.markConvenient': '+ Mark Convenient',
+        'js.deleteNote': 'Delete Note',
+        'js.noParticipants': 'No participants yet.',
+        'js.deleteNoteConfirm': 'Delete note?',
+        'js.edited': '(edited)',
+        'js.edit': 'Edit',
+        'js.deleteCommentConfirm': 'Delete comment?',
+        'js.cancel': 'Cancel',
+        'js.save': 'Save',
+        'js.linkCopied': 'Link copied!',
+        'js.fillReg': 'Fill all registration fields',
+        'js.regError': 'Registration failed: ',
+        'js.fillLogin': 'Fill login fields',
+        'js.loginError': 'Login failed',
+        'js.profNotFound': 'No profiles found for this user',
+        'js.profReq': 'First name and last name are required.',
+        'js.profUpdated': 'Profile updated!',
+        'js.profFail': 'Error saving profile',
+        'js.profLoadFail': 'Failed to load profile'
+    }
+}
+
+function getT(key) {
+    return translations[currentLang][key] || key;
+}
+
+function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.innerText = getT(key);
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        el.placeholder = getT(key);
+    });
+    const langBtn = document.getElementById('langSwitchBtn');
+    if (langBtn) {
+        langBtn.innerText = currentLang === 'ru' ? 'EN' : 'RU';
+    }
+
+    if (window.appCalendar) {
+        window.appCalendar.render(); // Re-render to update translations inside calendar events
+    }
+
+    // Update participant count label immediately
+    const groupParticipantCountLabel = document.getElementById('groupParticipantCountLabel');
+    if (groupParticipantCountLabel) {
+        groupParticipantCountLabel.innerText = getT('js.participants');
+    }
+}
+
+function toggleLanguage() {
+    currentLang = currentLang === 'ru' ? 'en' : 'ru';
+    localStorage.setItem('askdate_lang', currentLang);
+    applyTranslations();
+    fetchGroups(); // Re-render groups/participants language strings
+}
+
 const API_URL = '/api';
-const USERS_API_URL = 'http://localhost:50002/api';
+const USERS_API_URL = '/api';
 window.token = localStorage.getItem('askdate_token') || '';
 window.profileId = localStorage.getItem('askdate_profileId') || '';
 window.currentGroupId = null;
@@ -52,6 +244,7 @@ function toggleMobileMenu() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    applyTranslations();
     const urlParams = new URLSearchParams(window.location.search);
     const joinCode = urlParams.get('join');
     if (joinCode) {
@@ -101,7 +294,7 @@ function showToast(msg) {
 function copyInviteLink() {
     const link = document.getElementById('groupInviteLink').innerText;
     const fullUrl = `${window.location.origin}/?join=${link}`;
-    navigator.clipboard.writeText(fullUrl).then(() => showToast('Link copied!'));
+    navigator.clipboard.writeText(fullUrl).then(() => showToast(getT('js.linkCopied')));
 }
 
 async function fetchCurrentUserName() {
@@ -136,7 +329,7 @@ async function registerUser() {
     const lastName = document.getElementById('regLastName').value.trim();
 
     if (!email || !password || !firstName || !lastName) {
-        return appAlert("Fill all registration fields");
+        return appAlert(getT('js.fillReg'));
     }
 
     try {
@@ -147,7 +340,7 @@ async function registerUser() {
         });
 
         if (!regRes.ok) {
-            return appAlert("Registration failed: " + await regRes.text());
+            return appAlert(getT('js.regError') + await regRes.text());
         }
 
         // Now login
@@ -192,7 +385,7 @@ async function loginUser() {
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
 
-    if (!email || !password) return appAlert("Fill login fields");
+    if (!email || !password) return appAlert(getT('js.fillLogin'));
 
     try {
         const res = await fetch(`${USERS_API_URL}/User/login`, {
@@ -201,16 +394,16 @@ async function loginUser() {
             body: JSON.stringify({ email, password })
         });
 
-        if (!res.ok) return appAlert("Login failed");
+        if (!res.ok) return appAlert(getT('js.loginError'));
 
         const data = await res.json();
 
         // Fetch profiles
         const profRes = await fetch(`${USERS_API_URL}/Profile/user/${data.userId}`);
-        if (!profRes.ok) return appAlert("Failed to fetch profiles");
+        if (!profRes.ok) return appAlert(getT('js.profNotFound'));
 
         const profiles = await profRes.json();
-        if (!profiles || profiles.length === 0) return appAlert("No profiles found for this user");
+        if (!profiles || profiles.length === 0) return appAlert(getT('js.profNotFound'));
 
         setTokens(data.token, profiles[0].id);
     } catch (e) {
@@ -283,11 +476,11 @@ async function apiCall(endpoint, method = 'GET', body = null) {
     const response = await fetch(`${API_URL}${endpoint}`, options);
     if (!response.ok) {
         if (response.status === 401) {
-            appAlert("Unauthorized! Check your token.");
+            appAlert("Не авторизован! Проверьте токен.");
         } else if (response.status === 204) {
             return null; // OK no content
         } else {
-            appAlert(`Error: ${response.status} ${response.statusText}`);
+            appAlert(`Ошибка: ${response.status} ${response.statusText}`);
         }
         return false;
     }
@@ -350,7 +543,7 @@ async function loadGroup(id) {
     document.getElementById('editGroupNameInput').value = group.name;
     document.getElementById('saveGroupNameBtn').style.display = 'none';
     document.getElementById('groupInviteLink').innerText = group.inviteLink;
-    document.getElementById('groupParticipantCount').innerText = `${(group.participants || []).length} participant(s)`;
+    document.getElementById('groupParticipantCount').innerText = `${(group.participants || []).length}`;
 
     const deleteGroupBtn = document.getElementById('deleteGroupBtn');
     if (deleteGroupBtn) {
@@ -364,11 +557,13 @@ async function loadGroup(id) {
     (group.participants || []).forEach(p => {
         const canDelete = isAdmin || String(p.profileId) === String(window.profileId);
 
-        const li = document.createElement('li');
-        li.className = 'list-item';
-        li.innerHTML = `<span>${p.profileName} (${p.role === 1 ? 'Creator' : 'Member'})</span> 
-        ${canDelete ? `<span style="cursor:pointer; color:var(--danger); font-size:12px; text-decoration:underline;" onclick="event.stopPropagation(); removeParticipant(${p.profileId})" title="Remove">Remove</span>` : ''}`;
-        pList.appendChild(li);
+        const roleLabel = p.role === 1 ? getT('js.creator') : getT('js.member');
+
+        const liModal = document.createElement('li');
+        liModal.className = 'list-item';
+        liModal.innerHTML = `<span>${p.profileName} (${roleLabel})</span> 
+        ${canDelete ? `<span style="cursor:pointer; color:var(--danger); font-size:12px; text-decoration:underline;" onclick="event.stopPropagation(); removeParticipant(${p.profileId})" title="${getT('js.remove')}">${getT('js.remove')}</span>` : ''}`;
+        pList.appendChild(liModal);
     });
 
     fetchNotes();
@@ -387,7 +582,7 @@ async function saveGroupName() {
 }
 
 async function deleteCurrentGroup() {
-    const confirmed = await appConfirm('Are you sure you want to delete this group?');
+    const confirmed = await appConfirm(getT('js.deleteConfirm'));
     if (!confirmed) return;
 
     await apiCall(`/groups/${window.currentGroupId}`, 'DELETE');
@@ -400,7 +595,7 @@ async function deleteCurrentGroup() {
 
 async function joinGroupFromModal() {
     let link = document.getElementById('inviteLinkInput').value.trim();
-    if (!link) return appAlert('Enter valid invite link');
+    if (!link) return appAlert(getT('js.enterLink'));
 
     if (link.includes('join=')) {
         link = new URLSearchParams(link.substring(link.indexOf('?'))).get('join');
@@ -409,7 +604,7 @@ async function joinGroupFromModal() {
     const group = await apiCall(`/groups/invite/${link}`);
     if (group) {
         await apiCall(`/groups/${group.id}/participants`, 'POST');
-        await appAlert(`Joined group: ${group.name}`);
+        await appAlert(`${getT('js.joined')} ${group.name}`);
         document.getElementById('inviteLinkInput').value = '';
         closeAllModals();
         fetchGroups();
@@ -417,7 +612,7 @@ async function joinGroupFromModal() {
 }
 
 async function removeParticipant(userId) {
-    const confirmed = await appConfirm("Remove this participant?");
+    const confirmed = await appConfirm(getT('js.removeConfirm'));
     if(!confirmed) return;
     await apiCall(`/groups/${window.currentGroupId}/participants/${userId}`, 'DELETE');
     loadGroup(window.currentGroupId);
@@ -440,7 +635,7 @@ function initCalendar(notes) {
     const calendarEl = document.getElementById('calendar');
     const events = notes.map(n => ({
         id: n.id,
-        title: `${n.confirmedProfileNames ? n.confirmedProfileNames.length : 0} participant(s)`,
+        title: `${n.confirmedProfileNames ? n.confirmedProfileNames.length : 0}`,
         date: n.date.split('T')[0],
         extendedProps: { note: n }
     }));
@@ -476,9 +671,9 @@ function initCalendar(notes) {
         eventContent: function(arg) {
             const note = arg.event.extendedProps.note;
             const count = note.confirmedProfileNames ? note.confirmedProfileNames.length : 0;
-            return { html: `<div style="padding: 2px; text-align: center;"><span class="fc-event-badge" title="${count} participants">${count} <span class="badge-text">participants</span></span></div>` };
+            return { html: `<div style="padding: 2px; text-align: center;"><span class="fc-event-badge" title="${count} ${getT('js.participants')}">${count} <span class="badge-text">${getT('js.participants')}</span></span></div>` };
         }
-    });
+            });
     window.appCalendar.render();
 
     document.getElementById('dayPanel').classList.add('hidden');
@@ -503,8 +698,6 @@ function openDayPanel(dateStr, note) {
     document.getElementById('dayTitle').innerText = dateStr;
     window.selectedNote = note;
 
-    showDayDetails();
-
     const actionsContainer = document.getElementById('dayActions');
     const participantsContainer = document.getElementById('dayParticipantsList');
     const commentsContainer = document.getElementById('dayCommentsList');
@@ -515,8 +708,8 @@ function openDayPanel(dateStr, note) {
 
     if (!note) {
         actionsContainer.innerHTML = `
-            <p class="text-small mb-var">No discussions for this day.</p>
-            <button class="btn btn-outline btn-small w-full" onclick="createNoteForDate('${dateStr}')">+ Add Note for this day</button>
+            <p class="text-small mb-var">${getT('js.noDiscussions')}</p>
+            <button class="btn btn-outline btn-small w-full" onclick="createNoteForDate('${dateStr}')">${getT('js.addNote')}</button>
         `;
         document.getElementById('newCommentContainer').style.display = 'none';
         return;
@@ -531,9 +724,9 @@ function openDayPanel(dateStr, note) {
     actionsContainer.innerHTML = `
         <div class="flex-row mb-var">
             <button class="btn btn-outline btn-small" onclick="toggleConfirmNote(${note.id}, ${isConfirmed ? 'true' : 'false'})">
-                ${isConfirmed ? 'Marked Convenient' : '+ Mark Convenient'}
+                ${isConfirmed ? getT('js.convenient') : getT('js.markConvenient')}
             </button>
-            ${canDeleteNode ? `<button class="btn btn-danger btn-small" onclick="deleteNote(${note.id})">Delete Note</button>` : ''}
+            ${canDeleteNode ? `<button class="btn btn-danger btn-small" onclick="deleteNote(${note.id})">${getT('js.deleteNote')}</button>` : ''}
         </div>
     `;
 
@@ -546,7 +739,7 @@ function openDayPanel(dateStr, note) {
             participantsContainer.appendChild(li);
         });
     } else {
-        participantsContainer.innerHTML = '<li class="list-item text-small" style="padding: 8px;">No participants yet.</li>';
+        participantsContainer.innerHTML = `<li class="list-item text-small" style="padding: 8px;">${getT('js.noParticipants')}</li>`;
     }
 
     fetchComments(note.id);
@@ -579,7 +772,7 @@ async function createNote() {
 }
 
 async function deleteNote(id) {
-    const confirmed = await appConfirm('Delete note?');
+    const confirmed = await appConfirm(getT('js.deleteNoteConfirm'));
     if(!confirmed) return;
     await apiCall(`/groups/${window.currentGroupId}/notes/${id}`, 'DELETE');
     await fetchNotes();
@@ -633,7 +826,7 @@ async function fetchComments(noteId) {
                  const tMod = new Date(c.lastModified).getTime();
                  // Show edited only if diff > 10 seconds
                  if (tMod - tCreated > 10000) {
-                     dateStr += ` <span style="color:var(--text-secondary);font-size:10px;">(edited)</span>`;
+                     dateStr += ` <span style="color:var(--text-secondary);font-size:10px;">${getT('js.edited')}</span>`;
                  }
              }
         }
@@ -645,8 +838,8 @@ async function fetchComments(noteId) {
                         <span class="text-small" style="font-weight:bold; color: var(--accent);">${c.authorName}</span>${dateStr}
                     </div>
                     <div>
-                        ${isAuthor ? `<span style="cursor:pointer; color:var(--text-secondary); font-size:12px; margin-right:12px; text-decoration:underline;" onclick="startEditComment(${c.id})">Edit</span>` : ''}
-                        ${canDeleteComment ? `<span style="cursor:pointer; color:var(--danger); font-size:12px; text-decoration:underline;" onclick="deleteComment(${noteId}, ${c.id})">Delete</span>` : ''}
+                        ${isAuthor ? `<span style="cursor:pointer; color:var(--text-secondary); font-size:12px; margin-right:12px; text-decoration:underline;" onclick="startEditComment(${c.id})">${getT('js.edit')}</span>` : ''}
+                        ${canDeleteComment ? `<span style="cursor:pointer; color:var(--danger); font-size:12px; text-decoration:underline;" onclick="deleteComment(${noteId}, ${c.id})">${getT('js.remove')}</span>` : ''}
                     </div>
                 </div>
                 <div class="mt-var text-small" style="line-height:1.4;">${c.content}</div>
@@ -655,8 +848,8 @@ async function fetchComments(noteId) {
             <div id="commentEdit_${c.id}" class="hidden mt-var">
                 <input type="text" id="editInput_${c.id}" style="margin-bottom:8px; width:100%;">
                 <div class="flex-row">
-                    <button class="btn btn-small" onclick="saveComment(${noteId}, ${c.id})">Save</button>
-                    <button class="btn btn-outline btn-small" onclick="cancelEditComment(${c.id})">Cancel</button>
+                    <button class="btn btn-small" onclick="saveComment(${noteId}, ${c.id})">${getT('js.save')}</button>
+                    <button class="btn btn-outline btn-small" onclick="cancelEditComment(${c.id})">${getT('js.cancel')}</button>
                 </div>
             </div>
         `;
@@ -707,7 +900,7 @@ async function addComment(noteId) {
 }
 
 async function deleteComment(noteId, commentId) {
-    const confirmed = await appConfirm('Delete comment?');
+    const confirmed = await appConfirm(getT('js.deleteCommentConfirm'));
     if(!confirmed) return;
     await apiCall(`/notes/${noteId}/comments/${commentId}`, 'DELETE');
     fetchComments(noteId);
@@ -729,8 +922,6 @@ window.deleteComment = deleteComment;
 window.openModal = openModal;
 window.closeAllModals = closeAllModals;
 window.copyInviteLink = copyInviteLink;
-window.showDayDetails = showDayDetails;
-window.showDayParticipants = showDayParticipants;
 window.removeParticipant = removeParticipant;
 window.joinGroupFromModal = joinGroupFromModal;
 window.deleteCurrentGroup = deleteCurrentGroup;
@@ -763,7 +954,7 @@ async function openProfileModal() {
             openModal('profileModal');
         }
     } catch (e) {
-        appAlert("Failed to load profile");
+        appAlert(getT('js.profLoadFail'));
     }
 }
 
@@ -773,7 +964,7 @@ async function saveProfile() {
     const newPassword = document.getElementById('profNewPassword').value;
 
     if (!firstName || !lastName) {
-        return appAlert("First name and last name are required.");
+        return appAlert(getT('js.profReq'));
     }
 
     try {
@@ -809,12 +1000,12 @@ async function saveProfile() {
 
             closeAllModals();
             fetchCurrentUserName();
-            showToast("Profile updated!");
+            showToast(getT('js.profUpdated'));
         } else {
-            appAlert("Failed to update profile");
+            appAlert(getT('js.profFail'));
         }
     } catch (e) {
-        appAlert("Error saving profile");
+        appAlert(getT('js.profFail'));
     }
 }
 window.openProfileModal = openProfileModal;
@@ -827,7 +1018,7 @@ setInterval(async () => {
         const group = await apiCall(`/groups/${window.currentGroupId}`);
         if (!group) return;
 
-        document.getElementById('groupParticipantCount').innerText = `${(group.participants || []).length} participant(s)`;
+        document.getElementById('groupParticipantCount').innerText = `${(group.participants || []).length}`;
 
         const notes = await apiCall(`/groups/${window.currentGroupId}/notes`);
         if (notes) {
@@ -851,7 +1042,7 @@ setInterval(async () => {
                             participantsContainer.appendChild(li);
                         });
                     } else {
-                        participantsContainer.innerHTML = '<li class="list-item text-small" style="padding: 8px;">No participants yet.</li>';
+                        participantsContainer.innerHTML = '<li class="list-item text-small" style="padding: 8px;">Пока нет участников.</li>';
                     }
 
                     fetchComments(updatedNote.id);

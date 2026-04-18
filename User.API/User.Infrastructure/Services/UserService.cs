@@ -44,7 +44,7 @@ namespace Users.Infrastructure.Services
         {
             var user = await _userRepository.GetUserByEmailAsync(loginDto.Email);
 
-            if (user.Id != null && user.Password == _encrypt.HashPassword(loginDto.Password, user.Salt) && user.Verified)
+            if (user != null && user.Id != null && user.Password == _encrypt.HashPassword(loginDto.Password, user.Salt) && user.Verified)
             {
                 var token = _tokenService.GenerateToken(user);
                 return new AfterAuthDto { Token = token, UserId = user.Id ?? 0 };
@@ -103,7 +103,7 @@ namespace Users.Infrastructure.Services
         public async Task ValidateEmail(string email)
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
-            if (user.Id != null && (DateTimeOffset.UtcNow.Subtract(user.Created) <= TimeSpan.FromMinutes(10) || user.Verified)) throw new DuplicateEmailException();
+            if (user != null && user.Id != null && (DateTimeOffset.UtcNow.Subtract(user.Created) <= TimeSpan.FromMinutes(10) || user.Verified)) throw new DuplicateEmailException();
         }
        
         public async Task<int> UpdateUser(int userId, string phoneNumber, string password)
