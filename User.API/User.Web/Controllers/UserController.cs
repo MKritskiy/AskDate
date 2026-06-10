@@ -59,6 +59,24 @@ namespace Users.Web.Controllers
             }
         }
 
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenDto refreshDto)
+        {
+            try
+            {
+                var result = await UserService.RefreshTokenAsync(refreshDto.RefreshToken);
+                return Ok(result);
+            }
+            catch (AuthorizationException)
+            {
+                return Unauthorized("Invalid or expired refresh token.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
 
         //[HttpPost("create")]
         //public async Task<IActionResult> CreateUser([FromBody] User user)

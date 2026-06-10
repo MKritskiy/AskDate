@@ -47,7 +47,13 @@ namespace Users.Infrastructure.Services
             if (user != null && user.Id != null && user.Password == _encrypt.HashPassword(loginDto.Password, user.Salt) && user.Verified)
             {
                 var token = _tokenService.GenerateToken(user);
-                return new AfterAuthDto { Token = token, UserId = user.Id ?? 0 };
+                var refreshToken = _tokenService.GenerateRefreshToken();
+                
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+                await _userRepository.UpdateAsync(user);
+                
+                return new AfterAuthDto { Token = token, RefreshToken = refreshToken, UserId = user.Id ?? 0 };
             }
             throw new AuthorizationException();
         }
@@ -74,6 +80,11 @@ namespace Users.Infrastructure.Services
 
         public async Task Register(RegDto regDto)
         {
+            if (string.IsNullOrWhiteSpace(regDto.Email) || string.IsNullOrWhiteSpace(regDto.Password))
+                throw new InvalidOperationException("Email и пароль обязательны");
+            if (regDto.Password != regDto.ConfirmPassword)
+                throw new InvalidOperationException("Пароли не совпадают");
+
             User user = new User() { Email = regDto.Email, Password = regDto.Password };
             using (var scope = General.Helpers.CreateTransactionScope())
             {
@@ -91,13 +102,18 @@ namespace Users.Infrastructure.Services
 
             var user = await _userRepository.GetUserByEmailAsync(email);
             user.Verified = true;
+            
+            var refreshToken = _tokenService.GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+            
             await _userRepository.UpdateAsync(user);
 
             await _codeCache.RemoveCodeAsync($"email:{email}");
 
             var token = _tokenService.GenerateToken(user);
             int id = user.Id ?? 0;
-            return new AfterAuthDto { Token = token, UserId = id };
+            return new AfterAuthDto { Token = token, RefreshToken = refreshToken, UserId = id };
         }
 
         public async Task ValidateEmail(string email)
@@ -127,6 +143,28 @@ namespace Users.Infrastructure.Services
         public Task<int> DeleteUser(int userId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<AfterAuthDto> RefreshTokenAsync(string refreshToken)
+        {
+            var users = await _userRepository.Get(u => u.RefreshToken == refreshToken);
+            var user = users.FirstOrDefault();
+            
+            if (user == null || user.Id == null)
+                throw new AuthorizationException("Invalid refresh token");
+            
+            if (user.RefreshTokenExpiry == null || user.RefreshTokenExpiry < DateTime.UtcNow)
+                throw new AuthorizationException("Refresh token expired");
+            
+            // Generate new tokens
+            var newToken = _tokenService.GenerateToken(user);
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+            
+            user.RefreshToken = newRefreshToken;
+            user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+            await _userRepository.UpdateAsync(user);
+            
+            return new AfterAuthDto { Token = newToken, RefreshToken = newRefreshToken, UserId = user.Id ?? 0 };
         }
 
     }

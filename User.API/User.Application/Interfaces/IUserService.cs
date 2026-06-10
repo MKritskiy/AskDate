@@ -13,6 +13,7 @@ namespace Users.Application.Interfaces
         Task<int> DeleteUser(int userId);
         Task GenerateAndSendConfiramtionCode(string? email = null, string? phone = null);
         Task<AfterAuthDto> ConfirmEmail(string email, string code);
+        Task<AfterAuthDto> RefreshTokenAsync(string refreshToken);
 
     }
 }
