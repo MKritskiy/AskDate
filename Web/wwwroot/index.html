@@ -52,6 +52,7 @@
             <h2 data-i18n="reg.title">Регистрация</h2>
             <input type="email" id="regEmail" data-i18n-placeholder="reg.email" placeholder="Email">
             <input type="password" id="regPassword" data-i18n-placeholder="reg.password" placeholder="Пароль">
+            <input type="password" id="regConfirmPassword" data-i18n-placeholder="reg.confirmPassword" placeholder="Повторите пароль">
             <input type="text" id="regFirstName" data-i18n-placeholder="reg.firstName" placeholder="Имя">
             <input type="text" id="regLastName" data-i18n-placeholder="reg.lastName" placeholder="Фамилия">
             <button class="btn w-full mb-var" data-i18n="reg.submit" onclick="registerUser()">Зарегистрироваться</button>
@@ -81,20 +82,45 @@
                         <button class="btn btn-outline btn-small" data-i18n="group.copyLink" onclick="copyInviteLink()">Копировать ссылку</button>
                     </p>
 
-                    <div class="calendar-layout mt-var" style="position: relative;">
+                    <div class="flex-row mb-var" style="gap:0;">
+                        <button id="tabCalendar" class="btn btn-outline btn-small tab-btn tab-active" onclick="switchTab('calendar')" data-i18n="nav.calendar">Календарь</button>
+                        <button id="tabUpcoming" class="btn btn-outline btn-small tab-btn" onclick="switchTab('upcoming')" data-i18n="nav.upcoming">Предстоящие</button>
+                    </div>
+
+                    <div id="calendarTab" class="calendar-layout mt-var" style="position: relative;">
                         <div id="calendarWrapper" style="flex: 1;">
                             <div id="calendar"></div>
                         </div>
+                    </div>
 
-                        <div id="dayPanel" class="hidden">
-                            <div id="dayViewDetails">
-                                <span class="close-btn" onclick="closeDayPanel()">X</span>
-                                <h3 id="dayTitle">Date</h3>
-                                <div id="dayActions" class="mb-var mt-var"></div>
+                    <div id="upcomingTab" class="hidden mt-var">
+                        <div id="upcomingEventsList"></div>
+                    </div>
+
+                    <div id="dayPanel" class="hidden">
+                        <div class="day-panel-inner">
+                            <span class="close-btn" onclick="closeDayPanel()">X</span>
+                            <div class="day-panel-sidebar">
+                                <div class="day-nav-row">
+                                    <button id="dayNavPrev" class="btn btn-outline btn-small" onclick="navigateDay(-1)">&#9664;</button>
+                                    <h3 id="dayTitle" style="margin:0; text-align:center; flex:1;">Date</h3>
+                                    <button id="dayNavNext" class="btn btn-outline btn-small" onclick="navigateDay(1)">&#9654;</button>
+                                </div>
+                                <ul id="dayEventsList" class="list day-events-list"></ul>
+                                <button id="dayAddNoteBtn" class="btn btn-outline btn-small w-full" style="margin-top:8px;" onclick="createNoteForDate(window._currentDayDateStr)"></button>
+                            </div>
+                            <div class="day-panel-detail" id="dayViewDetails">
+                                <div id="dayActions" class="mb-var"></div>
 
                                 <div class="mb-var">
                                     <h4 style="margin: 0 0 8px 0;" data-i18n="day.participants">Участники</h4>
-                                    <ul id="dayParticipantsList" class="list" style="max-height: 120px; overflow-y: auto; margin-bottom: 16px;"></ul>
+                                    <ul id="dayParticipantsList" class="list" style="margin-bottom: 16px;"></ul>
+                                </div>
+
+                                <div id="recurrenceIndicator" class="hidden mb-var" style="display:flex; align-items:center; gap:6px; padding:8px; background:var(--bg-elevated); border-radius:var(--radius); font-size:12px;">
+                                    <span style="color:var(--accent); font-size:14px;">&#x21bb;</span>
+                                    <span id="recurrenceIndicatorText" style="color:var(--text-secondary);"></span>
+                                    <div id="recurrenceActions" style="margin-left:auto; display:flex; gap:4px;"></div>
                                 </div>
 
                                 <div class="mb-var">
@@ -154,6 +180,61 @@
     <h4 style="margin-bottom: 16px; margin-top: 16px; border-top: 1px solid var(--bg-surface); padding-top: 16px;" data-i18n="modal.profPassTitle">Обновить пароль</h4>
     <input type="password" id="profNewPassword" data-i18n-placeholder="modal.profPass" placeholder="Новый пароль (оставьте пустым для сохранения текущего)">
     <button class="btn w-full" data-i18n="modal.profSave" onclick="saveProfile()">Сохранить</button>
+</div>
+
+<div id="recurrenceModal" class="modal hidden">
+    <span class="close-btn" onclick="closeAllModals()">X</span>
+    <h3 style="margin-bottom: 16px;" data-i18n="modal.recurrenceTitle">Повторение</h3>
+    
+    <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.noteTitle">Название (необязательно)</label>
+    <input type="text" id="recNoteTitle" data-i18n-placeholder="rec.noteTitlePlaceholder" placeholder="Название отметки" style="margin-bottom:12px;">
+    
+    <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.type">Тип повторения</label>
+    <select id="recType" onchange="onRecurrenceTypeChange()">
+        <option value="none" data-i18n="rec.none">Без повторения</option>
+        <option value="daily" data-i18n="rec.daily">Ежедневно</option>
+        <option value="weekly" data-i18n="rec.weekly">Еженедельно</option>
+        <option value="monthly" data-i18n="rec.monthly">Ежемесячно</option>
+    </select>
+    
+    <div id="recIntervalGroup" class="hidden">
+        <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.interval">Интервал (каждые N)</label>
+        <input type="number" id="recInterval" min="1" value="1" style="width:80px;">
+    </div>
+    
+    <div id="recDaysGroup" class="hidden">
+        <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.daysOfWeek">Дни недели</label>
+        <div class="rec-days-row">
+            <label class="rec-day-label"><input type="checkbox" class="rec-day-cb" value="1"> <span data-i18n="rec.dayMon">Пн</span></label>
+            <label class="rec-day-label"><input type="checkbox" class="rec-day-cb" value="2"> <span data-i18n="rec.dayTue">Вт</span></label>
+            <label class="rec-day-label"><input type="checkbox" class="rec-day-cb" value="3"> <span data-i18n="rec.dayWed">Ср</span></label>
+            <label class="rec-day-label"><input type="checkbox" class="rec-day-cb" value="4"> <span data-i18n="rec.dayThu">Чт</span></label>
+            <label class="rec-day-label"><input type="checkbox" class="rec-day-cb" value="5"> <span data-i18n="rec.dayFri">Пт</span></label>
+            <label class="rec-day-label"><input type="checkbox" class="rec-day-cb" value="6"> <span data-i18n="rec.daySat">Сб</span></label>
+            <label class="rec-day-label"><input type="checkbox" class="rec-day-cb" value="7"> <span data-i18n="rec.daySun">Вс</span></label>
+        </div>
+    </div>
+    
+    <div id="recEndGroup" class="hidden">
+        <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.endType">Окончание</label>
+        <select id="recEndType" onchange="onRecurrenceEndTypeChange()">
+            <option value="never" data-i18n="rec.endNever">Без окончания</option>
+            <option value="date" data-i18n="rec.endDate">По дате</option>
+            <option value="count" data-i18n="rec.endCount">По количеству</option>
+        </select>
+        
+        <div id="recEndDateGroup" class="hidden" style="margin-top:8px;">
+            <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.endDateLabel">Дата окончания</label>
+            <input type="date" id="recEndDate">
+        </div>
+        
+        <div id="recEndCountGroup" class="hidden" style="margin-top:8px;">
+            <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.endCountLabel">Количество повторений</label>
+            <input type="number" id="recEndCount" min="1" value="4" style="width:80px;">
+        </div>
+    </div>
+    
+    <button class="btn w-full" style="margin-top:16px;" data-i18n="rec.apply" onclick="applyRecurrenceAndCreate()">Применить и создать</button>
 </div>
 
 <div id="customDialogOverlay" class="overlay hidden" style="z-index: 9999;">
