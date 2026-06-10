@@ -50,7 +50,7 @@ namespace AskDate.Infra.Migrations
 
                     b.HasIndex("NoteId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("AskDate.Domain.Entities.Group", b =>
@@ -80,7 +80,7 @@ namespace AskDate.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Groups", (string)null);
                 });
 
             modelBuilder.Entity("AskDate.Domain.Entities.Note", b =>
@@ -131,7 +131,7 @@ namespace AskDate.Infra.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Notes");
+                    b.ToTable("Notes", (string)null);
                 });
 
             modelBuilder.Entity("AskDate.Domain.Entities.NoteConfirmation", b =>
@@ -158,7 +158,7 @@ namespace AskDate.Infra.Migrations
 
                     b.HasIndex("NoteId");
 
-                    b.ToTable("NoteConfirmations");
+                    b.ToTable("NoteConfirmations", (string)null);
                 });
 
             modelBuilder.Entity("AskDate.Domain.Entities.Participant", b =>
@@ -188,7 +188,7 @@ namespace AskDate.Infra.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Participants");
+                    b.ToTable("Participants", (string)null);
                 });
 
             modelBuilder.Entity("AskDate.Domain.Entities.Comment", b =>
