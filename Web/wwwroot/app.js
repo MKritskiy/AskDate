@@ -299,6 +299,10 @@ function toggleLanguage() {
     localStorage.setItem('askdate_lang', currentLang);
     applyTranslations();
     fetchGroups(); // Re-render groups/participants language strings
+    // Update FullCalendar locale
+    if (window.appCalendar) {
+        window.appCalendar.setOption('locale', currentLang);
+    }
 }
 
 const API_URL = '/api';
@@ -1089,6 +1093,7 @@ function initCalendar(notes) {
     window.appCalendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         firstDay: 1,
+        locale: window.currentLang || 'ru',
         height: 'auto',
         events: events,
         dayCellClassNames: function(arg) {
