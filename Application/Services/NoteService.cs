@@ -471,8 +471,9 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
                         dayNumbers = new List<int> { (int)startDate.DayOfWeek == 0 ? 7 : (int)startDate.DayOfWeek };
                     }
 
-                    // Iterate week by week starting from the parent date's next interval
-                    var weekStart = startDate.AddDays(7 * interval);
+                    // Find Monday of the startDate's week
+                    var weekStart = GetMondayOfWeek(startDate);
+
                     // Fast-forward to range start
                     if (rangeStart > weekStart)
                     {
@@ -488,6 +489,7 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
                             var dayOfWeek = dayNum == 7 ? DayOfWeek.Sunday : (DayOfWeek)dayNum;
                             var targetDate = GetNextWeekdayFromWeekStart(weekStart, dayOfWeek);
 
+                            // Skip dates on or before the parent note's own date
                             if (targetDate <= startDate) continue;
                             if (targetDate > rangeEnd) break;
                             if (seriesEnd.HasValue && targetDate > seriesEnd.Value) break;
@@ -548,6 +550,15 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
         int offset = (int)targetDay - (int)DayOfWeek.Monday;
         if (offset < 0) offset += 7;
         return weekStart.AddDays(offset);
+    }
+
+    private static DateTime GetMondayOfWeek(DateTime date)
+    {
+        int dayOfWeek = (int)date.DayOfWeek;
+        // DayOfWeek: Sunday=0, Monday=1, ..., Saturday=6
+        // Convert to Monday=0, Tuesday=1, ..., Sunday=6
+        int offset = dayOfWeek == 0 ? 6 : dayOfWeek - 1;
+        return date.Date.AddDays(-offset);
     }
 
     private static NoteDto Map(Note note)

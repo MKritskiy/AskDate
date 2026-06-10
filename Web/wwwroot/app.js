@@ -1371,6 +1371,14 @@ async function createNoteForDate(dateStr) {
 
     // Open recurrence modal
     resetRecurrenceForm();
+
+    // Auto-check the weekday of the clicked date
+    const date = new Date(dateStr + 'T00:00:00Z');
+    const jsDay = date.getUTCDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+    const isoDay = jsDay === 0 ? 7 : jsDay; // 1=Mon, ..., 7=Sun
+    const cb = document.getElementById('recDay' + isoDay);
+    if (cb) cb.checked = true;
+
     openModal('recurrenceModal');
 }
 
