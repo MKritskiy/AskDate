@@ -10,6 +10,8 @@ public interface IBaseRepository<T> where T : class
     Task<bool> DeleteByIdAsync(params object[] ids);
     Task<int?> AddAsync(T entity);
     Task<bool> UpdateAsync(T entity);
+    Task AddRangeAsync(IEnumerable<T> entities);
+    Task DeleteRangeAsync(IEnumerable<T> entities);
     Task<IEnumerable<T>> Get(Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             string includeProperties = "",

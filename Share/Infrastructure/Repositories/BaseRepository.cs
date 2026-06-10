@@ -96,5 +96,17 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
         return true;
     }
 
+    public async Task AddRangeAsync(IEnumerable<T> entities)
+    {
+        await _dbSet.AddRangeAsync(entities);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteRangeAsync(IEnumerable<T> entities)
+    {
+        _dbSet.RemoveRange(entities);
+        await _context.SaveChangesAsync();
+    }
+
     protected abstract int? GetId(T entity);
 }
