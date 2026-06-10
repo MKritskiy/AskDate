@@ -1,0 +1,82 @@
+# Production docker-compose — pulls pre-built images from Docker Hub
+# Used on the server with Watchtower for auto-updates
+#
+# Usage:
+#   docker compose -f docker-compose.prod.yml up -d
+
+version: '3.8'
+
+services:
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 60 --cleanup
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - users.web
+      - askdate.web
+    restart: unless-stopped
+
+  users.web:
+    image: ${DOCKERHUB_USERNAME:-mkritskiy}/users-web:latest
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__ConnectionString=Host=users.db;Port=5432;Database=UserDB;Username=postgres;Password=${DB_PASSWORD:-postgres}
+      - Jwt__Key=${JWT_KEY:-YourExtremelySecretKey12345!@#$}
+      - Jwt__Issuer=${JWT_ISSUER:-AskDateIssuer}
+      - Jwt__Audience=${JWT_AUDIENCE:-AskDateAudience}
+    depends_on:
+      - users.db
+    ports:
+      - "50002:8080"
+    restart: unless-stopped
+
+  users.db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: UserDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "5434:5432"
+    volumes:
+      - users_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  askdate.web:
+    image: ${DOCKERHUB_USERNAME:-mkritskiy}/askdate-web:latest
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__ConnectionString=Host=askdate.db;Port=5432;Database=AskDateDB;Username=postgres;Password=${DB_PASSWORD:-postgres}
+      - Jwt__Key=${JWT_KEY:-YourExtremelySecretKey12345!@#$}
+      - Jwt__Issuer=${JWT_ISSUER:-AskDateIssuer}
+      - Jwt__Audience=${JWT_AUDIENCE:-AskDateAudience}
+    depends_on:
+      - askdate.db
+    ports:
+      - "5146:8080"
+    restart: unless-stopped
+
+  askdate.db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: AskDateDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "5433:5432"
+    volumes:
+      - askdate_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  users_db_data:
+  askdate_db_data:
