@@ -4,7 +4,12 @@ using AskDate.Domain.Entities;
 
 namespace AskDate.Application.Services;
 
-public class NoteService(INoteRepository noteRepository, INoteConfirmationRepository noteConfirmationRepository, IGroupRepository groupRepository, IProfileApiClient profileApiClient) : INoteService
+public class NoteService(
+    INoteRepository noteRepository,
+    INoteConfirmationRepository noteConfirmationRepository,
+    IGroupRepository groupRepository,
+    IProfileApiClient profileApiClient,
+    IRealtimeNotifier realtimeNotifier) : INoteService
 {
     public async Task<List<NoteDto>> GetByGroupAsync(int groupId)
     {
@@ -42,9 +47,7 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
             // If this is a parent note with recurrence, generate virtual instances
             if (note.RecurrenceType != RecurrenceType.None && !note.ParentNoteId.HasValue)
             {
-                var parentConfs = confirmations.Where(c => c.NoteId == note.Id).Select(c => c.ProfileId).ToList();
-                var parentConfNames = parentConfs.Select(id => names.GetValueOrDefault(id, "Unknown")).ToList();
-
+                var parentTime = note.Date.TimeOfDay;
                 var rangeStart = DateTime.UtcNow.AddMonths(-3);
                 var rangeEnd = DateTime.UtcNow.AddMonths(12);
                 var virtualDates = GenerateRecurrenceDatesInRange(note, rangeStart, rangeEnd);
@@ -58,7 +61,7 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
                     var virtualDto = new NoteDto
                     {
                         Id = INoteService.EncodeVirtualId(note.Id ?? 0, vDate),
-                        Date = vDate,
+                        Date = vDate.Date + parentTime,
                         Title = note.Title,
                         GroupId = note.GroupId,
                         CreatorProfileId = note.CreatorProfileId,
@@ -115,7 +118,7 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
                         : vDate.Date.ToUniversalTime();
                     return new Note
                     {
-                        Date = utcDate,
+                        Date = utcDate.Date + note.Date.TimeOfDay,
                         Title = note.Title,
                         GroupId = note.GroupId,
                         CreatorProfileId = note.CreatorProfileId,
@@ -140,6 +143,7 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
         res.CreatorName = names.GetValueOrDefault(profileId, "Unknown");
         res.ConfirmedProfileNames = new List<string> { res.CreatorName };
 
+        await realtimeNotifier.NotifyNotesChangedAsync(groupId);
         return res;
     }
 
@@ -153,6 +157,7 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
         if (note.CreatorProfileId == profileId || (group != null && group.CreatorProfileId == profileId))
         {
             await noteRepository.DeleteByIdAsync(id);
+            await realtimeNotifier.NotifyNotesChangedAsync(note.GroupId);
         }
         else
         {
@@ -204,6 +209,7 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
                 await noteConfirmationRepository.DeleteRangeAsync(parentConfirmations);
             }
             await noteRepository.DeleteByIdAsync(parentNoteId);
+            await realtimeNotifier.NotifyNotesChangedAsync(parentNote.GroupId);
         }
     }
 
@@ -256,7 +262,7 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
 
                 newChildren.Add(new Note
                 {
-                    Date = utcDate,
+                    Date = utcDate.Date + parent.Date.TimeOfDay,
                     Title = parent.Title,
                     GroupId = parent.GroupId,
                     CreatorProfileId = parent.CreatorProfileId,
@@ -276,6 +282,8 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
                     .ToList();
                 await noteConfirmationRepository.AddRangeAsync(newConfs);
             }
+
+            await realtimeNotifier.NotifyNotesChangedAsync(parent.GroupId);
         }
     }
 
@@ -284,11 +292,25 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
         // Unconfirm the parent note itself
         await UnconfirmNoteAsync(parentNoteId, profileId);
 
-        // Unconfirm all existing real child instances
+        // Batch-remove this user's confirmations from all children (avoids N+1 queries)
         var children = await noteRepository.Get(n => n.ParentNoteId == parentNoteId);
-        foreach (var child in children)
+        var childIds = children.Select(c => c.Id ?? 0).ToList();
+
+        if (childIds.Count > 0)
         {
-            await UnconfirmNoteAsync(child.Id ?? 0, profileId);
+            var myConfs = await noteConfirmationRepository.Get(c =>
+                childIds.Contains(c.NoteId) && c.ProfileId == profileId);
+            if (myConfs.Any())
+            {
+                await noteConfirmationRepository.DeleteRangeAsync(myConfs);
+            }
+        }
+
+        // Notify once — all children share the parent's group
+        var anyNote = children.FirstOrDefault();
+        if (anyNote != null)
+        {
+            await realtimeNotifier.NotifyNotesChangedAsync(anyNote.GroupId);
         }
     }
 
@@ -298,6 +320,7 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
         if (!existing.Any())
         {
             await noteConfirmationRepository.AddAsync(new NoteConfirmation { NoteId = id, ProfileId = profileId });
+            await NotifyForNoteAsync(id);
         }
     }
 
@@ -307,6 +330,7 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
         if (existing.Any())
         {
             await noteConfirmationRepository.DeleteByIdAsync(existing.First().Id);
+            await NotifyForNoteAsync(id);
         }
     }
 
@@ -323,6 +347,7 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
 
         note.Title = string.IsNullOrWhiteSpace(title) ? null : title.Trim();
         await noteRepository.UpdateAsync(note);
+        await realtimeNotifier.NotifyNotesChangedAsync(note.GroupId);
 
         return Map(note);
     }
@@ -350,7 +375,7 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
 
         var child = new Note
         {
-            Date = utcDate,
+            Date = utcDate.Date + parent.Date.TimeOfDay,
             Title = parent.Title,
             GroupId = parent.GroupId,
             CreatorProfileId = parent.CreatorProfileId,
@@ -394,6 +419,16 @@ public class NoteService(INoteRepository noteRepository, INoteConfirmationReposi
     }
 
     // --- Private Helpers ---
+
+    /// <summary>Resolve a note's group and broadcast a notes-changed event.</summary>
+    private async Task NotifyForNoteAsync(int noteId)
+    {
+        var note = await noteRepository.GetByIdAsync(noteId);
+        if (note != null)
+        {
+            await realtimeNotifier.NotifyNotesChangedAsync(note.GroupId);
+        }
+    }
 
     private static RecurrenceType ParseRecurrenceType(string? type)
     {

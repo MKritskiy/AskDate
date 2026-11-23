@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Users.Application.Interfaces;
 using Users.Application.Models;
 using Users.Domain.Entities;
@@ -7,14 +8,21 @@ namespace Users.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProfileController(IProfileService ProfileService) : ControllerBase
+[Authorize]
+public class ProfileController(IProfileService ProfileService, IConfiguration Configuration) : ControllerBase
 {
+    private int RequesterUserId => int.TryParse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value, out var id) ? id : 0;
+    private bool RequesterIsAdmin => User.IsInRole(Users.Domain.Constants.Roles.Administrator);
+
     [HttpPost("add")]
     public async Task<IActionResult> AddProfile([FromBody] AddProfileDto addProfileDto)
     {
         try
         {
-            var profileId = await ProfileService.AddProfile(addProfileDto.ToProfileModel());
+            var profile = addProfileDto.ToProfileModel();
+            // A profile is always bound to the authenticated user
+            profile.UserId = RequesterUserId;
+            var profileId = await ProfileService.AddProfile(profile);
             return Ok(profileId);
         }
         catch (Exception ex)
@@ -30,6 +38,7 @@ public class ProfileController(IProfileService ProfileService) : ControllerBase
         {
             var current = await ProfileService.GetProfileById(profileId);
             if (current == null || current.Id == null) return NotFound();
+            if (!RequesterIsAdmin && current.UserId != RequesterUserId) return Forbid();
 
             current.FirstName = updatedProfile.FirstName;
             current.LastName = updatedProfile.LastName;
@@ -91,13 +100,26 @@ public class ProfileController(IProfileService ProfileService) : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Bulk name lookup used by the askdate.web service. Authorized by the
+    /// internal API key (service-to-service) instead of a user JWT.
+    /// </summary>
     [HttpGet("profiles")]
+    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<Profile>>> GetProfilesByIds([FromQuery] int?[] ids)
     {
         try
         {
+            var expectedKey = Configuration["Internal:ApiKey"];
+            if (!string.IsNullOrEmpty(expectedKey)
+                && Request.Headers["X-Internal-Api-Key"].FirstOrDefault() != expectedKey)
+            {
+                return Unauthorized();
+            }
+
             var profiles = await ProfileService.GetProfilesByIds(ids);
-            return Ok(profiles);
+            // Never expose userId to external callers
+            return Ok(profiles?.Select(p => new { p.Id, p.FirstName, p.LastName }));
         }
         catch (Exception ex)
         {

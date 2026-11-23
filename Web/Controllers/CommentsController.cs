@@ -2,7 +2,6 @@ using AskDate.Application.DTO;
 using AskDate.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace AskDate.Web.Controllers;
 
@@ -11,7 +10,7 @@ namespace AskDate.Web.Controllers;
 [Authorize]
 public class CommentsController(ICommentService commentService, INoteService noteService, ILogger<CommentsController> logger) : ControllerBase
 {
-    private int ProfileId => int.Parse(Request.Headers["X-Profile-Id"].FirstOrDefault() ?? "0");
+    private int ProfileId => this.GetProfileId();
 
     private async Task<int> ResolveNoteIdAsync(int noteId)
     {

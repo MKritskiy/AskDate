@@ -1,0 +1,17 @@
+{
+  "name": "AskDate",
+  "short_name": "AskDate",
+  "description": "Совместное планирование дат и событий с друзьями",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1b222d",
+  "theme_color": "#1b222d",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

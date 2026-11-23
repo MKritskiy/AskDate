@@ -4,7 +4,7 @@ namespace Users.Application.Interfaces
 {
     public interface ITokenService
     {
-        string GenerateToken(User user);
+        string GenerateToken(User user, int? profileId = null);
         string GenerateRefreshToken();
     }
 }

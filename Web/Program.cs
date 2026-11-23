@@ -1,5 +1,8 @@
+using AskDate.Application.Interfaces;
 using AskDate.Infra;
 using AskDate.Web.Configurations;
+using AskDate.Web.Hubs;
+using AskDate.Web.Services;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Extensions.Logging;
@@ -24,6 +27,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Secret not configured")))
         };
+        // SignalR passes the JWT in the query string (browsers can't set headers on WebSocket)
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                if (!string.IsNullOrEmpty(accessToken) && context.HttpContext.Request.Path.StartsWithSegments("/hub"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 
 var logger = Log.Logger = new LoggerConfiguration()
@@ -37,6 +53,9 @@ builder.AddLoggerConfigs();
 builder.Services.AddControllers();
 var appLogger = new SerilogLoggerFactory(logger)
     .CreateLogger<Program>();
+
+builder.Services.AddSignalR();
+builder.Services.AddScoped<IRealtimeNotifier, SignalRNotifier>();
 
 builder.Services.AddInfrastructureServices(builder.Configuration, appLogger);
 
@@ -102,5 +121,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<GroupHub>("/hub");
 
 app.Run();

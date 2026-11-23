@@ -11,4 +11,5 @@ public interface IGroupService
     Task RemoveParticipantAsync(int groupId, int profileId, int currentProfileId);
     Task AddParticipantAsync(int groupId, int profileId);
     Task DeleteAsync(int id, int currentProfileId);
+    Task SetAvailabilityModeAsync(int groupId, int profileId, int mode);
 }

@@ -18,9 +18,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__ConnectionString=Host=users.db;Port=5432;Database=UserDB;Username=postgres;Password=${DB_PASSWORD:-postgres}
-      - Jwt__Key=${JWT_KEY:-YourExtremelySecretKey12345!@#$}
+      - Jwt__Key=${JWT_KEY:-DevFallbackJwtKey1234567890ABCDEF1234567890}
       - Jwt__Issuer=${JWT_ISSUER:-AskDateIssuer}
       - Jwt__Audience=${JWT_AUDIENCE:-AskDateAudience}
+      - Internal__ApiKey=${INTERNAL_API_KEY:-dev-internal-key-change-me}
     depends_on:
       - users.db
     ports:
@@ -45,9 +46,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__ConnectionString=Host=askdate.db;Port=5432;Database=AskDateDB;Username=postgres;Password=${DB_PASSWORD:-postgres}
-      - Jwt__Key=${JWT_KEY:-YourExtremelySecretKey12345!@#$}
+      - Jwt__Key=${JWT_KEY:-DevFallbackJwtKey1234567890ABCDEF1234567890}
       - Jwt__Issuer=${JWT_ISSUER:-AskDateIssuer}
       - Jwt__Audience=${JWT_AUDIENCE:-AskDateAudience}
+      - Internal__ApiKey=${INTERNAL_API_KEY:-dev-internal-key-change-me}
     depends_on:
       - askdate.db
     ports:

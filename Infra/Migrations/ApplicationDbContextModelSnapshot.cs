@@ -50,7 +50,7 @@ namespace AskDate.Infra.Migrations
 
                     b.HasIndex("NoteId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("AskDate.Domain.Entities.Group", b =>
@@ -80,7 +80,7 @@ namespace AskDate.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups", (string)null);
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("AskDate.Domain.Entities.Note", b =>
@@ -131,7 +131,7 @@ namespace AskDate.Infra.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Notes", (string)null);
+                    b.ToTable("Notes");
                 });
 
             modelBuilder.Entity("AskDate.Domain.Entities.NoteConfirmation", b =>
@@ -158,7 +158,7 @@ namespace AskDate.Infra.Migrations
 
                     b.HasIndex("NoteId");
 
-                    b.ToTable("NoteConfirmations", (string)null);
+                    b.ToTable("NoteConfirmations");
                 });
 
             modelBuilder.Entity("AskDate.Domain.Entities.Participant", b =>
@@ -168,6 +168,9 @@ namespace AskDate.Infra.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
+
+                    b.Property<int>("AvailabilityMode")
+                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("timestamp with time zone");
@@ -188,7 +191,7 @@ namespace AskDate.Infra.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Participants", (string)null);
+                    b.ToTable("Participants");
                 });
 
             modelBuilder.Entity("AskDate.Domain.Entities.Comment", b =>

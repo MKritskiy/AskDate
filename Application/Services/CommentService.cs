@@ -4,7 +4,12 @@ using AskDate.Domain.Entities;
 
 namespace AskDate.Application.Services;
 
-public class CommentService(ICommentRepository commentRepository, INoteRepository noteRepository, IGroupRepository groupRepository, IProfileApiClient profileApiClient) : ICommentService
+public class CommentService(
+    ICommentRepository commentRepository,
+    INoteRepository noteRepository,
+    IGroupRepository groupRepository,
+    IProfileApiClient profileApiClient,
+    IRealtimeNotifier realtimeNotifier) : ICommentService
 {
     public async Task<List<CommentDto>> GetByNoteAsync(int noteId)
     {
@@ -46,6 +51,7 @@ public class CommentService(ICommentRepository commentRepository, INoteRepositor
         var names = await profileApiClient.GetProfileNamesAsync(new[] { profileId });
         res.AuthorName = names.GetValueOrDefault(profileId, "Unknown");
 
+        await realtimeNotifier.NotifyCommentsChangedAsync(note.GroupId, noteId);
         return res;
     }
 
@@ -58,6 +64,9 @@ public class CommentService(ICommentRepository commentRepository, INoteRepositor
         comment.Content = dto.Content;
         comment.LastModified = DateTimeOffset.UtcNow; // ensure updated
         await commentRepository.UpdateAsync(comment);
+
+        var note = await noteRepository.GetByIdAsync(comment.NoteId);
+        if (note != null) await realtimeNotifier.NotifyCommentsChangedAsync(note.GroupId, comment.NoteId);
     }
 
     public async Task DeleteAsync(int id, int profileId)
@@ -74,8 +83,9 @@ public class CommentService(ICommentRepository commentRepository, INoteRepositor
         if (comment.AuthorProfileId == profileId || group.CreatorProfileId == profileId)
         {
             await commentRepository.DeleteByIdAsync(id);
+            await realtimeNotifier.NotifyCommentsChangedAsync(note.GroupId, note.Id ?? 0);
         }
-        else 
+        else
         {
             throw new UnauthorizedAccessException("You are not allowed to delete this comment.");
         }

@@ -4,7 +4,11 @@ using AskDate.Domain.Entities;
 
 namespace AskDate.Application.Services;
 
-public class GroupService(IGroupRepository groupRepository, IParticipantRepository participantRepository, IProfileApiClient profileApiClient) : IGroupService
+public class GroupService(
+    IGroupRepository groupRepository,
+    IParticipantRepository participantRepository,
+    IProfileApiClient profileApiClient,
+    IRealtimeNotifier realtimeNotifier) : IGroupService
 {
     private async Task<GroupDto> MapWithNames(AskDate.Domain.Entities.Group group)
     {
@@ -23,12 +27,15 @@ public class GroupService(IGroupRepository groupRepository, IParticipantReposito
 
     public async Task<List<GroupDto>> GetAllAsync(int profileId)
     {
-        var allGroups = await groupRepository.Get(includeProperties: "Participants");
-        var groups = allGroups.Where(g => g.Participants.Any(p => p.ProfileId == profileId)).ToList();
+        // Filter groups in the database instead of loading everything
+        var groups = await groupRepository.Get(
+            g => g.Participants.Any(p => p.ProfileId == profileId),
+            includeProperties: "Participants");
 
         var dtos = new List<GroupDto>();
-        foreach (var g in groups) {
-             dtos.Add(await MapWithNames(g));
+        foreach (var g in groups)
+        {
+            dtos.Add(await MapWithNames(g));
         }
         return dtos;
     }
@@ -70,6 +77,7 @@ public class GroupService(IGroupRepository groupRepository, IParticipantReposito
         group.Name = dto.Name;
         await groupRepository.UpdateAsync(group);
 
+        await realtimeNotifier.NotifyGroupUpdatedAsync(id);
         return Map(group);
     }
 
@@ -79,6 +87,7 @@ public class GroupService(IGroupRepository groupRepository, IParticipantReposito
         if (group?.CreatorProfileId == currentProfileId)
         {
             await groupRepository.DeleteByIdAsync(id);
+            await realtimeNotifier.NotifyGroupUpdatedAsync(id, deleted: true);
         }
     }
 
@@ -91,6 +100,7 @@ public class GroupService(IGroupRepository groupRepository, IParticipantReposito
 
         var participant = new Participant { GroupId = groupId, ProfileId = profileId, Role = ParticipantRole.Member };
         await participantRepository.AddAsync(participant);
+        await realtimeNotifier.NotifyParticipantsChangedAsync(groupId);
     }
 
     public async Task RemoveParticipantAsync(int groupId, int profileId, int currentProfileId)
@@ -106,7 +116,22 @@ public class GroupService(IGroupRepository groupRepository, IParticipantReposito
         if (p != null)
         {
             await participantRepository.DeleteByIdAsync(p.Id);
+            await realtimeNotifier.NotifyParticipantsChangedAsync(groupId);
         }
+    }
+
+    public async Task SetAvailabilityModeAsync(int groupId, int profileId, int mode)
+    {
+        if (mode is not ((int)AvailabilityMode.Free) and not ((int)AvailabilityMode.Busy))
+            throw new ArgumentException("Invalid availability mode");
+
+        var participants = await participantRepository.Get(p => p.GroupId == groupId && p.ProfileId == profileId);
+        var participant = participants.FirstOrDefault();
+        if (participant == null) throw new Exception("You are not a participant of this group.");
+
+        participant.AvailabilityMode = (AvailabilityMode)mode;
+        await participantRepository.UpdateAsync(participant);
+        await realtimeNotifier.NotifyParticipantsChangedAsync(groupId);
     }
 
     private static GroupDto Map(AskDate.Domain.Entities.Group group)
@@ -120,8 +145,9 @@ public class GroupService(IGroupRepository groupRepository, IParticipantReposito
             Participants = group.Participants?.Select(p => new ParticipantDto
             {
                 ProfileId = p.ProfileId,
-                ProfileName = "", // Mapping skipped for simplified version
-                Role = p.Role
+                ProfileName = "", // Names resolved via ProfileApiClient
+                Role = p.Role,
+                AvailabilityMode = (int)p.AvailabilityMode
             }).ToList() ?? new List<ParticipantDto>()
         };
     }

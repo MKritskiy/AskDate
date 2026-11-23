@@ -2,7 +2,6 @@ using AskDate.Application.DTO;
 using AskDate.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace AskDate.Web.Controllers;
 
@@ -11,7 +10,7 @@ namespace AskDate.Web.Controllers;
 [Authorize]
 public class GroupsController(IGroupService groupService) : ControllerBase
 {
-    private int ProfileId => int.Parse(Request.Headers["X-Profile-Id"].FirstOrDefault() ?? "0");
+    private int ProfileId => this.GetProfileId();
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
@@ -63,5 +62,12 @@ public class GroupsController(IGroupService groupService) : ControllerBase
     {
         await groupService.RemoveParticipantAsync(id, participantId, ProfileId);
         return NoContent();
+    }
+
+    [HttpPut("{id}/availability-mode")]
+    public async Task<IActionResult> SetAvailabilityMode(int id, AvailabilityModeDto dto)
+    {
+        await groupService.SetAvailabilityModeAsync(id, ProfileId, dto.AvailabilityMode);
+        return Ok();
     }
 }

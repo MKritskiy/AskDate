@@ -26,4 +26,12 @@ public class ParticipantDto
     public int ProfileId { get; set; }
     public string ProfileName { get; set; } = string.Empty;
     public ParticipantRole Role { get; set; }
+
+    /// <summary>Free = marks mean available days; Busy = marks mean unavailable days.</summary>
+    public int AvailabilityMode { get; set; }
+}
+
+public class AvailabilityModeDto
+{
+    public int AvailabilityMode { get; set; }
 }

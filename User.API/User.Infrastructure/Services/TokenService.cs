@@ -18,15 +18,24 @@ namespace Users.Infrastructure.Services
             _configuration = configuration;
         }
 
-        public string GenerateToken(User user)
+        public string GenerateToken(User user, int? profileId = null)
         {
-            var claims = new[]
+            // Short claim names keep the payload clean for clients;
+            // JwtSecurityTokenHandler's inbound map still binds them to
+            // ClaimTypes.Name / NameIdentifier / Role during validation.
+            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()!),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Role, user.Role)
+                new("name", user.Email),
+                new("nameid", user.Id.ToString()!),
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new("role", user.Role)
             };
+
+            // Embed profileId so downstream APIs can authorize without trusting headers
+            if (profileId.HasValue && profileId.Value > 0)
+            {
+                claims.Add(new Claim("profileId", profileId.Value.ToString()));
+            }
 
             var jwtKey = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? "JwtKey");
             var key = new SymmetricSecurityKey(jwtKey);

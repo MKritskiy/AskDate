@@ -6,6 +6,10 @@ const translations = {
         'nav.profile': 'Профиль',
         'nav.logout': 'Выйти',
         'nav.menu': 'Меню',
+        'nav.admin': 'Админ',
+        'nav.notifications': 'Уведомления',
+        'realtime.online': 'Онлайн — изменения приходят мгновенно',
+        'realtime.offline': 'Нет соединения — включён резервный режим',
         'login.title': 'Вход',
         'login.email': 'Email',
         'login.password': 'Пароль',
@@ -24,10 +28,12 @@ const translations = {
         'sidebar.title': 'Мои группы',
         'group.invite': 'Приглашение:',
         'group.copyLink': 'Копировать ссылку',
+        'group.qr': 'QR-код',
         'day.participants': 'Участники',
         'day.comments': 'Комментарии',
         'day.addComment': 'Добавить комментарий...',
         'day.send': 'Отправить',
+        'day.copy': 'Копировать день',
         'modal.createTitle': 'Создать группу',
         'modal.createName': 'Имя группы',
         'modal.createBtn': 'Создать',
@@ -44,12 +50,59 @@ const translations = {
         'modal.profPassTitle': 'Обновить пароль',
         'modal.profPass': 'Новый пароль (оставьте пустым для сохранения текущего)',
         'modal.profSave': 'Сохранить',
+        'modal.adminTitle': 'Админ-панель',
+        'modal.statsTitle': 'Статистика группы',
+        'modal.qrTitle': 'QR-код приглашения',
         'dialog.ok': 'ОК',
         'dialog.cancel': 'Отмена',
+        'mode.free': 'Отмечаю свободные дни',
+        'mode.busy': 'Отмечаю занятые дни',
+        'mode.switchedFree': 'Режим: отмечаю свободные дни',
+        'mode.switchedBusy': 'Режим: отмечаю занятые дни',
+        'mode.freeTip': 'Зелёным отмечены дни, когда вы свободны',
+        'mode.busyTip': 'Красным отмечены дни, когда вы заняты',
+        'mode.shortFree': 'свободен',
+        'mode.shortBusy': 'занят',
+        'admin.selfRole': 'Нельзя менять свою роль',
+        'legend.free': 'Мои свободные дни',
+        'legend.busy': 'Мои занятые дни',
+        'legend.allFree': 'Все участники свободны',
+        'toolbar.stats': 'Статистика',
+        'toolbar.export': 'Экспорт iCal',
+        'hint.calendar': 'Кликните на день, чтобы создать отметку. Выделите диапазон мышью — создадутся сразу несколько.',
+        'empty.noGroups': 'Пока нет групп. Создайте первую или присоединитесь по приглашению.',
+        'upcoming.search': 'Поиск по названию или создателю...',
+        'admin.reset': 'Сбросить пароль',
+        'admin.delete': 'Удалить',
+        'admin.makeAdmin': 'Сделать админом',
+        'admin.removeAdmin': 'Снять админа',
+        'admin.verified': 'подтверждён',
+        'admin.notVerified': 'не подтверждён',
+        'admin.created': 'создан',
+        'admin.empty': 'Нет пользователей',
+        'admin.newPassword': 'Новый пароль для',
+        'admin.confirmDelete': 'Удалить пользователя',
+        'admin.confirmRole': 'Изменить роль пользователя',
+        'admin.toAdmin': 'на администратора?',
+        'admin.toUser': 'на обычного пользователя?',
+        'stats.total': 'Всего событий',
+        'stats.upcoming': 'Предстоящих событий',
+        'stats.participation': 'Моё участие',
+        'stats.topParticipant': 'Самый активный участник',
+        'stats.members': 'Участников в группе',
+        'stats.commonDays': 'Дней, когда свободны все',
+        'notif.enabled': 'Уведомления включены',
+        'notif.disabled': 'Уведомления выключены',
+        'notif.unsupported': 'Браузер не поддерживает уведомления',
+        'notif.blocked': 'Разрешение на уведомления не выдано',
+        'notif.newNotes': 'Обновление событий группы',
+        'notif.newComments': 'Новый комментарий',
+        'notif.groupChanged': 'Изменения в группе',
         'js.participants': 'участников',
         'js.events': 'событий',
         'js.creator': 'Создатель',
         'js.member': 'Участник',
+        'js.you': 'вы',
         'js.remove': 'Удалить',
         'js.deleteConfirm': 'Вы уверены, что хотите удалить эту группу?',
         'js.enterLink': 'Введите код или ссылку-приглашение',
@@ -57,16 +110,18 @@ const translations = {
         'js.removeConfirm': 'Удалить этого участника?',
         'js.noDiscussions': 'На этот день нет отметок.',
         'js.addNote': '+ Добавить отметку на этот день',
-'js.convenient': 'Отметить неудобным',
-  'js.markConvenient': '+ Отметить удобным',
-  'js.deleteNote': 'Удалить событие',
-  'js.deleteNoteConfirm': 'Удалить событие?',
+        'js.convenient': 'Отметить неудобным',
+        'js.markConvenient': '+ Отметить удобным',
+        'js.deleteNote': 'Удалить событие',
+        'js.deleteNoteConfirm': 'Удалить событие?',
         'js.edited': '(изменено)',
         'js.edit': 'Изменить',
         'js.deleteCommentConfirm': 'Удалить комментарий?',
         'js.cancel': 'Отмена',
         'js.save': 'Сохранить',
         'js.linkCopied': 'Ссылка скопирована!',
+        'js.copiedDay': 'День скопирован в буфер обмена',
+        'js.exportDone': 'Календарь экспортирован в iCal',
         'js.fillReg': 'Заполните все поля регистрации',
         'js.passwordMismatch': 'Пароли не совпадают',
         'js.regError': 'Ошибка регистрации: ',
@@ -89,6 +144,7 @@ const translations = {
         'rec.daily': 'Ежедневно',
         'rec.weekly': 'Еженедельно',
         'rec.monthly': 'Ежемесячно',
+        'rec.time': 'Время (необязательно)',
         'rec.interval': 'Интервал (каждые N)',
         'rec.daysOfWeek': 'Дни недели',
         'rec.dayMon': 'Пн', 'rec.dayTue': 'Вт', 'rec.dayWed': 'Ср', 'rec.dayThu': 'Чт',
@@ -114,6 +170,9 @@ const translations = {
         'js.recTimes': 'раз',
         'js.noEvents': 'Нет событий',
         'js.eventOf': 'из',
+        'js.rangeConfirm': 'Создать отметки на',
+        'js.rangeDays': 'дн. (с',
+        'js.rangeTo': 'по',
         'js.editTitle': 'Изменить название',
         'js.saveTitle': 'Сохранить',
         'js.titlePlaceholder': 'Название отметки',
@@ -122,6 +181,7 @@ const translations = {
         'nav.upcoming': 'Предстоящие',
         'upcoming.title': 'Предстоящие события',
         'upcoming.noEvents': 'Нет предстоящих событий',
+        'upcoming.noMatch': 'Ничего не найдено',
         'upcoming.participants': 'участников',
         'upcoming.comments': 'комментариев',
         'upcoming.recurring': 'Регулярное',
@@ -137,6 +197,10 @@ const translations = {
         'nav.profile': 'Profile',
         'nav.logout': 'Logout',
         'nav.menu': 'Menu',
+        'nav.admin': 'Admin',
+        'nav.notifications': 'Notifications',
+        'realtime.online': 'Online — changes arrive instantly',
+        'realtime.offline': 'No connection — fallback mode active',
         'login.title': 'Login',
         'login.email': 'Email',
         'login.password': 'Password',
@@ -155,10 +219,12 @@ const translations = {
         'sidebar.title': 'My Groups',
         'group.invite': 'Invite:',
         'group.copyLink': 'Copy Link',
+        'group.qr': 'QR code',
         'day.participants': 'Participants',
         'day.comments': 'Comments',
         'day.addComment': 'Add a comment...',
         'day.send': 'Send',
+        'day.copy': 'Copy day',
         'modal.createTitle': 'Create Group',
         'modal.createName': 'Group Name',
         'modal.createBtn': 'Create',
@@ -175,12 +241,59 @@ const translations = {
         'modal.profPassTitle': 'Update Password',
         'modal.profPass': 'New Password (leave blank to keep current)',
         'modal.profSave': 'Save',
+        'modal.adminTitle': 'Admin panel',
+        'modal.statsTitle': 'Group stats',
+        'modal.qrTitle': 'Invite QR code',
         'dialog.ok': 'OK',
         'dialog.cancel': 'Cancel',
+        'mode.free': 'I mark free days',
+        'mode.busy': 'I mark busy days',
+        'mode.switchedFree': 'Mode: marking free days',
+        'mode.switchedBusy': 'Mode: marking busy days',
+        'mode.freeTip': 'Green highlights show days you are free',
+        'mode.busyTip': 'Red highlights show days you are busy',
+        'mode.shortFree': 'free',
+        'mode.shortBusy': 'busy',
+        'admin.selfRole': 'You cannot change your own role',
+        'legend.free': 'My free days',
+        'legend.busy': 'My busy days',
+        'legend.allFree': 'Everyone is available',
+        'toolbar.stats': 'Stats',
+        'toolbar.export': 'Export iCal',
+        'hint.calendar': 'Click a day to create an event. Drag over a range to create several at once.',
+        'empty.noGroups': 'No groups yet. Create one or join via invite.',
+        'upcoming.search': 'Search by title or creator...',
+        'admin.reset': 'Reset password',
+        'admin.delete': 'Delete',
+        'admin.makeAdmin': 'Make admin',
+        'admin.removeAdmin': 'Revoke admin',
+        'admin.verified': 'verified',
+        'admin.notVerified': 'not verified',
+        'admin.created': 'created',
+        'admin.empty': 'No users',
+        'admin.newPassword': 'New password for',
+        'admin.confirmDelete': 'Delete user',
+        'admin.confirmRole': 'Change role of user',
+        'admin.toAdmin': 'to administrator?',
+        'admin.toUser': 'to regular user?',
+        'stats.total': 'Total events',
+        'stats.upcoming': 'Upcoming events',
+        'stats.participation': 'My participation',
+        'stats.topParticipant': 'Most active participant',
+        'stats.members': 'Group members',
+        'stats.commonDays': 'Days when everyone is free',
+        'notif.enabled': 'Notifications enabled',
+        'notif.disabled': 'Notifications disabled',
+        'notif.unsupported': 'Browser does not support notifications',
+        'notif.blocked': 'Notification permission denied',
+        'notif.newNotes': 'Group events updated',
+        'notif.newComments': 'New comment',
+        'notif.groupChanged': 'Group changes',
         'js.participants': 'participants',
         'js.events': 'events',
         'js.creator': 'Creator',
         'js.member': 'Member',
+        'js.you': 'you',
         'js.remove': 'Remove',
         'js.deleteConfirm': 'Are you sure you want to delete this group?',
         'js.enterLink': 'Enter valid invite link',
@@ -199,6 +312,8 @@ const translations = {
         'js.cancel': 'Cancel',
         'js.save': 'Save',
         'js.linkCopied': 'Link copied!',
+        'js.copiedDay': 'Day copied to clipboard',
+        'js.exportDone': 'Calendar exported to iCal',
         'js.fillReg': 'Fill all registration fields',
         'js.passwordMismatch': 'Passwords do not match',
         'js.regError': 'Registration failed: ',
@@ -221,6 +336,7 @@ const translations = {
         'rec.daily': 'Daily',
         'rec.weekly': 'Weekly',
         'rec.monthly': 'Monthly',
+        'rec.time': 'Time (optional)',
         'rec.interval': 'Interval (every N)',
         'rec.daysOfWeek': 'Days of week',
         'rec.dayMon': 'Mon', 'rec.dayTue': 'Tue', 'rec.dayWed': 'Wed', 'rec.dayThu': 'Thu',
@@ -246,6 +362,9 @@ const translations = {
         'js.recTimes': 'times',
         'js.noEvents': 'No events',
         'js.eventOf': 'of',
+        'js.rangeConfirm': 'Create marks for',
+        'js.rangeDays': 'days (from',
+        'js.rangeTo': 'to',
         'js.editTitle': 'Edit title',
         'js.saveTitle': 'Save',
         'js.titlePlaceholder': 'Note title',
@@ -254,6 +373,7 @@ const translations = {
         'nav.upcoming': 'Upcoming',
         'upcoming.title': 'Upcoming Events',
         'upcoming.noEvents': 'No upcoming events',
+        'upcoming.noMatch': 'Nothing found',
         'upcoming.participants': 'participants',
         'upcoming.comments': 'comments',
         'upcoming.recurring': 'Recurring',
@@ -278,10 +398,17 @@ function applyTranslations() {
         const key = el.getAttribute('data-i18n-placeholder');
         el.placeholder = getT(key);
     });
+    document.querySelectorAll('[data-title-i18n]').forEach(el => {
+        el.title = getT(el.getAttribute('data-title-i18n'));
+    });
     const langBtn = document.getElementById('langSwitchBtn');
     if (langBtn) {
         langBtn.innerText = currentLang === 'ru' ? 'EN' : 'RU';
     }
+    setRealtimeStatus(window._realtimeOnline === true);
+    updateModeTooltips();
+    updateNotifyButton();
+    updateAvailabilitySummary();
 
     if (window.appCalendar) {
         window.appCalendar.render(); // Re-render to update translations inside calendar events
@@ -312,7 +439,61 @@ window.profileId = localStorage.getItem('askdate_profileId') || '';
 window.refreshToken = localStorage.getItem('askdate_refresh_token') || '';
 window.currentGroupId = null;
 window.currentGroupCreatorId = null;
+window.currentGroup = null;
 window.autoRefreshInterval = null;
+
+// --- Small utilities ---
+function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+const AVATAR_COLORS = ['#EE6C4D', '#3D5A80', '#98C1D9', '#52B788', '#5C9CE6', '#B5838D', '#6D9773', '#C9ADA7'];
+
+function hashStr(s) {
+    let h = 0;
+    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+    return Math.abs(h);
+}
+
+function avatarHtml(name, id, small) {
+    const initials = String(name || '?').trim().split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase() || '?';
+    const color = AVATAR_COLORS[(id || hashStr(name || '?')) % AVATAR_COLORS.length];
+    return `<span class="avatar${small ? ' avatar-small' : ''}" style="background:${color}" title="${esc(name)}">${esc(initials)}</span>`;
+}
+
+function debounce(fn, ms) {
+    let t = null;
+    return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn(...args), ms);
+    };
+}
+
+function toLocalIsoStr(d) {
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+}
+
+function todayStr() {
+    return toLocalIsoStr(new Date());
+}
+
+function addDaysIso(dateStr, n) {
+    const d = new Date(dateStr + 'T00:00:00Z');
+    d.setUTCDate(d.getUTCDate() + n);
+    return d.toISOString().split('T')[0];
+}
+
+function noteTime(note) {
+    const m = String(note.date || '').match(/T(\d{2}):(\d{2})/);
+    if (!m) return null;
+    return (m[1] === '00' && m[2] === '00') ? null : `${m[1]}:${m[2]}`;
+}
+
+function formatDateHuman(dateStr, opts) {
+    const d = new Date(dateStr + 'T12:00:00');
+    const locale = currentLang === 'ru' ? 'ru-RU' : 'en-US';
+    return d.toLocaleDateString(locale, opts || { day: 'numeric', month: 'long' });
+}
 
 // --- JWT Token Helpers ---
 function parseJwt(token) {
@@ -336,12 +517,35 @@ function isTokenExpired(token) {
     return (payload.exp * 1000) < (Date.now() - 30000);
 }
 
+// JWT claim readers — tolerate both short and full-URI claim names
+function jwtRole(payload) {
+    return payload?.role || payload?.['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+}
+
+function jwtUserId(payload) {
+    return payload?.nameid || payload?.['http://schemas.microsoft.com/ws/2008/06/identity/claims/nameidentifier'];
+}
+
+function isAdminUser() {
+    const payload = parseJwt(window.token);
+    return !!payload && jwtRole(payload) === 'Administrator';
+}
+
+function updateAdminVisibility() {
+    const admin = isAdminUser();
+    const adminBtn = document.getElementById('adminBtn');
+    const adminLink = document.getElementById('adminMenuLink');
+    if (adminBtn) adminBtn.classList.toggle('hidden', !admin);
+    if (adminLink) adminLink.classList.toggle('hidden', !admin);
+}
+
 function forceLogout(showMessage) {
     window.token = '';
     window.profileId = '';
     window.refreshToken = '';
     window.currentGroupId = null;
     window.currentGroupCreatorId = null;
+    window.currentGroup = null;
     localStorage.removeItem('askdate_token');
     localStorage.removeItem('askdate_profileId');
     localStorage.removeItem('askdate_refresh_token');
@@ -350,6 +554,13 @@ function forceLogout(showMessage) {
         clearInterval(window.autoRefreshInterval);
         window.autoRefreshInterval = null;
     }
+    stopRealtime();
+    updateAdminVisibility();
+    setRealtimeStatus(false);
+    commentsCache.clear();
+    document.getElementById('groupDetails').classList.add('hidden');
+    document.getElementById('calendarLegend').classList.add('hidden');
+    document.getElementById('dayPanel').classList.add('hidden');
     showView('loginView');
     if (showMessage) {
         appAlert(currentLang === 'ru' ? 'Сессия истекла. Пожалуйста, войдите заново.' : 'Session expired. Please log in again.');
@@ -374,6 +585,7 @@ async function tryRefreshToken() {
         window.refreshToken = data.refreshToken;
         localStorage.setItem('askdate_token', data.token);
         localStorage.setItem('askdate_refresh_token', data.refreshToken);
+        updateAdminVisibility();
         return true;
     } catch (e) {
         console.error('Token refresh failed:', e);
@@ -423,8 +635,34 @@ window.appConfirm = function(msg) {
     });
 };
 
+function showToast(msg, type) {
+    const toast = document.createElement('div');
+    toast.className = 'toast' + (type ? ` toast-${type}` : '');
+    toast.innerText = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.5s';
+        setTimeout(() => toast.remove(), 500);
+    }, 2000);
+}
+
 function toggleMobileMenu() {
     document.getElementById('mobileMenuDropdown').classList.toggle('hidden');
+}
+
+// --- Skeleton loaders ---
+function showGroupsSkeleton() {
+    const list = document.getElementById('groupsList');
+    list.innerHTML = Array.from({ length: 3 }, () => '<li class="skeleton skeleton-line" style="padding:0;"></li>').join('');
+}
+
+function showCalendarSkeleton() {
+    document.getElementById('calendarSkeleton').classList.remove('hidden');
+}
+
+function hideCalendarSkeleton() {
+    document.getElementById('calendarSkeleton').classList.add('hidden');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -435,6 +673,13 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('pending_join', joinCode);
         window.history.replaceState({}, document.title, window.location.pathname);
     }
+
+    const searchInput = document.getElementById('upcomingSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(() => renderUpcomingEvents(), 200));
+    }
+
+    setupKeyboardShortcuts();
 
     if (window.token && window.profileId) {
         if (isTokenExpired(window.token)) {
@@ -467,30 +712,34 @@ function closeAllModals() {
     document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
 }
 
-function showToast(msg) {
-    const toast = document.createElement('div');
-    toast.style.position = 'fixed';
-    toast.style.bottom = '20px';
-    toast.style.right = '20px';
-    toast.style.background = 'var(--accent)';
-    toast.style.color = '#000';
-    toast.style.padding = '10px 20px';
-    toast.style.borderRadius = 'var(--radius)';
-    toast.style.zIndex = '3000';
-    toast.style.boxShadow = '0 4px 6px rgba(0,0,0,0.3)';
-    toast.innerText = msg;
-    document.body.appendChild(toast);
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.5s';
-        setTimeout(() => toast.remove(), 500);
-    }, 2000);
-}
-
 function copyInviteLink() {
     const link = document.getElementById('groupInviteLink').innerText;
     const fullUrl = `${window.location.origin}/?join=${link}`;
-    navigator.clipboard.writeText(fullUrl).then(() => showToast(getT('js.linkCopied')));
+    navigator.clipboard.writeText(fullUrl).then(() => showToast(getT('js.linkCopied'), 'success'));
+}
+
+function showInviteQr() {
+    const link = document.getElementById('groupInviteLink').innerText;
+    if (!link) return;
+    document.getElementById('qrInviteCode').innerText = link;
+    const container = document.getElementById('qrContainer');
+    container.innerHTML = '';
+    if (typeof QRCode === 'undefined') {
+        showToast('QR library failed to load', 'error');
+        return;
+    }
+    openModal('qrModal');
+    // Render after the modal becomes visible (needs layout)
+    setTimeout(() => {
+        new QRCode(container, {
+            text: `${window.location.origin}/?join=${link}`,
+            width: 200,
+            height: 200,
+            colorDark: '#293241',
+            colorLight: '#E0FBFC',
+            correctLevel: QRCode.CorrectLevel.M
+        });
+    }, 50);
 }
 
 async function fetchCurrentUserName() {
@@ -502,23 +751,17 @@ async function fetchCurrentUserName() {
                 return;
             }
         }
-        const res = await fetch(`${USERS_API_URL}/Profile/${window.profileId}`, {
-            headers: { 'Authorization': `Bearer ${window.token}` }
-        });
+        const headers = { 'Authorization': `Bearer ${window.token}` };
+        let res = await fetch(`${USERS_API_URL}/Profile/${window.profileId}`, { headers });
         if (res.status === 401) {
             const refreshed = await tryRefreshToken();
             if (refreshed) {
-                const retryRes = await fetch(`${USERS_API_URL}/Profile/${window.profileId}`, {
-                    headers: { 'Authorization': `Bearer ${window.token}` }
-                });
-                if (retryRes.ok) {
-                    const profile = await retryRes.json();
-                    document.getElementById('headerUserName').innerText = `${profile.firstName} ${profile.lastName}`;
-                }
+                headers['Authorization'] = `Bearer ${window.token}`;
+                res = await fetch(`${USERS_API_URL}/Profile/${window.profileId}`, { headers });
             } else {
                 forceLogout(true);
+                return;
             }
-            return;
         }
         if (res.ok) {
             const profile = await res.json();
@@ -577,10 +820,13 @@ async function registerUser() {
 
         const loginData = await loginRes.json();
 
-        // Add profile
+        // Add profile (Profile API now requires authentication)
         const profileRes = await fetch(`${USERS_API_URL}/Profile/add`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${loginData.token}`
+            },
             body: JSON.stringify({
                 firstName,
                 lastName,
@@ -621,8 +867,10 @@ async function loginUser() {
 
         const data = await res.json();
 
-        // Fetch profiles
-        const profRes = await fetch(`${USERS_API_URL}/Profile/user/${data.userId}`);
+        // Fetch profiles (authorized)
+        const profRes = await fetch(`${USERS_API_URL}/Profile/user/${data.userId}`, {
+            headers: { 'Authorization': `Bearer ${data.token}` }
+        });
         if (!profRes.ok) return appAlert(getT('js.profNotFound'));
 
         const profiles = await profRes.json();
@@ -642,6 +890,7 @@ function setTokens(t, pId, rt) {
     localStorage.setItem('askdate_token', window.token);
     localStorage.setItem('askdate_profileId', window.profileId);
     if (rt) localStorage.setItem('askdate_refresh_token', rt);
+    updateAdminVisibility();
     checkAuth();
 }
 
@@ -651,6 +900,7 @@ function logoutUser() {
     window.refreshToken = '';
     window.currentGroupId = null;
     window.currentGroupCreatorId = null;
+    window.currentGroup = null;
     localStorage.removeItem('askdate_token');
     localStorage.removeItem('askdate_profileId');
     localStorage.removeItem('askdate_refresh_token');
@@ -659,6 +909,13 @@ function logoutUser() {
         clearInterval(window.autoRefreshInterval);
         window.autoRefreshInterval = null;
     }
+    stopRealtime();
+    updateAdminVisibility();
+    setRealtimeStatus(false);
+    commentsCache.clear();
+    document.getElementById('groupDetails').classList.add('hidden');
+    document.getElementById('calendarLegend').classList.add('hidden');
+    document.getElementById('dayPanel').classList.add('hidden');
     showView('loginView');
 }
 
@@ -674,7 +931,9 @@ async function checkAuth() {
             }
         }
         showView('mainView');
+        updateAdminVisibility();
         fetchCurrentUserName();
+        ensureRealtime();
 
         const pendingJoin = localStorage.getItem('pending_join');
         if (pendingJoin) {
@@ -719,12 +978,12 @@ async function apiCall(endpoint, method = 'GET', body = null) {
         method,
         headers
     };
-    
+
     if (body) {
         options.body = JSON.stringify(body);
     }
 
-    const response = await fetch(`${API_URL}${endpoint}`, options);
+    let response = await fetch(`${API_URL}${endpoint}`, options);
     if (!response.ok) {
         if (response.status === 401) {
             // Try refresh token before force logout
@@ -732,28 +991,19 @@ async function apiCall(endpoint, method = 'GET', body = null) {
             if (refreshed) {
                 // Retry the original request with new token
                 options.headers['Authorization'] = `Bearer ${window.token}`;
-                const retryResponse = await fetch(`${API_URL}${endpoint}`, options);
-                if (!retryResponse.ok) {
-                    if (retryResponse.status === 401) {
-                        forceLogout(true);
-                    } else if (retryResponse.status === 204) {
-                        return null;
-                    } else {
-                        appAlert(`Ошибка: ${retryResponse.status} ${retryResponse.statusText}`);
-                    }
-                    return false;
-                }
-                if (retryResponse.status === 204) return true;
-                const retryText = await retryResponse.text();
-                return retryText ? JSON.parse(retryText) : true;
+                response = await fetch(`${API_URL}${endpoint}`, options);
+            } else {
+                forceLogout(true);
+                return false;
             }
-            forceLogout(true);
-        } else if (response.status === 204) {
-            return null; // OK no content
-        } else {
-            appAlert(`Ошибка: ${response.status} ${response.statusText}`);
         }
-        return false;
+        if (!response.ok) {
+            if (response.status === 204) {
+                return null; // OK no content
+            }
+            appAlert(`Ошибка: ${response.status} ${response.statusText}`);
+            return false;
+        }
     }
 
     if (response.status === 204) return true; // changed from null so if checks pass
@@ -762,13 +1012,51 @@ async function apiCall(endpoint, method = 'GET', body = null) {
     return text ? JSON.parse(text) : true;
 }
 
+// Authorized call to the Users API (admin panel, profile)
+async function usersApi(endpoint, method = 'GET', body = null) {
+    if (isTokenExpired(window.token)) {
+        const refreshed = await tryRefreshToken();
+        if (!refreshed) {
+            forceLogout(true);
+            return null;
+        }
+    }
+
+    const headers = { 'Authorization': `Bearer ${window.token}` };
+    if (body) headers['Content-Type'] = 'application/json';
+
+    const options = { method, headers };
+    if (body) options.body = JSON.stringify(body);
+
+    let response = await fetch(`${USERS_API_URL}${endpoint}`, options);
+    if (response.status === 401) {
+        if (await tryRefreshToken()) {
+            headers['Authorization'] = `Bearer ${window.token}`;
+            response = await fetch(`${USERS_API_URL}${endpoint}`, options);
+        } else {
+            forceLogout(true);
+            return null;
+        }
+    }
+    if (!response.ok) {
+        appAlert(`Ошибка: ${response.status} ${response.statusText}`);
+        return null;
+    }
+    const text = await response.text();
+    return text ? JSON.parse(text) : true;
+}
+
 // --- Groups ---
 async function fetchGroups() {
+    showGroupsSkeleton();
     const groups = await apiCall('/groups');
-    if (!groups) return;
+    if (!groups) { hideGroupsSkeleton(); return; }
 
     const list = document.getElementById('groupsList');
     list.innerHTML = '';
+    const emptyState = document.getElementById('groupsEmpty');
+    if (emptyState) emptyState.classList.toggle('hidden', groups.length > 0);
+
     groups.forEach(g => {
         const li = document.createElement('li');
         li.className = 'list-item';
@@ -785,6 +1073,13 @@ async function fetchGroups() {
     }
 }
 
+function hideGroupsSkeleton() {
+    const list = document.getElementById('groupsList');
+    if (list && list.querySelector('.skeleton')) {
+        list.innerHTML = '';
+    }
+}
+
 async function createGroup() {
     const name = document.getElementById('newGroupName').value.trim();
     if (!name) return;
@@ -794,6 +1089,7 @@ async function createGroup() {
         document.getElementById('newGroupName').value = '';
         closeAllModals();
         fetchGroups();
+        if (group.id) loadGroup(group.id);
     }
 }
 
@@ -803,13 +1099,29 @@ async function loadGroup(id) {
 
     if (document.getElementById('dayPanel')) closeDayPanel();
 
+    // Switch realtime channel
+    joinRealtimeGroup(id);
+
     window.currentGroupId = id;
     localStorage.setItem('askdate_currentGroupId', id);
+    window.currentGroup = group;
     window.currentGroupCreatorId = group.creatorProfileId;
 
+    document.getElementById('groupDetails').classList.remove('hidden');
+    renderGroupHeader(group);
+    renderParticipantsModal(group);
+    renderAvailabilitySwitch();
+    updateLegendVisibility();
+
+    // Show calendar hint only while the group has no notes
+    document.getElementById('calendarHint').classList.toggle('hidden', (window.currentNotes || []).length > 0);
+
+    fetchNotes();
+}
+
+function renderGroupHeader(group) {
     const isAdmin = String(window.profileId) === String(group.creatorProfileId);
 
-    document.getElementById('groupDetails').classList.remove('hidden');
     document.getElementById('groupTitle').innerText = group.name;
     document.getElementById('editGroupNameInput').value = group.name;
     document.getElementById('saveGroupNameBtn').style.display = 'none';
@@ -820,24 +1132,128 @@ async function loadGroup(id) {
     if (deleteGroupBtn) {
         deleteGroupBtn.classList.toggle('hidden', !isAdmin);
     }
+}
 
-    // update participants for modal
+function renderParticipantsModal(group) {
+    const isAdmin = String(window.profileId) === String(group.creatorProfileId);
     const pList = document.getElementById('modalGroupParticipantsList');
     pList.innerHTML = '';
 
     (group.participants || []).forEach(p => {
         const canDelete = isAdmin || String(p.profileId) === String(window.profileId);
-
         const roleLabel = p.role === 1 ? getT('js.creator') : getT('js.member');
+        const modeLabel = p.availabilityMode === 1 ? getT('mode.shortBusy') : getT('mode.shortFree');
 
         const liModal = document.createElement('li');
         liModal.className = 'list-item';
-        liModal.innerHTML = `<span>${p.profileName} (${roleLabel})</span> 
-        ${canDelete ? `<span style="cursor:pointer; color:var(--danger); font-size:12px; text-decoration:underline;" onclick="event.stopPropagation(); removeParticipant(${p.profileId})" title="${getT('js.remove')}">${getT('js.remove')}</span>` : ''}`;
+        liModal.innerHTML = `<span class="participant-row">${avatarHtml(p.profileName, p.profileId)}<span class="participant-name">${esc(p.profileName)} (${roleLabel})</span></span>
+        <span class="flex-row" style="gap:10px;">
+            <span class="text-small" style="font-size:10px; opacity:0.7;" title="${getT(p.availabilityMode === 1 ? 'mode.busyTip' : 'mode.freeTip')}">${esc(modeLabel)}</span>
+            ${canDelete ? `<span style="cursor:pointer; color:var(--danger); font-size:12px; text-decoration:underline;" onclick="event.stopPropagation(); removeParticipant(${p.profileId})" title="${getT('js.remove')}">${getT('js.remove')}</span>` : ''}
+        </span>`;
         pList.appendChild(liModal);
     });
+}
 
-    fetchNotes();
+// --- Availability mode (free/busy marking) ---
+function getMyAvailabilityMode() {
+    const participants = (window.currentGroup && window.currentGroup.participants) || [];
+    const me = participants.find(p => String(p.profileId) === String(window.profileId));
+    return me ? (me.availabilityMode || 0) : 0;
+}
+
+function renderAvailabilitySwitch() {
+    const mode = getMyAvailabilityMode();
+    const freeBtn = document.getElementById('modeFreeBtn');
+    const busyBtn = document.getElementById('modeBusyBtn');
+    if (!freeBtn || !busyBtn) return;
+    freeBtn.classList.toggle('active', mode !== 1);
+    freeBtn.classList.toggle('free-active', mode !== 1);
+    busyBtn.classList.toggle('active', mode === 1);
+    busyBtn.classList.toggle('busy-active', mode === 1);
+    updateModeTooltips();
+}
+
+function updateModeTooltips() {
+    const sw = document.getElementById('availabilitySwitch');
+    if (sw) sw.title = getT(getMyAvailabilityMode() === 1 ? 'mode.busyTip' : 'mode.freeTip');
+}
+
+async function setAvailabilityMode(mode) {
+    if (!window.currentGroupId) return;
+    if (getMyAvailabilityMode() === mode) return;
+
+    const result = await apiCall(`/groups/${window.currentGroupId}/availability-mode`, 'PUT', { availabilityMode: mode });
+    if (result === false) return;
+
+    // Optimistic update — realtime broadcast will confirm
+    const me = ((window.currentGroup && window.currentGroup.participants) || []).find(p => String(p.profileId) === String(window.profileId));
+    if (me) me.availabilityMode = mode;
+
+    renderAvailabilitySwitch();
+    computeAvailability();
+    if (window.appCalendar) window.appCalendar.render();
+    updateAvailabilitySummary();
+    updateLegendVisibility();
+    showToast(getT(mode === 1 ? 'mode.switchedBusy' : 'mode.switchedFree'), 'success');
+}
+
+function updateLegendVisibility() {
+    const legend = document.getElementById('calendarLegend');
+    if (legend) legend.classList.toggle('hidden', !window.currentGroupId);
+}
+
+/**
+ * Computes per-day availability colors:
+ * - my marks colored by my mode (free = green, busy = red)
+ * - days where every group member is available get an outline
+ */
+function computeAvailability() {
+    window._dayColor = { free: new Set(), busy: new Set() };
+    window._allFreeDates = new Set();
+    if (!window.currentGroupId || !window.currentGroup) return;
+
+    const participants = window.currentGroup.participants || [];
+    const myMode = getMyAvailabilityMode();
+    const profileIdStr = String(window.profileId);
+    const notesByDate = groupNotesByDate();
+
+    for (const [dateStr, dayNotes] of Object.entries(notesByDate)) {
+        const confirmedMe = dayNotes.some(n => (n.confirmedProfileIds || []).map(String).includes(profileIdStr));
+        if (confirmedMe) {
+            (myMode === 1 ? window._dayColor.busy : window._dayColor.free).add(dateStr);
+        }
+
+        if (participants.length > 0) {
+            const allFree = participants.every(p => {
+                const confirmed = dayNotes.some(n => (n.confirmedProfileIds || []).includes(p.profileId));
+                return p.availabilityMode === 1 ? !confirmed : confirmed;
+            });
+            if (allFree) window._allFreeDates.add(dateStr);
+        }
+    }
+}
+
+function updateAvailabilitySummary() {
+    const el = document.getElementById('availabilitySummary');
+    if (!el || !window.currentGroupId || !window._dayColor) { if (el) el.innerText = ''; return; }
+
+    const cal = window.appCalendar;
+    if (!cal) { el.innerText = ''; return; }
+    const view = cal.view;
+    if (!view || !view.activeStart) { el.innerText = ''; return; }
+
+    const startStr = toLocalIsoStr(view.activeStart);
+    const endStr = toLocalIsoStr(view.activeEnd);
+
+    const countInRange = set => [...set].filter(d => d >= startStr && d < endStr).length;
+    const free = countInRange(window._dayColor.free);
+    const busy = countInRange(window._dayColor.busy);
+    const common = countInRange(window._allFreeDates);
+
+    el.innerText = currentLang === 'ru'
+        ? `В этом месяце: ${free} свободных · ${busy} занятых · ${common} общих`
+        : `This month: ${free} free · ${busy} busy · ${common} common`;
 }
 
 // --- Tab switching (calendar / upcoming events) ---
@@ -861,20 +1277,39 @@ function switchTab(tab) {
 window._upcomingShownCount = 0;
 const UPCOMING_PAGE_SIZE = 50;
 
+function getUpcomingFilter() {
+    const input = document.getElementById('upcomingSearch');
+    return input ? input.value.trim().toLowerCase() : '';
+}
+
 function renderUpcomingEvents() {
     const container = document.getElementById('upcomingEventsList');
     if (!container) return;
 
     const notes = window.currentNotes || [];
-    const today = new Date().toISOString().split('T')[0];
+    const today = todayStr();
+    const filter = getUpcomingFilter();
 
-    // Filter to upcoming (today and future), sort by date
-    let upcoming = notes.filter(n => n.date.split('T')[0] >= today);
+    // Filter to upcoming (today and future), sort by date, apply search filter
+    let upcoming = notes
+        .filter(n => n.date.split('T')[0] >= today)
+        .filter(n => {
+            if (!filter) return true;
+            const haystack = `${n.title || ''} ${n.creatorName || ''}`.toLowerCase();
+            return haystack.includes(filter);
+        });
     upcoming.sort((a, b) => a.date.split('T')[0].localeCompare(b.date.split('T')[0]));
 
     // Store for lazy loading
     window._upcomingAll = upcoming;
     window._upcomingShownCount = 0;
+
+    const countEl = document.getElementById('upcomingCount');
+    if (countEl) {
+        countEl.innerText = filter
+            ? `${upcoming.length} ${getT('js.eventOf')} ${notes.filter(n => n.date.split('T')[0] >= today).length}`
+            : `${upcoming.length}`;
+    }
 
     appendUpcomingEvents(container, true);
 }
@@ -886,7 +1321,8 @@ function appendUpcomingEvents(container, isInitial) {
     const end = Math.min(start + pageSize, upcoming.length);
 
     if (isInitial && upcoming.length === 0) {
-        container.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--text-secondary);">${getT('upcoming.noEvents')}</div>`;
+        const filter = getUpcomingFilter();
+        container.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--text-secondary);">${filter ? getT('upcoming.noMatch') : getT('upcoming.noEvents')}</div>`;
         return;
     }
 
@@ -916,7 +1352,7 @@ function appendUpcomingEvents(container, isInitial) {
             dateLabel = dateObj.toLocaleDateString(currentLang === 'ru' ? 'ru-RU' : 'en-US', { weekday: 'short', day: 'numeric', month: 'short' });
         }
 
-        html += `<div class="upcoming-date-header">${dateLabel}</div>`;
+        html += `<div class="upcoming-date-header">${esc(dateLabel)}</div>`;
         html += `<div class="upcoming-date-group">`;
 
         grouped[dateStr].forEach(note => {
@@ -925,27 +1361,29 @@ function appendUpcomingEvents(container, isInitial) {
             const participantCount = note.confirmedProfileNames ? note.confirmedProfileNames.length : 0;
             const commentCount = note.comments ? note.comments.length : 0;
             const hasTitle = note.title && note.title.trim();
+            const time = noteTime(note);
 
             html += `
             <div class="upcoming-card ${isRecurring ? 'upcoming-card-recurring' : ''}" onclick="openDayPanelFromUpcoming('${dateStr}', ${note.id})">
                 <div class="upcoming-card-header">
-                    ${hasTitle ? `<span class="upcoming-card-title">${note.title}</span>` : ''}
-                    ${isRecurring ? `<span class="upcoming-badge recurring-badge">&#x21bb; ${getT('upcoming.recurring')}</span>` : ''}
+                    ${hasTitle ? `<span class="upcoming-card-title">${esc(note.title)}</span>` : ''}
+                    ${time ? `<span class="time-chip">${esc(time)}</span>` : ''}
+                    ${isRecurring ? `<span class="upcoming-badge recurring-badge">&#x21bb; ${esc(getT('upcoming.recurring'))}</span>` : ''}
                 </div>
                 <div class="upcoming-card-body">
                     <div class="upcoming-card-info">
                         <svg class="upcoming-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        ${participantCount} ${getT('upcoming.participants')}
+                        ${participantCount} ${esc(getT('upcoming.participants'))}
                     </div>
                     <div class="upcoming-card-info">
                         <svg class="upcoming-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                        ${commentCount} ${getT('upcoming.comments')}
+                        ${commentCount} ${esc(getT('upcoming.comments'))}
                     </div>
                     <div class="upcoming-card-info">
-                        <span class="upcoming-status ${isConfirmed ? 'status-confirmed' : 'status-not-confirmed'}">${isConfirmed ? getT('upcoming.confirmed') : getT('upcoming.notConfirmed')}</span>
+                        <span class="upcoming-status ${isConfirmed ? 'status-confirmed' : 'status-not-confirmed'}">${esc(isConfirmed ? getT('upcoming.confirmed') : getT('upcoming.notConfirmed'))}</span>
                     </div>
                 </div>
-                ${!hasTitle ? `<div class="upcoming-card-creator">${note.creatorName || ''}</div>` : ''}
+                ${!hasTitle ? `<div class="upcoming-card-creator">${esc(note.creatorName || '')}</div>` : ''}
             </div>`;
         });
 
@@ -978,6 +1416,7 @@ function appendUpcomingEvents(container, isInitial) {
 window.appendUpcomingEvents = appendUpcomingEvents;
 
 function openDayPanelFromUpcoming(dateStr, noteId) {
+    switchTab('calendar');
     openDayPanel(dateStr);
 }
 
@@ -1001,6 +1440,7 @@ async function deleteCurrentGroup() {
     document.getElementById('groupDetails').classList.add('hidden');
     closeAllModals();
     window.currentGroupId = null;
+    window.currentGroup = null;
     localStorage.removeItem('askdate_currentGroupId');
     fetchGroups();
 }
@@ -1040,20 +1480,30 @@ async function fetchNotes() {
     if (!notes) return;
 
     window.currentNotes = notes;
+    computeAvailability();
     initCalendar(notes);
+    updateAvailabilitySummary();
+    document.getElementById('calendarHint').classList.toggle('hidden', notes.length > 0);
+    updateLegendVisibility();
+    refreshOpenDayPanel();
     if (window._activeTab === 'upcoming') renderUpcomingEvents();
+}
+
+function groupNotesByDate() {
+    const map = {};
+    (window.currentNotes || []).forEach(n => {
+        const d = n.date.split('T')[0];
+        if (!map[d]) map[d] = [];
+        map[d].push(n);
+    });
+    return map;
 }
 
 function initCalendar(notes) {
     const calendarEl = document.getElementById('calendar');
 
     // Group notes by date
-    const notesByDate = {};
-    notes.forEach(n => {
-        const d = n.date.split('T')[0];
-        if (!notesByDate[d]) notesByDate[d] = [];
-        notesByDate[d].push(n);
-    });
+    const notesByDate = groupNotesByDate();
 
     // Create one event per date: multi-event days show count of events, single shows participants
     const events = Object.entries(notesByDate).map(([date, dayNotes]) => {
@@ -1096,12 +1546,21 @@ function initCalendar(notes) {
         locale: window.currentLang || 'ru',
         height: 'auto',
         events: events,
+        // Scroll to current month on first load (today is visible by default in month view)
+        nowIndicator: false,
+        // Drag-select a range of days to create several marks at once
+        selectable: true,
+        selectMirror: true,
+        select: onCalendarSelect,
+        datesSet: () => updateAvailabilitySummary(),
         dayCellClassNames: function(arg) {
             const classes = [];
-            // Parse local date strictly without time changes
-            const dateLocal = new Date(arg.date.getTime() - (arg.date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-            const hasEvent = window.currentNotes.some(n => n.date.split('T')[0] === dateLocal);
-            if (hasEvent) classes.push('calendar-marked');
+            const dateLocal = toLocalIsoStr(arg.date);
+            if (window._dayColor) {
+                if (window._dayColor.free.has(dateLocal)) classes.push('day-free');
+                if (window._dayColor.busy.has(dateLocal)) classes.push('day-busy');
+                if (window._allFreeDates && window._allFreeDates.has(dateLocal)) classes.push('day-all-free');
+            }
             return classes;
         },
         dateClick: function(info) {
@@ -1115,7 +1574,6 @@ function initCalendar(notes) {
         },
         eventClick: function(info) {
             const dateStr = info.event.startStr;
-            const dayNotes = window.currentNotes.filter(n => n.date.split('T')[0] === dateStr);
             openDayPanel(dateStr);
         },
         eventContent: function(arg) {
@@ -1124,17 +1582,45 @@ function initCalendar(notes) {
             const recIcon = isRec ? '&#x21bb; ' : '';
             if (arg.event.extendedProps.isMulti) {
                 const count = arg.event.extendedProps.count;
-                return { html: `<div style="padding: 2px; text-align: center;"><span class="fc-event-badge${recCls}" title="${count} ${getT('js.events')}">${recIcon}${count} <span class="badge-text">${getT('js.events')}</span></span></div>` };
+                return { html: `<div style="padding: 2px; text-align: center;"><span class="fc-event-badge${recCls}" title="${count} ${esc(getT('js.events'))}">${recIcon}${count} <span class="badge-text">${esc(getT('js.events'))}</span></span></div>` };
             } else {
                 const note = arg.event.extendedProps.note;
                 const count = note.confirmedProfileNames ? note.confirmedProfileNames.length : 0;
-                return { html: `<div style="padding: 2px; text-align: center;"><span class="fc-event-badge${recCls}" title="${count} ${getT('js.participants')}">${recIcon}${count} <span class="badge-text">${getT('js.participants')}</span></span></div>` };
+                const time = noteTime(note);
+                return { html: `<div style="padding: 2px; text-align: center;"><span class="fc-event-badge${recCls}" title="${count} ${esc(getT('js.participants'))}">${time ? esc(time) + ' · ' : ''}${recIcon}${count} <span class="badge-text">${esc(getT('js.participants'))}</span></span></div>` };
             }
         }
-            });
+    });
     window.appCalendar.render();
 
     document.getElementById('dayPanel').classList.add('hidden');
+}
+
+// Drag-select handler: create marks for the whole selected range at once
+async function onCalendarSelect(info) {
+    const startStr = info.startStr.slice(0, 10);
+    const endStr = info.endStr.slice(0, 10); // exclusive
+    const days = Math.round((new Date(endStr + 'T00:00:00Z') - new Date(startStr + 'T00:00:00Z')) / 86400000);
+
+    if (days < 1) return;
+
+    if (days === 1) {
+        // Single-day selection behaves like a click on an empty day
+        createNoteForDate(startStr);
+        return;
+    }
+
+    const confirmed = await appConfirm(
+        `${getT('js.rangeConfirm')} ${days} ${getT('js.rangeDays')} ${formatDateHuman(startStr)} ${getT('js.rangeTo')} ${formatDateHuman(addDaysIso(endStr, -1))})?`
+    );
+    if (!confirmed || !window.currentGroupId) return;
+
+    for (let i = 0; i < days; i++) {
+        const dateStr = addDaysIso(startStr, i);
+        await apiCall(`/groups/${window.currentGroupId}/notes`, 'POST', { date: `${dateStr}T00:00:00Z` });
+    }
+    await fetchNotes();
+    openDayPanel(startStr);
 }
 
 function closeDayPanel() {
@@ -1174,7 +1660,7 @@ function updateDayNavButtons() {
 
 function openDayPanel(dateStr) {
     document.getElementById('dayPanel').classList.remove('hidden');
-    document.getElementById('dayTitle').innerText = dateStr;
+    document.getElementById('dayTitle').innerText = formatDateHuman(dateStr, { weekday: 'long', day: 'numeric', month: 'long' });
     window._currentDayDateStr = dateStr;
 
     // Find ALL notes for this date
@@ -1198,14 +1684,15 @@ function openDayPanel(dateStr) {
         li.innerText = getT('js.noEvents');
         eventsList.appendChild(li);
     } else {
-        dayNotes.forEach((n, idx) => {
+        dayNotes.forEach((n) => {
             const li = document.createElement('li');
             li.className = 'list-item day-event-item';
             li.dataset.noteId = n.id;
             const confirmCount = n.confirmedProfileNames ? n.confirmedProfileNames.length : 0;
             const isRecurring = (n.recurrenceType && n.recurrenceType !== 'none') || n.parentNoteId || n.isVirtual;
-            const titleText = n.title ? n.title : `${confirmCount} ${getT('js.participants')}`;
-            li.innerHTML = `<span class="day-event-label">${titleText}${isRecurring ? ' <span style="color:var(--accent);font-size:10px;">&#x21bb;</span>' : ''}</span>`;
+            const time = noteTime(n);
+            const titleText = n.title ? esc(n.title) : `${confirmCount} ${getT('js.participants')}`;
+            li.innerHTML = `<span class="day-event-label">${time ? `<span class="time-chip">${esc(time)}</span> ` : ''}${titleText}${isRecurring ? ' <span style="color:var(--accent);font-size:10px;">&#x21bb;</span>' : ''}</span>`;
             li.onclick = () => selectNoteInPanel(n.id);
             eventsList.appendChild(li);
         });
@@ -1227,6 +1714,32 @@ function openDayPanel(dateStr) {
 
     // Update prev/next navigation buttons
     updateDayNavButtons();
+}
+
+/**
+ * Refreshes the open day panel after data changed, preserving selection.
+ * Skipped while the user is editing the note title (like the old poll guard).
+ */
+function refreshOpenDayPanel() {
+    const panel = document.getElementById('dayPanel');
+    if (panel.classList.contains('hidden') || !window._currentDayDateStr) return;
+
+    const titleEditEl = document.getElementById('noteTitleEdit');
+    const isEditingTitle = titleEditEl && !titleEditEl.classList.contains('hidden');
+    if (isEditingTitle) return;
+
+    const selectedId = window.selectedNote ? window.selectedNote.id : null;
+    const dayNotes = window.currentNotes.filter(n => n.date.split('T')[0] === window._currentDayDateStr);
+
+    if (dayNotes.length === 0) {
+        closeDayPanel();
+        return;
+    }
+
+    openDayPanel(window._currentDayDateStr);
+    if (selectedId != null && dayNotes.some(n => n.id === selectedId)) {
+        selectNoteInPanel(selectedId);
+    }
 }
 
 function highlightSelectedEvent() {
@@ -1257,8 +1770,9 @@ function renderNoteDetail(note) {
 
     if (!note) {
         detailArea.classList.add('hidden');
-        document.getElementById('recurrenceIndicator').classList.add('hidden');
-        document.getElementById('recurrenceIndicator').style.display = 'none';
+        const recIndicator = document.getElementById('recurrenceIndicator');
+        recIndicator.classList.add('hidden');
+        recIndicator.style.display = 'none';
         return;
     }
 
@@ -1287,12 +1801,12 @@ function renderNoteDetail(note) {
         const canDeleteSeries = isAdmin || isSeriesCreator;
         const allSeriesConfirmed = isAllSeriesConfirmed(note);
         if (canDeleteSeries) {
-            recActions.innerHTML += `<button class="btn btn-danger btn-small" style="font-size:10px; padding:2px 8px;" onclick="deleteNoteSeries()">${getT('js.deleteSeries')}</button>`;
+            recActions.innerHTML += `<button class="btn btn-danger btn-small" style="font-size:10px; padding:2px 8px;" onclick="deleteNoteSeries()">${esc(getT('js.deleteSeries'))}</button>`;
         }
         if (allSeriesConfirmed) {
-            recActions.innerHTML += `<button class="btn btn-outline btn-small" style="font-size:10px; padding:2px 8px;" onclick="toggleConfirmSeries(${parentId}, true)">${getT('js.leaveSeries')}</button>`;
+            recActions.innerHTML += `<button class="btn btn-outline btn-small" style="font-size:10px; padding:2px 8px;" onclick="toggleConfirmSeries(${parentId}, true)">${esc(getT('js.leaveSeries'))}</button>`;
         } else {
-            recActions.innerHTML += `<button class="btn btn-outline btn-small" style="font-size:10px; padding:2px 8px;" onclick="toggleConfirmSeries(${parentId}, false)">${getT('js.confirmSeries')}</button>`;
+            recActions.innerHTML += `<button class="btn btn-outline btn-small" style="font-size:10px; padding:2px 8px;" onclick="toggleConfirmSeries(${parentId}, false)">${esc(getT('js.confirmSeries'))}</button>`;
         }
     } else {
         recIndicator.classList.add('hidden');
@@ -1301,104 +1815,156 @@ function renderNoteDetail(note) {
 
      actionsContainer.innerHTML = `
         <div id="noteTitleArea" style="margin-bottom:8px; min-height:20px;">
-            <span id="noteTitleDisplay" style="font-size:14px; font-weight:600; color:var(--text-primary); cursor:pointer; line-height:20px; display:block; ${note.title ? '' : 'font-style:italic; color:var(--text-secondary); font-weight:400;'}" onclick="startEditNoteTitle()">${note.title || getT('js.addTitle')}</span>
+            <span id="noteTitleDisplay" style="font-size:14px; font-weight:600; color:var(--text-primary); cursor:pointer; line-height:20px; display:block; ${note.title ? '' : 'font-style:italic; color:var(--text-secondary); font-weight:400;'}" onclick="startEditNoteTitle()">${note.title ? esc(note.title) : esc(getT('js.addTitle'))}</span>
             <div id="noteTitleEdit" class="hidden" style="display:flex; gap:4px; align-items:center; padding-right:28px;">
-                <input type="text" id="noteTitleInput" placeholder="${getT('js.titlePlaceholder')}" style="margin:0; height:26px; min-height:0; font-size:12px; flex:1; padding:1px 6px; width:auto; margin-bottom:0;" value="${note.title || ''}">
-                <button class="btn btn-small" style="font-size:10px; padding:0 8px; height:26px; min-height:0; line-height:26px;" onclick="saveNoteTitle()">${getT('js.saveTitle')}</button>
-                <button class="btn btn-outline btn-small" style="font-size:10px; padding:0 8px; height:26px; min-height:0; line-height:26px;" onclick="cancelEditNoteTitle()">${getT('js.cancel')}</button>
+                <input type="text" id="noteTitleInput" placeholder="${esc(getT('js.titlePlaceholder'))}" style="margin:0; height:26px; min-height:0; font-size:12px; flex:1; padding:1px 6px; width:auto; margin-bottom:0;" value="${esc(note.title || '')}">
+                <button class="btn btn-small" style="font-size:10px; padding:0 8px; height:26px; min-height:0; line-height:26px;" onclick="saveNoteTitle()">${esc(getT('js.saveTitle'))}</button>
+                <button class="btn btn-outline btn-small" style="font-size:10px; padding:0 8px; height:26px; min-height:0; line-height:26px;" onclick="cancelEditNoteTitle()">${esc(getT('js.cancel'))}</button>
             </div>
         </div>
         <div class="flex-row mb-var">
             <button class="btn btn-outline btn-small" onclick="toggleConfirmNote(${note.id}, ${isConfirmed ? 'true' : 'false'})">
-                ${isConfirmed ? getT('js.convenient') : getT('js.markConvenient')}
+                ${esc(isConfirmed ? getT('js.convenient') : getT('js.markConvenient'))}
             </button>
-            ${canDeleteNode ? `<button class="btn btn-danger btn-small" onclick="deleteNote(${note.id})">${getT('js.deleteNote')}</button>` : ''}
+            ${canDeleteNode ? `<button class="btn btn-danger btn-small" onclick="deleteNote(${note.id})">${esc(getT('js.deleteNote'))}</button>` : ''}
         </div>
     `;
 
     if (note.confirmedProfileNames && note.confirmedProfileNames.length > 0) {
-        note.confirmedProfileNames.forEach(name => {
+        note.confirmedProfileNames.forEach((name, idx) => {
             const li = document.createElement('li');
             li.className = 'list-item';
             li.style.padding = '8px';
-            li.innerText = name;
+            const isMe = String(note.confirmedProfileIds?.[idx]) === String(window.profileId);
+            li.innerHTML = `<span class="participant-row">${avatarHtml(name, note.confirmedProfileIds ? note.confirmedProfileIds[idx] : undefined)}<span class="participant-name">${esc(name)}${isMe ? ` <span class="text-small" style="opacity:0.6;">(${esc(getT('js.you'))})</span>` : ''}</span></span>`;
             participantsContainer.appendChild(li);
         });
     } else {
-        participantsContainer.innerHTML = `<li class="list-item text-small" style="padding: 8px;">${getT('js.noParticipants')}</li>`;
+        participantsContainer.innerHTML = `<li class="list-item text-small" style="padding: 8px;">${esc(getT('js.noParticipants'))}</li>`;
     }
 
     fetchComments(note.id);
 }
 
-function updateNoteDetailInPlace(note) {
-    // Update participants without full re-render to avoid flicker
-    const participantsContainer = document.getElementById('dayParticipantsList');
-    if (note.confirmedProfileNames && note.confirmedProfileNames.length > 0) {
-        participantsContainer.innerHTML = note.confirmedProfileNames.map(name =>
-            `<li class="list-item" style="padding:8px;">${name}</li>`
-        ).join('');
-    } else {
-        participantsContainer.innerHTML = `<li class="list-item text-small" style="padding: 8px;">${getT('js.noParticipants')}</li>`;
+// --- Comments cache (fetch once per note; realtime events invalidate) ---
+const commentsCache = new Map();
+
+async function fetchComments(noteId, force = false) {
+    if (!force && commentsCache.has(noteId)) {
+        renderComments(noteId, commentsCache.get(noteId));
+        return;
     }
 
-    // Update confirm button state
-    const isConfirmed = note.confirmedProfileIds && note.confirmedProfileIds.includes(parseInt(window.profileId));
-    const confirmBtn = document.querySelector('#dayActions .btn-outline');
-    if (confirmBtn) {
-        confirmBtn.textContent = isConfirmed ? getT('js.convenient') : getT('js.markConvenient');
-        confirmBtn.onclick = () => toggleConfirmNote(note.id, isConfirmed);
-    }
+    const comments = await apiCall(`/notes/${noteId}/comments`);
+    if (!comments) return;
 
-    // Update recurrence series confirm button
-    const recActions = document.getElementById('recurrenceActions');
-    if (recActions && (note.parentNoteId || note.isVirtual)) {
-        const parentId = note.parentNoteId || note.id;
-        const allSeriesConfirmed = isAllSeriesConfirmed(note);
-        const seriesBtn = recActions.querySelector('.btn-outline');
-        if (seriesBtn) {
-            if (allSeriesConfirmed) {
-                seriesBtn.textContent = getT('js.leaveSeries');
-                seriesBtn.onclick = () => toggleConfirmSeries(parentId, true);
-            } else {
-                seriesBtn.textContent = getT('js.confirmSeries');
-                seriesBtn.onclick = () => toggleConfirmSeries(parentId, false);
-            }
+    commentsCache.set(noteId, comments);
+    renderComments(noteId, comments);
+}
+
+function renderComments(noteId, comments) {
+    // Only render if this note is still the one displayed
+    if (!window.selectedNote || window.selectedNote.id !== noteId) return;
+
+    const container = document.getElementById('dayCommentsList');
+    if (!container) return;
+
+    container.innerHTML = '';
+    comments.forEach(c => {
+        const isAuthor = String(c.authorProfileId) === String(window.profileId);
+        const isAdmin = String(window.profileId) === String(window.currentGroupCreatorId);
+        const canDeleteComment = isAdmin || isAuthor;
+
+        const div = document.createElement('div');
+        div.style.cssText = 'margin-bottom:8px; padding:12px; background-color:var(--bg-elevated); border-radius:var(--radius);';
+
+        let dateStr = '';
+        if (c.created) {
+             const createdDate = new Date(c.created).toLocaleString();
+             dateStr = ` • <span style="color:var(--text-secondary);font-size:10px;">${esc(createdDate)}</span>`;
+             if (c.lastModified) {
+                 const tCreated = new Date(c.created).getTime();
+                 const tMod = new Date(c.lastModified).getTime();
+                 // Show edited only if diff > 10 seconds
+                 if (tMod - tCreated > 10000) {
+                     dateStr += ` <span style="color:var(--text-secondary);font-size:10px;">${esc(getT('js.edited'))}</span>`;
+                 }
+             }
         }
+
+        div.innerHTML = `
+            <div id="commentView_${c.id}">
+                <div style="display: flex; justify-content: space-between; align-items:center;">
+                    <div class="participant-row">
+                        ${avatarHtml(c.authorName, c.authorProfileId, true)}
+                        <span class="text-small" style="font-weight:bold; color: var(--accent);">${esc(c.authorName)}</span>${dateStr}
+                    </div>
+                    <div>
+                        ${isAuthor ? `<span style="cursor:pointer; color:var(--text-secondary); font-size:12px; margin-right:12px; text-decoration:underline;" onclick="startEditComment(${c.id})">${esc(getT('js.edit'))}</span>` : ''}
+                        ${canDeleteComment ? `<span style="cursor:pointer; color:var(--danger); font-size:12px; text-decoration:underline;" onclick="deleteComment(${noteId}, ${c.id})">${esc(getT('js.remove'))}</span>` : ''}
+                    </div>
+                </div>
+                <div class="mt-var text-small" style="line-height:1.4;">${esc(c.content)}</div>
+                <input type="hidden" id="rawContent_${c.id}" value="${esc(c.content)}">
+            </div>
+            <div id="commentEdit_${c.id}" class="hidden mt-var">
+                <input type="text" id="editInput_${c.id}" style="margin-bottom:8px; width:100%;" value="${esc(c.content)}">
+                <div class="flex-row">
+                    <button class="btn btn-small" onclick="saveComment(${noteId}, ${c.id})">${esc(getT('js.save'))}</button>
+                    <button class="btn btn-outline btn-small" onclick="cancelEditComment(${c.id})">${esc(getT('js.cancel'))}</button>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function startEditComment(id) {
+    const rawVal = document.getElementById(`rawContent_${id}`).value;
+    document.getElementById(`commentView_${id}`).classList.add('hidden');
+    document.getElementById(`commentEdit_${id}`).classList.remove('hidden');
+    document.getElementById(`editInput_${id}`).value = rawVal;
+    document.getElementById(`editInput_${id}`).focus();
+}
+
+function cancelEditComment(id) {
+    document.getElementById(`commentEdit_${id}`).classList.add('hidden');
+    document.getElementById(`commentView_${id}`).classList.remove('hidden');
+}
+
+async function saveComment(noteId, id) {
+    const val = document.getElementById(`editInput_${id}`).value.trim();
+    if (!val) return;
+    const res = await apiCall(`/notes/${noteId}/comments/${id}`, 'PUT', { content: val });
+    if (res === false) return;
+    commentsCache.delete(noteId);
+    fetchComments(noteId, true);
+}
+
+async function addCommentToCurrentDay() {
+    if (!window.selectedNote) return;
+    const noteId = window.selectedNote.id;
+    const content = document.getElementById('newCommentText').value.trim();
+    if (!content) return;
+
+    const res = await apiCall(`/notes/${noteId}/comments`, 'POST', { content });
+    if (res) {
+        document.getElementById('newCommentText').value = '';
+        commentsCache.delete(noteId);
+        fetchComments(noteId, true);
     }
 }
 
-async function createNoteForDate(dateStr) {
-    if (!window.currentGroupId) return;
-
-    // Store the date for later use in recurrence modal
-    window.pendingNoteDate = dateStr;
-
-    // Open recurrence modal
-    resetRecurrenceForm();
-
-    // Auto-check the weekday of the clicked date
-    const date = new Date(dateStr + 'T00:00:00Z');
-    const jsDay = date.getUTCDay(); // 0=Sun, 1=Mon, ..., 6=Sat
-    const isoDay = jsDay === 0 ? 7 : jsDay; // 1=Mon, ..., 7=Sun
-    const cb = document.getElementById('recDay' + isoDay);
-    if (cb) cb.checked = true;
-
-    openModal('recurrenceModal');
+async function deleteComment(noteId, commentId) {
+    const confirmed = await appConfirm(getT('js.deleteCommentConfirm'));
+    if(!confirmed) return;
+    const res = await apiCall(`/notes/${noteId}/comments/${commentId}`, 'DELETE');
+    if (res === false) return;
+    commentsCache.delete(noteId);
+    fetchComments(noteId, true);
 }
 
-async function createNote() {
-    const dateValue = document.getElementById('newNoteDate').value;
-    if (!dateValue) return appAlert('Select a date');
-
-    const dateStr = new Date(dateValue).toISOString();
-
-    const note = await apiCall(`/groups/${window.currentGroupId}/notes`, 'POST', { date: dateStr });
-    if (note) {
-        fetchNotes();
-    }
-}
-
+// --- Note actions ---
 async function deleteNote(id) {
     if (id < 0) {
         // Virtual instance — can't delete individually
@@ -1406,27 +1972,15 @@ async function deleteNote(id) {
     }
     const confirmed = await appConfirm(getT('js.deleteNoteConfirm'));
     if(!confirmed) return;
-    await apiCall(`/groups/${window.currentGroupId}/notes/${id}`, 'DELETE');
+    const res = await apiCall(`/groups/${window.currentGroupId}/notes/${id}`, 'DELETE');
+    if (res === false) return;
     await fetchNotes();
-    // Re-open the day panel for the same date
-    const dateStr = window._currentDayDateStr;
-    if (dateStr) {
-        const remainingNotes = window.currentNotes.filter(n => n.date.split('T')[0] === dateStr);
-        if (remainingNotes.length > 0) {
-            openDayPanel(dateStr);
-        } else {
-            closeDayPanel();
-        }
-    } else {
-        closeDayPanel();
-    }
 }
 
 // --- Recurrence helpers ---
-let _pendingRecurrenceDate = null;
-
 function resetRecurrenceForm() {
     document.getElementById('recNoteTitle').value = '';
+    document.getElementById('recNoteTime').value = '';
     document.getElementById('recType').value = 'none';
     document.getElementById('recInterval').value = '1';
     document.getElementById('recEndDate').value = '';
@@ -1450,11 +2004,31 @@ function onRecurrenceEndTypeChange() {
     document.getElementById('recEndCountGroup').classList.toggle('hidden', endType !== 'count');
 }
 
+async function createNoteForDate(dateStr) {
+    if (!window.currentGroupId) return;
+
+    // Store the date for later use in recurrence modal
+    window.pendingNoteDate = dateStr;
+
+    // Open recurrence modal
+    resetRecurrenceForm();
+
+    // Auto-check the weekday of the clicked date
+    const date = new Date(dateStr + 'T00:00:00Z');
+    const jsDay = date.getUTCDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+    const isoDay = jsDay === 0 ? 7 : jsDay; // 1=Mon, ..., 7=Sun
+    const cb = document.getElementById('recDay' + isoDay);
+    if (cb) cb.checked = true;
+
+    openModal('recurrenceModal');
+}
+
 async function applyRecurrenceAndCreate() {
     if (!window.currentGroupId || !window.pendingNoteDate) return;
 
     const dateStr = window.pendingNoteDate;
-    const dateISO = dateStr + "T00:00:00Z";
+    const timeVal = document.getElementById('recNoteTime').value; // "HH:MM" or ""
+    const dateISO = dateStr + 'T' + (timeVal ? timeVal + ':00' : '00:00') + 'Z';
 
     const recType = document.getElementById('recType').value;
     const noteTitle = document.getElementById('recNoteTitle').value.trim();
@@ -1475,8 +2049,8 @@ async function applyRecurrenceAndCreate() {
             });
             if (days.length === 0) {
                 // Default to the day of the selected date
-                const d = new Date(dateStr);
-                let dayNum = d.getDay(); // 0=Sun
+                const d = new Date(dateStr + 'T00:00:00Z');
+                let dayNum = d.getUTCDay();
                 if (dayNum === 0) dayNum = 7;
                 days.push(String(dayNum));
             }
@@ -1518,25 +2092,15 @@ async function deleteNoteSeries() {
     const confirmed = await appConfirm(getT('js.deleteSeriesConfirm'));
     if (!confirmed) return;
 
-    await apiCall(`/groups/${window.currentGroupId}/notes/${parentId}/series`, 'DELETE');
+    const res = await apiCall(`/groups/${window.currentGroupId}/notes/${parentId}/series`, 'DELETE');
+    if (res === false) return;
     await fetchNotes();
-    const dateStr = window._currentDayDateStr;
-    if (dateStr) {
-        const remainingNotes = window.currentNotes.filter(n => n.date.split('T')[0] === dateStr);
-        if (remainingNotes.length > 0) {
-            openDayPanel(dateStr);
-        } else {
-            closeDayPanel();
-        }
-    } else {
-        closeDayPanel();
-    }
 }
 
 function isAllSeriesConfirmed(note) {
     const parentId = note.parentNoteId || note.id;
     const profileId = parseInt(window.profileId);
-    
+
     // For "Leave series", just check if the user confirmed the parent (first day)
     // This indicates they previously joined the series
     const parent = window.currentNotes.find(n => n.id === parentId);
@@ -1552,25 +2116,17 @@ async function toggleConfirmSeries(parentId, isLeaving) {
     const confirmed = await appConfirm(msg);
     if (!confirmed) return;
 
-    if (isLeaving) {
-        await apiCall(`/groups/${window.currentGroupId}/notes/${parentId}/confirm/series`, 'DELETE');
-    } else {
-        await apiCall(`/groups/${window.currentGroupId}/notes/${parentId}/confirm/series`, 'POST');
-    }
-
+    const res = await apiCall(
+        `/groups/${window.currentGroupId}/notes/${parentId}/confirm/series`,
+        isLeaving ? 'DELETE' : 'POST'
+    );
+    if (res === false) return;
     await fetchNotes();
-    const dateStr = window._currentDayDateStr;
-    if (dateStr) {
-        const dayNotes = window.currentNotes.filter(n => n.date.split('T')[0] === dateStr);
-        const currentNote = window.selectedNote;
-        const refreshed = dayNotes.find(n => n.id === (currentNote?.id));
-        openDayPanel(dateStr);
-    }
 }
 
 function getRecurrenceDescription(note) {
     if (!note) return null;
-    
+
     // For virtual instances or real children, get the parent's recurrence info
     if (note.isVirtual || (note.parentNoteId && (!note.recurrenceType || note.recurrenceType === 'none'))) {
         const parentId = note.parentNoteId;
@@ -1579,12 +2135,12 @@ function getRecurrenceDescription(note) {
         // If parent not found, just show generic info
         return null;
     }
-    
+
     if (note.recurrenceType === 'none' || note.recurrenceType === undefined) return null;
-    
+
     const type = note.recurrenceType;
     const interval = note.recurrenceInterval || 1;
-    
+
     let desc = '';
     if (type === 'daily') {
         desc = interval === 1 ? getT('js.recDaily') : `${getT('js.recEvery')} ${interval} ${getT('js.recDays')}`;
@@ -1600,49 +2156,23 @@ function getRecurrenceDescription(note) {
     } else if (type === 'monthly') {
         desc = interval === 1 ? getT('js.recMonthly') : `${getT('js.recEvery')} ${interval} ${getT('js.recMonths')}`;
     }
-    
+
     if (note.recurrenceEndDate) {
         desc += `, ${getT('js.recUntil')} ${note.recurrenceEndDate.split('T')[0]}`;
     } else if (note.recurrenceCount) {
         desc += `, ${note.recurrenceCount} ${getT('js.recTimes')}`;
     }
-    
+
     return desc;
 }
 
 async function toggleConfirmNote(id, isConfirmed) {
-    if (isConfirmed) {
-        await apiCall(`/groups/${window.currentGroupId}/notes/${id}/confirm`, 'DELETE');
-    } else {
-        await apiCall(`/groups/${window.currentGroupId}/notes/${id}/confirm`, 'POST');
-    }
+    const res = await apiCall(
+        `/groups/${window.currentGroupId}/notes/${id}/confirm`,
+        isConfirmed ? 'DELETE' : 'POST'
+    );
+    if (res === false) return;
     await fetchNotes();
-    if (window.selectedNote && window.selectedNote.id === id) {
-        const updated = window.currentNotes.find(n => n.id === id);
-        if (updated) {
-            window.selectedNote = updated;
-            renderNoteDetail(updated);
-            // Also refresh the event list sidebar item text
-            const dateStr = window._currentDayDateStr;
-            if (dateStr) {
-                const dayNotes = window.currentNotes.filter(n => n.date.split('T')[0] === dateStr);
-                const eventsList = document.getElementById('dayEventsList');
-                eventsList.innerHTML = '';
-                dayNotes.forEach(n => {
-                    const li = document.createElement('li');
-                    li.className = 'list-item day-event-item';
-                    li.dataset.noteId = n.id;
-                    const confirmCount = n.confirmedProfileNames ? n.confirmedProfileNames.length : 0;
-                    const isRecurring = (n.recurrenceType && n.recurrenceType !== 'none') || n.parentNoteId || n.isVirtual;
-                    const titleText = n.title ? n.title : `${confirmCount} ${getT('js.participants')}`;
-                    li.innerHTML = `<span class="day-event-label">${titleText}${isRecurring ? ' <span style="color:var(--accent);font-size:10px;">&#x21bb;</span>' : ''}</span>`;
-                    li.onclick = () => selectNoteInPanel(n.id);
-                    eventsList.appendChild(li);
-                });
-                highlightSelectedEvent();
-            }
-        }
-    }
 }
 
 // --- Note title editing ---
@@ -1666,148 +2196,486 @@ async function saveNoteTitle() {
     if (!window.selectedNote) return;
     const input = document.getElementById('noteTitleInput');
     const newTitle = input ? input.value.trim() : '';
-    
+
     const result = await apiCall(`/groups/${window.currentGroupId}/notes/${window.selectedNote.id}/title`, 'PUT', { title: newTitle || null });
     if (result) {
         await fetchNotes();
-        const dateStr = window._currentDayDateStr;
-        if (dateStr) {
-            const dayNotes = window.currentNotes.filter(n => n.date.split('T')[0] === dateStr);
-            const updated = dayNotes.find(n => n.id === window.selectedNote.id);
-            if (updated) {
-                window.selectedNote = updated;
-                renderNoteDetail(updated);
-                // Refresh sidebar list text
-                const eventsList = document.getElementById('dayEventsList');
-                eventsList.innerHTML = '';
-                dayNotes.forEach(n => {
-                    const li = document.createElement('li');
-                    li.className = 'list-item day-event-item';
-                    li.dataset.noteId = n.id;
-                    const confirmCount = n.confirmedProfileNames ? n.confirmedProfileNames.length : 0;
-                    const isRecurring = (n.recurrenceType && n.recurrenceType !== 'none') || n.parentNoteId || n.isVirtual;
-                    const titleText = n.title ? n.title : `${confirmCount} ${getT('js.participants')}`;
-                    li.innerHTML = `<span class="day-event-label">${titleText}${isRecurring ? ' <span style="color:var(--accent);font-size:10px;">&#x21bb;</span>' : ''}</span>`;
-                    li.onclick = () => selectNoteInPanel(n.id);
-                    eventsList.appendChild(li);
-                });
-                highlightSelectedEvent();
-            }
-        }
     }
 }
 
-// --- Comments ---
-function escapeQuotes(str) {
-    return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+// --- Copy day summary to clipboard ---
+async function copyDaySummary() {
+    const dateStr = window._currentDayDateStr;
+    if (!dateStr) return;
+    const dayNotes = window.currentNotes
+        .filter(n => n.date.split('T')[0] === dateStr)
+        .sort((a, b) => a.date.localeCompare(b.date));
+    if (!dayNotes.length) return;
+
+    const lines = [formatDateHuman(dateStr, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })];
+    dayNotes.forEach(n => {
+        const time = noteTime(n);
+        const title = n.title || `${(n.confirmedProfileNames || []).length} ${getT('js.participants')}`;
+        lines.push(`• ${title}${time ? ` (${time})` : ''} — ${(n.confirmedProfileNames || []).length} ${getT('js.participants')}`);
+    });
+
+    try {
+        await navigator.clipboard.writeText(lines.join('\n'));
+        showToast(getT('js.copiedDay'), 'success');
+    } catch (e) {
+        showToast('Clipboard error', 'error');
+    }
 }
 
-async function fetchComments(noteId) {
-    const comments = await apiCall(`/notes/${noteId}/comments`);
-    if (!comments) return;
+// --- Group statistics ---
+function openStatsModal() {
+    if (!window.currentGroupId || !window.currentGroup) return;
+    const notes = window.currentNotes || [];
+    const today = todayStr();
+    const upcoming = notes.filter(n => n.date.split('T')[0] >= today).length;
+    const participants = window.currentGroup.participants || [];
 
-    const container = document.getElementById('dayCommentsList');
-    if (!container) return;
+    // Participation counts per participant name
+    const counts = {};
+    notes.forEach(n => (n.confirmedProfileNames || []).forEach(nm => {
+        counts[nm] = (counts[nm] || 0) + 1;
+    }));
+    const topEntry = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
 
-    container.innerHTML = '';
-    comments.forEach(c => {
-        const isAuthor = String(c.authorProfileId) === String(window.profileId);
-        const isAdmin = String(window.profileId) === String(window.currentGroupCreatorId);
-        const canDeleteComment = isAdmin || isAuthor;
+    const myConfirmed = notes.filter(n => (n.confirmedProfileIds || []).map(String).includes(String(window.profileId))).length;
+    const participation = notes.length ? Math.round((myConfirmed / notes.length) * 100) : 0;
 
-        const div = document.createElement('div');
-        div.style.marginBottom = '8px';
-        div.style.padding = '12px';
-        div.style.backgroundColor = 'var(--bg-elevated)';
-        div.style.borderRadius = 'var(--radius)';
+    const rows = [
+        [getT('stats.total'), notes.length],
+        [getT('stats.upcoming'), upcoming],
+        [getT('stats.members'), participants.length],
+        [getT('stats.participation'), `${participation}%`],
+        [getT('stats.commonDays'), (window._allFreeDates ? window._allFreeDates.size : 0)],
+        [getT('stats.topParticipant'), topEntry ? `${topEntry[0]} (${topEntry[1]})` : '—']
+    ];
 
-        let dateStr = '';
-        if (c.created) {
-             const createdDate = new Date(c.created).toLocaleString();
-             dateStr = ` • <span style="color:var(--text-secondary);font-size:10px;">${createdDate}</span>`;
-             if (c.lastModified) {
-                 const tCreated = new Date(c.created).getTime();
-                 const tMod = new Date(c.lastModified).getTime();
-                 // Show edited only if diff > 10 seconds
-                 if (tMod - tCreated > 10000) {
-                     dateStr += ` <span style="color:var(--text-secondary);font-size:10px;">${getT('js.edited')}</span>`;
-                 }
-             }
+    const container = document.getElementById('statsContent');
+    container.innerHTML = rows.map(([label, value]) =>
+        `<div class="stats-row"><span>${esc(label)}</span><span class="stats-value">${esc(value)}</span></div>`
+    ).join('');
+
+    openModal('statsModal');
+}
+
+// --- iCal export ---
+function icalEscape(s) {
+    return String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+}
+
+function exportIcal() {
+    const notes = (window.currentNotes || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+    if (!notes.length) {
+        showToast(getT('js.noEvents'));
+        return;
+    }
+
+    const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//AskDate//RU', 'CALSCALE:GREGORIAN'];
+    const seen = new Set();
+
+    notes.forEach(n => {
+        const d = n.date.split('T')[0];
+        const key = `${d}|${n.title || ''}|${noteTime(n) || ''}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+
+        const time = noteTime(n);
+        const startDate = time ? `${d.replace(/-/g, '')}T${time.replace(':', '')}00Z` : d.replace(/-/g, '');
+        const endDate = addDaysIso(d, 1).replace(/-/g, '');
+        const summary = n.title || (n.creatorName ? `AskDate — ${n.creatorName}` : 'AskDate');
+
+        lines.push('BEGIN:VEVENT');
+        lines.push(`UID:askdate-${n.id}-${d}@askdate.local`);
+        lines.push(`DTSTAMP:${stamp}`);
+        if (time) {
+            lines.push(`DTSTART:${startDate}`);
+        } else {
+            lines.push(`DTSTART;VALUE=DATE:${startDate}`);
+            lines.push(`DTEND;VALUE=DATE:${endDate}`);
+        }
+        lines.push(`SUMMARY:${icalEscape(summary)}`);
+        if (n.confirmedProfileNames && n.confirmedProfileNames.length) {
+            lines.push(`DESCRIPTION:${icalEscape(n.confirmedProfileNames.join(', '))}`);
+        }
+        lines.push('END:VEVENT');
+    });
+    lines.push('END:VCALENDAR');
+
+    const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    const groupName = (window.currentGroup && window.currentGroup.name ? window.currentGroup.name : 'group').replace(/[^\w\-]+/g, '_');
+    a.download = `askdate-${groupName}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(a.href);
+    showToast(getT('js.exportDone'), 'success');
+}
+
+// --- Browser notifications (opt-in) ---
+function notificationsEnabled() {
+    return localStorage.getItem('askdate_notify') === '1'
+        && typeof Notification !== 'undefined'
+        && Notification.permission === 'granted';
+}
+
+async function toggleNotifications() {
+    if (typeof Notification === 'undefined') {
+        showToast(getT('notif.unsupported'), 'error');
+        return;
+    }
+    if (!notificationsEnabled()) {
+        const perm = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
+        if (perm === 'granted') {
+            localStorage.setItem('askdate_notify', '1');
+            showToast(getT('notif.enabled'), 'success');
+        } else {
+            showToast(getT('notif.blocked'), 'error');
+        }
+    } else {
+        localStorage.setItem('askdate_notify', '0');
+        showToast(getT('notif.disabled'));
+    }
+    updateNotifyButton();
+}
+
+function updateNotifyButton() {
+    const btn = document.getElementById('notifyToggleBtn');
+    if (btn) btn.classList.toggle('toggled', notificationsEnabled());
+}
+
+function realtimeNotify(body) {
+    if (!notificationsEnabled() || document.visibilityState === 'visible') return;
+    try {
+        new Notification('AskDate', { body, icon: 'favicon.svg', tag: 'askdate-realtime' });
+    } catch (e) { /* some browsers require SW — ignore */ }
+}
+
+// --- Realtime updates (SignalR over WebSocket) ---
+let _notesRefreshTimer = null;
+let _participantsRefreshTimer = null;
+let _joinedGroupId = null;
+
+function setRealtimeStatus(online) {
+    window._realtimeOnline = online;
+    const dot = document.getElementById('realtimeStatus');
+    if (!dot) return;
+    dot.classList.toggle('online', online);
+    dot.classList.toggle('offline', !online);
+    dot.title = getT(online ? 'realtime.online' : 'realtime.offline');
+}
+
+function ensureRealtime() {
+    if (typeof signalR === 'undefined') {
+        // CDN unavailable — fallback polling keeps the page usable
+        console.warn('SignalR client not loaded, using fallback polling');
+        scheduleFallbackPoll();
+        return;
+    }
+    if (window._hubConn) return;
+
+    const conn = new signalR.HubConnectionBuilder()
+        .withUrl('/hub', {
+            accessTokenFactory: () => window.token,
+            transport:
+                signalR.HttpTransportType.WebSockets |
+                signalR.HttpTransportType.ServerSentEvents |
+                signalR.HttpTransportType.LongPolling
+        })
+        .withAutomaticReconnect([0, 2000, 5000, 10000, 30000])
+        .configureLogging(signalR.LogLevel.Error)
+        .build();
+
+    window._hubConn = conn;
+
+    conn.on('notesChanged', () => {
+        realtimeNotify(getT('notif.newNotes'));
+        debouncedNotesRefresh();
+    });
+
+    conn.on('commentsChanged', (data) => {
+        if (data && typeof data.noteId === 'number') {
+            commentsCache.delete(data.noteId);
+            if (window.selectedNote && window.selectedNote.id === data.noteId
+                && !document.getElementById('dayPanel').classList.contains('hidden')) {
+                fetchComments(data.noteId, true);
+                realtimeNotify(getT('notif.newComments'));
+            }
+        }
+    });
+
+    conn.on('participantsChanged', () => {
+        realtimeNotify(getT('notif.groupChanged'));
+        debouncedParticipantsRefresh();
+    });
+
+    conn.on('groupUpdated', (data) => onGroupUpdated(data || {}));
+
+    conn.onreconnecting(() => setRealtimeStatus(false));
+    conn.onreconnected(async () => {
+        setRealtimeStatus(true);
+        _joinedGroupId = null;
+        joinRealtimeGroup(window.currentGroupId);
+        await refreshAfterReconnect();
+    });
+    conn.onclose(() => {
+        setRealtimeStatus(false);
+        scheduleFallbackPoll();
+    });
+
+    conn.start()
+        .then(() => {
+            setRealtimeStatus(true);
+            joinRealtimeGroup(window.currentGroupId);
+        })
+        .catch(() => {
+            setRealtimeStatus(false);
+            scheduleFallbackPoll();
+        });
+}
+
+function stopRealtime() {
+    if (window._hubConn) {
+        window._hubConn.stop().catch(() => {});
+        window._hubConn = null;
+    }
+    _joinedGroupId = null;
+    setRealtimeStatus(false);
+}
+
+function joinRealtimeGroup(groupId) {
+    if (!window._hubConn || !groupId) return;
+    if (window._hubConn.state !== signalR.HubConnectionState.Connected) return; // will rejoin on connect/reconnect
+    if (_joinedGroupId === groupId) return;
+    const leave = _joinedGroupId;
+    _joinedGroupId = groupId;
+    const doJoin = () => {
+        if (leave && leave !== groupId) {
+            window._hubConn.invoke('LeaveGroup', parseInt(leave)).catch(() => {});
+        }
+        window._hubConn.invoke('JoinGroup', parseInt(groupId)).catch(() => {});
+    };
+    doJoin();
+}
+
+function debouncedNotesRefresh() {
+    clearTimeout(_notesRefreshTimer);
+    _notesRefreshTimer = setTimeout(async () => {
+        if (!window.currentGroupId) return;
+        await fetchNotes();
+    }, 250);
+}
+
+function debouncedParticipantsRefresh() {
+    clearTimeout(_participantsRefreshTimer);
+    _participantsRefreshTimer = setTimeout(async () => {
+        if (!window.currentGroupId) return;
+        await refreshCurrentGroup();
+        fetchGroups();
+    }, 250);
+}
+
+async function refreshCurrentGroup() {
+    if (!window.currentGroupId) return;
+    const group = await apiCall(`/groups/${window.currentGroupId}`);
+    if (!group) return;
+    window.currentGroup = group;
+    window.currentGroupCreatorId = group.creatorProfileId;
+    renderGroupHeader(group);
+    renderParticipantsModal(group);
+    renderAvailabilitySwitch();
+    computeAvailability();
+    if (window.appCalendar) window.appCalendar.render();
+    updateAvailabilitySummary();
+}
+
+function onGroupUpdated(data) {
+    const { groupId, deleted } = data;
+    if (deleted) {
+        if (String(groupId) === String(window.currentGroupId)) {
+            window.currentGroupId = null;
+            window.currentGroup = null;
+            localStorage.removeItem('askdate_currentGroupId');
+            document.getElementById('groupDetails').classList.add('hidden');
+            closeDayPanel();
+        }
+        fetchGroups();
+        return;
+    }
+    if (String(groupId) === String(window.currentGroupId)) {
+        refreshCurrentGroup();
+    }
+    fetchGroups();
+}
+
+async function refreshAfterReconnect() {
+    await refreshCurrentGroup();
+    await fetchNotes();
+    fetchGroups();
+}
+
+// Fallback polling when realtime is unavailable (CDN blocked, proxy without WS, etc.)
+function scheduleFallbackPoll() {
+    if (window._fallbackPoll) return;
+    window._fallbackPoll = setInterval(async () => {
+        if (!window.token || !window.currentGroupId) return;
+        // Realtime is back — no polling needed
+        if (window._hubConn && typeof signalR !== 'undefined'
+            && window._hubConn.state === signalR.HubConnectionState.Connected) {
+            clearInterval(window._fallbackPoll);
+            window._fallbackPoll = null;
+            return;
+        }
+        try {
+            await refreshCurrentGroup();
+            await fetchNotes();
+        } catch (e) { /* transient */ }
+    }, 45000);
+}
+
+// --- Keyboard shortcuts ---
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const overlayOpen = !document.getElementById('customDialogOverlay').classList.contains('hidden');
+            if (overlayOpen) return; // dialog handles its own buttons
+            if (!document.getElementById('appOverlay').classList.contains('hidden')) {
+                closeAllModals();
+                return;
+            }
+            if (!document.getElementById('dayPanel').classList.contains('hidden')) {
+                closeDayPanel();
+            }
+            return;
         }
 
-        div.innerHTML = `
-            <div id="commentView_${c.id}">
-                <div style="display: flex; justify-content: space-between; align-items:center;">
-                    <div>
-                        <span class="text-small" style="font-weight:bold; color: var(--accent);">${c.authorName}</span>${dateStr}
-                    </div>
-                    <div>
-                        ${isAuthor ? `<span style="cursor:pointer; color:var(--text-secondary); font-size:12px; margin-right:12px; text-decoration:underline;" onclick="startEditComment(${c.id})">${getT('js.edit')}</span>` : ''}
-                        ${canDeleteComment ? `<span style="cursor:pointer; color:var(--danger); font-size:12px; text-decoration:underline;" onclick="deleteComment(${noteId}, ${c.id})">${getT('js.remove')}</span>` : ''}
-                    </div>
-                </div>
-                <div class="mt-var text-small" style="line-height:1.4;">${c.content}</div>
-                <input type="hidden" id="rawContent_${c.id}" value="${escapeQuotes(c.content)}">
-            </div>
-            <div id="commentEdit_${c.id}" class="hidden mt-var">
-                <input type="text" id="editInput_${c.id}" style="margin-bottom:8px; width:100%;">
-                <div class="flex-row">
-                    <button class="btn btn-small" onclick="saveComment(${noteId}, ${c.id})">${getT('js.save')}</button>
-                    <button class="btn btn-outline btn-small" onclick="cancelEditComment(${c.id})">${getT('js.cancel')}</button>
-                </div>
-            </div>
-        `;
-        container.appendChild(div);
+        const tag = (e.target.tagName || '').toLowerCase();
+        if (['input', 'textarea', 'select'].includes(tag) || e.target.isContentEditable) return;
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+        if (!window.token || !window.currentGroupId) return;
+
+        const dayPanelOpen = !document.getElementById('dayPanel').classList.contains('hidden');
+
+        if (e.key === 'ArrowLeft' && dayPanelOpen) {
+            navigateDay(-1);
+        } else if (e.key === 'ArrowRight' && dayPanelOpen) {
+            navigateDay(1);
+        } else if (e.key.toLowerCase() === 'n') {
+            createNoteForDate(todayStr());
+        } else if (e.key.toLowerCase() === 't' && window.appCalendar) {
+            window.appCalendar.gotoDate(todayStr());
+        }
     });
 }
 
-function startEditComment(id) {
-    const rawVal = document.getElementById(`rawContent_${id}`).value;
-    document.getElementById(`commentView_${id}`).classList.add('hidden');
-    document.getElementById(`commentEdit_${id}`).classList.remove('hidden');
-    document.getElementById(`editInput_${id}`).value = rawVal;
+// --- Admin panel ---
+async function openAdminModal() {
+    openModal('adminModal');
+    await refreshAdminUsers();
 }
 
-function cancelEditComment(id) {
-    document.getElementById(`commentEdit_${id}`).classList.add('hidden');
-    document.getElementById(`commentView_${id}`).classList.remove('hidden');
-}
+async function refreshAdminUsers() {
+    const container = document.getElementById('adminUsersList');
+    container.innerHTML = '<div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div>';
 
-async function saveComment(noteId, id) {
-    const val = document.getElementById(`editInput_${id}`).value.trim();
-    if (!val) return;
-    await apiCall(`/notes/${noteId}/comments/${id}`, 'PUT', { content: val });
-    fetchComments(noteId);
-}
+    const users = await usersApi('/User/all');
+    if (!users || users === true) {
+        container.innerHTML = '';
+        return;
+    }
 
-async function addCommentToCurrentDay() {
-    if (!window.selectedNote) return;
-    const noteId = window.selectedNote.id;
-    const content = document.getElementById('newCommentText').value.trim();
-    if (!content) return;
+    const myUserId = String(jwtUserId(parseJwt(window.token)) || '');
+    container.innerHTML = '';
 
-    const res = await apiCall(`/notes/${noteId}/comments`, 'POST', { content });
-    if (res) {
-        document.getElementById('newCommentText').value = '';
-        fetchComments(noteId);
+    users.forEach(u => {
+        const isAdmin = u.role === 'Administrator';
+        const isSelf = String(u.id) === myUserId;
+
+        const row = document.createElement('div');
+        row.className = 'admin-user-row';
+        row.innerHTML = `
+            <div class="admin-user-info">
+                <div class="admin-user-email">${esc(u.email)}</div>
+                <div class="admin-user-meta">#${u.id} · ${esc(u.verified ? getT('admin.verified') : getT('admin.notVerified'))} · ${esc(getT('admin.created'))} ${esc(new Date(u.created).toLocaleDateString())}</div>
+            </div>
+            <span class="role-badge${isAdmin ? ' role-admin' : ''}">${isAdmin ? 'admin' : 'user'}</span>
+            <div class="admin-actions"></div>
+        `;
+
+        const actions = row.querySelector('.admin-actions');
+
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'btn btn-outline btn-small';
+        resetBtn.innerText = getT('admin.reset');
+        resetBtn.onclick = () => adminResetPassword(u.id, u.email);
+        actions.appendChild(resetBtn);
+
+        const roleBtn = document.createElement('button');
+        roleBtn.className = 'btn btn-outline btn-small';
+        roleBtn.innerText = isAdmin ? getT('admin.removeAdmin') : getT('admin.makeAdmin');
+        if (!isSelf) {
+            roleBtn.onclick = () => adminSetRole(u.id, u.email, isAdmin);
+        } else {
+            roleBtn.disabled = true;
+            roleBtn.title = getT('admin.selfRole');
+        }
+        actions.appendChild(roleBtn);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn btn-danger btn-small';
+        deleteBtn.innerText = getT('admin.delete');
+        if (!isSelf) {
+            deleteBtn.onclick = () => adminDeleteUser(u.id, u.email);
+        } else {
+            deleteBtn.disabled = true;
+        }
+        actions.appendChild(deleteBtn);
+
+        container.appendChild(row);
+    });
+
+    if (!users.length) {
+        container.innerHTML = `<div class="text-small">${esc(getT('admin.empty'))}</div>`;
     }
 }
 
-async function addComment(noteId) {
-    const content = document.getElementById(`newComment_${noteId}`).value.trim();
-    if (!content) return;
-    
-    const res = await apiCall(`/notes/${noteId}/comments`, 'POST', { content });
-    if (res) {
-        fetchComments(noteId);
-    }
+async function adminResetPassword(userId, email) {
+    const confirmed = await appConfirm(`${getT('admin.reset')} — ${email}?`);
+    if (!confirmed) return;
+
+    const res = await usersApi(`/User/${userId}/reset-password`, 'PUT', {});
+    if (!res || res === true) return;
+
+    // Show the generated password once
+    await appAlert(`${getT('admin.newPassword')} ${email}:\n${res.password}`);
+    refreshAdminUsers();
 }
 
-async function deleteComment(noteId, commentId) {
-    const confirmed = await appConfirm(getT('js.deleteCommentConfirm'));
-    if(!confirmed) return;
-    await apiCall(`/notes/${noteId}/comments/${commentId}`, 'DELETE');
-    fetchComments(noteId);
+async function adminSetRole(userId, email, isAdminNow) {
+    const target = isAdminNow ? getT('admin.toUser') : getT('admin.toAdmin');
+    const confirmed = await appConfirm(`${getT('admin.confirmRole')} ${email} ${target}`);
+    if (!confirmed) return;
+
+    const role = isAdminNow ? 'User' : 'Administrator';
+    const res = await usersApi(`/User/${userId}/role`, 'PUT', { role });
+    if (res === null) return;
+    refreshAdminUsers();
+}
+
+async function adminDeleteUser(userId, email) {
+    const confirmed = await appConfirm(`${getT('admin.confirmDelete')} ${email}?`);
+    if (!confirmed) return;
+
+    const res = await usersApi(`/User/delete/${userId}`, 'DELETE');
+    if (res === null) return;
+    showToast(getT('admin.delete') + ': OK', 'success');
+    refreshAdminUsers();
 }
 
 // make functions global for index.html onclicks
@@ -1818,14 +2686,13 @@ window.logoutUser = logoutUser;
 window.fetchGroups = fetchGroups;
 window.createGroup = createGroup;
 window.fetchNotes = fetchNotes;
-window.createNote = createNote;
 window.deleteNote = deleteNote;
 window.toggleConfirmNote = toggleConfirmNote;
-window.addComment = addComment;
 window.deleteComment = deleteComment;
 window.openModal = openModal;
 window.closeAllModals = closeAllModals;
 window.copyInviteLink = copyInviteLink;
+window.showInviteQr = showInviteQr;
 window.removeParticipant = removeParticipant;
 window.joinGroupFromModal = joinGroupFromModal;
 window.deleteCurrentGroup = deleteCurrentGroup;
@@ -1850,12 +2717,39 @@ window.selectNoteInPanel = selectNoteInPanel;
 window.startEditNoteTitle = startEditNoteTitle;
 window.cancelEditNoteTitle = cancelEditNoteTitle;
 window.saveNoteTitle = saveNoteTitle;
+window.openProfileModal = openProfileModal;
+window.saveProfile = saveProfile;
+window.setAvailabilityMode = setAvailabilityMode;
+window.openAdminModal = openAdminModal;
+window.openStatsModal = openStatsModal;
+window.exportIcal = exportIcal;
+window.copyDaySummary = copyDaySummary;
+window.toggleNotifications = toggleNotifications;
+window.navigateDay = navigateDay;
+window.openDayPanelFromUpcoming = openDayPanelFromUpcoming;
 
 async function openProfileModal() {
     try {
-        const res = await fetch(`${USERS_API_URL}/Profile/${window.profileId}`, {
+        if (isTokenExpired(window.token)) {
+            const refreshed = await tryRefreshToken();
+            if (!refreshed) {
+                forceLogout(true);
+                return;
+            }
+        }
+        let res = await fetch(`${USERS_API_URL}/Profile/${window.profileId}`, {
             headers: { 'Authorization': `Bearer ${window.token}` }
         });
+        if (res.status === 401) {
+            if (await tryRefreshToken()) {
+                res = await fetch(`${USERS_API_URL}/Profile/${window.profileId}`, {
+                    headers: { 'Authorization': `Bearer ${window.token}` }
+                });
+            } else {
+                forceLogout(true);
+                return;
+            }
+        }
         if (res.ok) {
             const profile = await res.json();
             document.getElementById('profFirstName').value = profile.firstName || '';
@@ -1882,7 +2776,15 @@ async function saveProfile() {
     }
 
     try {
-        const res = await fetch(`${USERS_API_URL}/Profile/${window.profileId}`, {
+        if (isTokenExpired(window.token)) {
+            const refreshed = await tryRefreshToken();
+            if (!refreshed) {
+                forceLogout(true);
+                return;
+            }
+        }
+
+        let res = await fetch(`${USERS_API_URL}/Profile/${window.profileId}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${window.token}`,
@@ -1896,9 +2798,22 @@ async function saveProfile() {
             })
         });
 
+        if (res.status === 401) {
+            if (await tryRefreshToken()) {
+                res = await fetch(`${USERS_API_URL}/Profile/${window.profileId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${window.token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ firstName, lastName, currentAvatar: "", status: 1 })
+                });
+            }
+        }
+
         if (res.ok) {
             if (newPassword && window.currentUserId) {
-                // Try updating the password
+                // Update own password (backend enforces ownership)
                 await fetch(`${USERS_API_URL}/User/update?userId=${window.currentUserId}`, {
                     method: 'PUT',
                     headers: {
@@ -1910,11 +2825,13 @@ async function saveProfile() {
                         phoneNumber: ""
                     })
                 });
+                // Password change revokes refresh tokens — refresh now
+                await tryRefreshToken();
             }
 
             closeAllModals();
             fetchCurrentUserName();
-            showToast(getT('js.profUpdated'));
+            showToast(getT('js.profUpdated'), 'success');
         } else {
             appAlert(getT('js.profFail'));
         }
@@ -1922,76 +2839,3 @@ async function saveProfile() {
         appAlert(getT('js.profFail'));
     }
 }
-window.openProfileModal = openProfileModal;
-window.saveProfile = saveProfile;
-
-// Auto-refresh periodically
-window.autoRefreshInterval = setInterval(async () => {
-    if (!window.currentGroupId || !window.token) return;
-    try {
-        const group = await apiCall(`/groups/${window.currentGroupId}`);
-        if (!group) return;
-
-        document.getElementById('groupParticipantCount').innerText = `${(group.participants || []).length}`;
-
-        const notes = await apiCall(`/groups/${window.currentGroupId}/notes`);
-        if (notes) {
-            window.currentNotes = notes;
-            initCalendar(notes);
-
-            if (window.selectedNote && !document.getElementById('dayPanel').classList.contains('hidden')) {
-                const activeDate = window._currentDayDateStr;
-                if (activeDate) {
-                    const dayNotes = window.currentNotes.filter(n => n.date.split('T')[0] === activeDate);
-
-                    // Incrementally update the event list sidebar (avoid flicker)
-                    const eventsList = document.getElementById('dayEventsList');
-                    const existingIds = new Set();
-                    dayNotes.forEach(n => {
-                        existingIds.add(String(n.id));
-                        const li = eventsList.querySelector(`[data-note-id="${n.id}"]`);
-                        const confirmCount = n.confirmedProfileNames ? n.confirmedProfileNames.length : 0;
-                        const isRecurring = (n.recurrenceType && n.recurrenceType !== 'none') || n.parentNoteId || n.isVirtual;
-                        const titleText = n.title ? n.title : `${confirmCount} ${getT('js.participants')}`;
-                        const inner = `<span class="day-event-label">${titleText}${isRecurring ? ' <span style="color:var(--accent);font-size:10px;">&#x21bb;</span>' : ''}</span>`;
-                        if (li) {
-                            li.innerHTML = inner;
-                        } else {
-                            const newLi = document.createElement('li');
-                            newLi.className = 'list-item day-event-item';
-                            newLi.dataset.noteId = n.id;
-                            newLi.innerHTML = inner;
-                            newLi.onclick = () => selectNoteInPanel(n.id);
-                            eventsList.appendChild(newLi);
-                        }
-                    });
-                    // Remove items for notes that no longer exist on this date
-                    eventsList.querySelectorAll('.day-event-item').forEach(li => {
-                        if (!existingIds.has(li.dataset.noteId)) li.remove();
-                    });
-
-                    // Refresh selected note detail if still exists (skip if user is editing title)
-                    const titleEditEl = document.getElementById('noteTitleEdit');
-                    const isEditingTitle = titleEditEl && !titleEditEl.classList.contains('hidden');
-                    const updatedNote = window.currentNotes.find(n => n.id === window.selectedNote.id);
-                    if (updatedNote) {
-                        window.selectedNote = updatedNote;
-                        if (!isEditingTitle) {
-                            updateNoteDetailInPlace(updatedNote);
-                        }
-                    } else if (dayNotes.length > 0) {
-                        // Selected note was deleted, select first
-                        window.selectedNote = dayNotes[0];
-                        renderNoteDetail(dayNotes[0]);
-                    } else {
-                        // All notes deleted, close panel
-                        closeDayPanel();
-                        return;
-                    }
-                    highlightSelectedEvent();
-                    updateDayNavButtons();
-                }
-            }
-        }
-    } catch(e) { }
-}, 15000);

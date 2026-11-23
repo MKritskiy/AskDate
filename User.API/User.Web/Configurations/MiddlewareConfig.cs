@@ -30,16 +30,28 @@ public static class MiddlewareConfig
     {
         using var scope = app.Services.CreateScope();
         var services = scope.ServiceProvider;
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        var context = services.GetRequiredService<ApplicationDbContext>();
 
-        try
+        // Retry while the database container is starting (docker compose race)
+        const int maxAttempts = 12;
+        for (int attempt = 1; attempt <= maxAttempts; attempt++)
         {
-            var context = services.GetRequiredService<ApplicationDbContext>();
-            await context.Database.MigrateAsync();
-        }
-        catch (Exception ex)
-        {
-            var logger = services.GetRequiredService<ILogger<Program>>();
-            logger.LogError(ex, "An error occurred seeding the DB. {exceptionMessage}", ex.Message);
+            try
+            {
+                await context.Database.MigrateAsync();
+                return;
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Migration attempt {Attempt}/{Max} failed: {Message}", attempt, maxAttempts, ex.Message);
+                if (attempt == maxAttempts)
+                {
+                    logger.LogError(ex, "An error occurred seeding the DB after {Max} attempts.", maxAttempts);
+                    return;
+                }
+                await Task.Delay(TimeSpan.FromSeconds(5));
+            }
         }
     }
 }
