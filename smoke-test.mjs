@@ -204,6 +204,38 @@ async function run() {
     r = await api(A, U);
     check('remove all clears only own marks', r.status === 200 && r.json.length === 1 && r.json[0].profileId === adminProfileId, JSON.stringify(r.json));
 
+    // 7b. Erasing: the brush dragged over marks already there wipes its area, its own type only
+    await put(U, { dates: [D1], type: 2 });
+    await put(U, { dates: [D1], type: 1, startTime: '18:00', endTime: '23:59' });
+    r = await put(U, { dates: [D1], type: 2, startTime: '09:00', endTime: '12:00', erase: true });
+    check('erase cuts an interval out of a mark', shape(r.json) === '03-03 t1 18:00-24:00 | 03-03 t2 00:00-09:00 | 03-03 t2 12:00-18:00', shape(r.json));
+    r = await put(U, { dates: [D1], type: 1, erase: true });
+    check('erase touches its own type only', r.status === 200 && shape(r.json) === '03-03 t2 00:00-09:00 | 03-03 t2 12:00-18:00', shape(r.json));
+    r = await put(U, { dates: [D1], type: 1, startTime: '10:00', endTime: '12:00', erase: true });
+    check('erase that meets nothing leaves the day as it is', r.status === 200 && shape(r.json) === '03-03 t2 00:00-09:00 | 03-03 t2 12:00-18:00', shape(r.json));
+
+    await put(U, { dates: [D1, D2], type: 2 });
+    r = await put(U, { dates: [D1, D2], type: 2, erase: true });
+    check('erase clears whole days', r.status === 200 && r.json.length === 0 && (await mine()).length === 0, JSON.stringify(r.json));
+
+    await put(U, { dates: [D1], type: 2, startTime: '09:00', endTime: '12:00' });
+    r = await put(U, { dates: [D1], type: 1, startTime: '12:00', endTime: '15:00' });
+    const freeId = r.json.find(m => m.type === 1).id;
+    r = await put(U, { dates: [D1], type: 2, startTime: '10:00', endTime: '11:00', erase: true });
+    check('erase splits a mark in two; the other type keeps its id',
+        shape(r.json) === '03-03 t1 12:00-15:00 | 03-03 t2 09:00-10:00 | 03-03 t2 11:00-12:00' && r.json.find(m => m.type === 1).id === freeId, shape(r.json));
+
+    await put(U, { dates: [D1], type: 2, startTime: '09:00' });
+    r = await put(U, { dates: [D1], type: 2, startTime: '18:00', erase: true });
+    check('erase without an end runs until midnight', shape(r.json) === '03-03 t2 09:00-18:00', shape(r.json));
+    r = await put(U, { dates: [D1], type: 2, startTime: '09:00', endTime: '10:00', erase: true, replaceIds: [1] });
+    check('erase with replaceIds -> 400', r.status === 400, r.status);
+    r = await put(U, { dates: [D1], type: 2, startTime: '12:00', endTime: '10:00', erase: true });
+    check('erase with end before start -> 400', r.status === 400, r.status);
+    r = await put(U, { dates: [], type: 2, erase: true });
+    check('erase with empty dates -> 400', r.status === 400, r.status);
+    await api(`${A}/all`, { ...U, method: 'DELETE' });
+
     // validation
     r = await put(U, { dates: [D1], type: 1, startTime: '9:00', endTime: '10:00' });
     check('time not in HH:mm -> 400', r.status === 400, r.status);

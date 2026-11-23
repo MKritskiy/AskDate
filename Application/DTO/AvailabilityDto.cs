@@ -25,6 +25,12 @@ public class SetAvailabilityDto
 
     /// <summary>Own marks to remove in the same operation (used to edit a mark without a gap).</summary>
     public List<int>? ReplaceIds { get; set; }
+
+    /// <summary>
+    /// Wipe this mark (the whole day or the interval) from the days instead of adding it.
+    /// Not combined with <see cref="ReplaceIds"/>.
+    /// </summary>
+    public bool Erase { get; set; }
 }
 
 public class RemoveAvailabilityDto

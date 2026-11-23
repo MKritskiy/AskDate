@@ -26,8 +26,9 @@ public class AvailabilityController(IAvailabilityService availabilityService) : 
 
     /// <summary>
     /// Adds a mark on every listed day for the current user. Overlaps are resolved by the server:
-    /// same-type neighbours merge, the new mark overrides the other type. Returns the user's
-    /// marks on those days as they are stored now.
+    /// same-type neighbours merge, the new mark overrides the other type. With <c>erase</c> the
+    /// mark is wiped from the days instead (the brush was dragged over marks already there).
+    /// Returns the user's marks on those days as they are stored now.
     /// </summary>
     [HttpPut]
     public async Task<IActionResult> Set(int groupId, SetAvailabilityDto dto)
@@ -39,7 +40,8 @@ public class AvailabilityController(IAvailabilityService availabilityService) : 
         if (!TryParseRange(dto.StartTime, dto.EndTime, out var start, out var end, out error))
             return BadRequest(error);
 
-        var marks = await availabilityService.SetAsync(groupId, this.GetProfileId(), dates, dto.Type, start, end, dto.ReplaceIds);
+        var marks = await availabilityService.SetAsync(
+            groupId, this.GetProfileId(), dates, dto.Type, start, end, dto.ReplaceIds, dto.Erase);
         return Ok(marks);
     }
 

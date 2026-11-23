@@ -21,8 +21,12 @@ public class AvailabilityMarkRepo(ApplicationDbContext context) : IAvailabilityM
         int profileId,
         IReadOnlyCollection<DateOnly> dates,
         IReadOnlyCollection<int> removeIds,
-        AvailabilityDay.Span? added)
+        AvailabilityDay.Span? added,
+        AvailabilityDay.Span? erased)
     {
+        if (added is not null && erased is not null)
+            throw new ArgumentException("A day is painted or erased, never both.", nameof(erased));
+
         var dateSet = dates.Distinct().ToHashSet();
         var idSet = (removeIds ?? Enumerable.Empty<int>()).Where(id => id > 0).ToHashSet();
         if (dateSet.Count == 0 && idSet.Count == 0) return new List<AvailabilityMark>();
@@ -55,8 +59,11 @@ public class AvailabilityMarkRepo(ApplicationDbContext context) : IAvailabilityM
         foreach (var date in daySet.OrderBy(d => d))
         {
             var onDay = touched.Where(m => m.Date == date).ToList();
+            var listed = dateSet.Contains(date);
+            var paint = added is not null && listed ? added : null;
+            var wipe = erased is not null && listed ? erased : null;
 
-            if (added is null && dateSet.Contains(date))
+            if (paint is null && wipe is null && listed)
             {
                 removed.AddRange(onDay); // "remove my marks on these days"
                 continue;
@@ -64,7 +71,7 @@ public class AvailabilityMarkRepo(ApplicationDbContext context) : IAvailabilityM
 
             removed.AddRange(onDay.Where(m => idSet.Contains(m.Id!.Value)));
             var rest = onDay.Where(m => !idSet.Contains(m.Id!.Value)).ToList();
-            var line = AvailabilityDay.Paint(rest.Select(ToSpan), added is not null && dateSet.Contains(date) ? added : null);
+            var line = AvailabilityDay.Paint(rest.Select(ToSpan), paint, wipe);
 
             foreach (var span in AvailabilityDay.Extract(line))
             {

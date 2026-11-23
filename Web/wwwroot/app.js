@@ -101,11 +101,11 @@ const translations = {
         'tool.busy': 'Занят',
         'tool.done': 'Готово',
         'tool.viewTip': 'Клик по дню открывает его: доступность, события, комментарии (клавиша 1)',
-        'tool.freeTip': 'Кисть «Свободен»: кликайте по дням или выделите диапазон (клавиша 2)',
-        'tool.busyTip': 'Кисть «Занят»: кликайте по дням или выделите диапазон (клавиша 3)',
+        'tool.freeTip': 'Кисть «Свободен»: клик или протяжка по дням ставит отметку, от своей отметки — снимает (клавиша 2)',
+        'tool.busyTip': 'Кисть «Занят»: клик или протяжка по дням ставит отметку, от своей отметки — снимает (клавиша 3)',
         'hint.viewEmpty': 'Кликните по дню, чтобы отметить доступность или создать событие. Для быстрой разметки выберите кисть «Свободен» или «Занят».',
-        'hint.brushFree': 'Кисть «Свободен»: кликайте по дням или выделите диапазон. Повторный клик по такой же отметке снимает её.',
-        'hint.brushBusy': 'Кисть «Занят»: кликайте по дням или выделите диапазон. Повторный клик по такой же отметке снимает её.',
+        'hint.brushFree': 'Кисть «Свободен»: клик или протяжка ставит отметку, от своей отметки — снимает.',
+        'hint.brushBusy': 'Кисть «Занят»: клик или протяжка ставит отметку, от своей отметки — снимает.',
         'cal.today': 'Сегодня',
         'cal.prevHint': 'Предыдущий месяц',
         'cal.nextHint': 'Следующий месяц',
@@ -218,6 +218,8 @@ const translations = {
         'toast.freeDay': 'Свободен: {date}',
         'toast.busyDay': 'Занят: {date}',
         'toast.clearedDay': 'Отметка снята: {date}',
+        'toast.clearedTime': 'Снято {start}–{end}: {date}',
+        'toast.clearedDays': 'Отметки сняты, дней: {count}',
         'toast.freeTime': 'Свободен {start}–{end}: {date}',
         'toast.busyTime': 'Занят {start}–{end}: {date}',
         'toast.freeRangeTime': 'Свободен {start}–{end}, дней: {count}',
@@ -372,11 +374,11 @@ const translations = {
         'tool.busy': 'Busy',
         'tool.done': 'Done',
         'tool.viewTip': 'Click a day to open it: availability, events, comments (key 1)',
-        'tool.freeTip': '“Free” brush: click days or drag over a range (key 2)',
-        'tool.busyTip': '“Busy” brush: click days or drag over a range (key 3)',
+        'tool.freeTip': '“Free” brush: click or drag over days to mark them; from your own mark, to clear (key 2)',
+        'tool.busyTip': '“Busy” brush: click or drag over days to mark them; from your own mark, to clear (key 3)',
         'hint.viewEmpty': 'Click a day to mark your availability or create an event. For quick marking pick the “Free” or “Busy” brush.',
-        'hint.brushFree': '“Free” brush: click days or drag over a range. Click an identical mark again to remove it.',
-        'hint.brushBusy': '“Busy” brush: click days or drag over a range. Click an identical mark again to remove it.',
+        'hint.brushFree': '“Free” brush: click or drag to mark days; from your own mark, to clear.',
+        'hint.brushBusy': '“Busy” brush: click or drag to mark days; from your own mark, to clear.',
         'cal.today': 'Today',
         'cal.prevHint': 'Previous month',
         'cal.nextHint': 'Next month',
@@ -489,6 +491,8 @@ const translations = {
         'toast.freeDay': 'Free: {date}',
         'toast.busyDay': 'Busy: {date}',
         'toast.clearedDay': 'Mark cleared: {date}',
+        'toast.clearedTime': 'Cleared {start}–{end}: {date}',
+        'toast.clearedDays': 'Marks cleared, days: {count}',
         'toast.freeTime': 'Free {start}–{end}: {date}',
         'toast.busyTime': 'Busy {start}–{end}: {date}',
         'toast.freeRangeTime': 'Free {start}–{end}, days: {count}',
@@ -1684,7 +1688,19 @@ function myAllDayType(dateStr) {
     return mark ? mark.type : 0;
 }
 
-// Whether the mark is exactly the type and span the user is about to paint
+// What a brush puts on a day: [from, to) in minutes of that day
+function brushArea(type, range) {
+    const timed = range && !range.allDay;
+    return { type, from: timed ? toMinutes(range.start) : 0, to: timed ? toMinutes(range.end) : DAY_MINUTES };
+}
+
+// Whether the mark covers at least a minute of the area
+function touchesArea(mark, area) {
+    const [from, to] = markRange(mark);
+    return from < area.to && area.from < to;
+}
+
+// Whether the mark is exactly the type and span about to be saved from the day panel
 function isSameSpan(mark, type, range) {
     if (mark.type !== type) return false;
     return isAllDayMark(mark) ? range.allDay
@@ -1853,13 +1869,19 @@ function applyMyMarks(dates, marks) {
 let nextProvisionalId = -1;
 const isProvisional = mark => mark.id < 0;
 
-function normalizeDay(dateStr, existing, added) {
+// The day after the area is painted onto the marks (added) or wiped off them (erased)
+function normalizeDay(dateStr, existing, added, erased) {
     const line = new Uint8Array(DAY_MINUTES);
     existing.forEach(mark => {
         const [from, to] = markRange(mark);
         line.fill(mark.type, from, to);
     });
     if (added) line.fill(added.type, added.from, added.to);
+    if (erased) {
+        for (let minute = erased.from; minute < erased.to; minute++) {
+            if (line[minute] === erased.type) line[minute] = T_UNKNOWN;
+        }
+    }
 
     return segmentsOf(line)
         .filter(segment => segment.state !== T_UNKNOWN)
@@ -1943,7 +1965,7 @@ function setMyMarks(dates, type, range = null, replaceIds = null) {
     if (replaceIds && replaceIds.length) body.replaceIds = replaceIds.map(Number);
 
     // optimistic picture, normalized the way the server will normalize it
-    const added = { type, from: timed ? toMinutes(range.start) : 0, to: timed ? toMinutes(range.end) : DAY_MINUTES };
+    const added = brushArea(type, range);
     const picture = [];
     list.forEach(date => {
         const kept = myMarksOn(date).filter(mark => !(replaceIds || []).includes(mark.id));
@@ -1952,6 +1974,35 @@ function setMyMarks(dates, type, range = null, replaceIds = null) {
     applyMyMarks(list, picture);
 
     markToast(type, range, list);
+
+    return queueMarkRequest(() => apiCall(availabilityUrl(), 'PUT', body, { silent: true }), list);
+}
+
+// Erases the brush area from my marks of that type on every listed day: the mark the gesture
+// started on and every mark of the same type it passed over. Marks of the other type stay;
+// a mark cut in the middle keeps its ends.
+function eraseMyMarks(dates, type, range = null) {
+    const area = brushArea(type, range);
+
+    // Only the days with something to erase are touched; the rest keep their ids
+    const list = dates.map(String).filter(date =>
+        myMarksOn(date).some(mark => mark.type === type && touchesArea(mark, area)));
+    if (!list.length || !window.currentGroupId) return Promise.resolve();
+
+    const picture = [];
+    list.forEach(date => picture.push(...normalizeDay(date, myMarksOn(date), null, area)));
+    applyMyMarks(list, picture);
+
+    const timed = range && !range.allDay;
+    if (list.length > 1) showToast(tF('toast.clearedDays', { count: list.length }));
+    else if (timed) showToast(tF('toast.clearedTime', { date: formatDateHuman(list[0]), start: range.start, end: range.end }));
+    else showToast(tF('toast.clearedDay', { date: formatDateHuman(list[0]) }));
+
+    const body = { dates: list, type, erase: true };
+    if (timed) {
+        body.startTime = range.start;
+        body.endTime = range.end;
+    }
 
     return queueMarkRequest(() => apiCall(availabilityUrl(), 'PUT', body, { silent: true }), list);
 }
@@ -2103,6 +2154,12 @@ function initCalendar() {
     });
     window.appCalendar.render();
     new MutationObserver(syncToolbarTexts).observe(el('calendar'), { childList: true, subtree: true, characterData: true });
+
+    // Where a gesture began decides between painting and erasing (see onCalendarPointerDown)
+    el('calendar').addEventListener('pointerdown', onCalendarPointerDown);
+    window.addEventListener('pointerup', onCalendarPointerUp);
+    window.addEventListener('pointercancel', onCalendarPointerUp);
+
     scheduleDecorate();
 }
 
@@ -2428,6 +2485,29 @@ writeRangeForm('panel');
 // Remembering the last painted range for a moment makes every gesture count exactly once.
 let lastPaint = { key: '', at: 0 };
 
+// The day the gesture on the calendar began on, and whether it erases. A selection arrives with
+// its start at the earlier end whichever way the pointer went, but what the gesture does depends
+// on where it began: on my own mark of the brush type it erases, anywhere else it paints.
+let gesture = null;
+
+function onCalendarPointerDown(event) {
+    if (event.button !== 0 || currentTool === 'view') return;
+    const cell = event.target instanceof Element && event.target.closest('#calendar .fc-daygrid-day[data-date]');
+    gesture = null;
+    if (!cell) return;
+
+    const date = cell.dataset.date;
+    const type = TOOL_TYPE[currentTool];
+    const area = brushArea(type, RANGES.brush);
+    gesture = { date, erase: myMarksOn(date).some(mark => mark.type === type && touchesArea(mark, area)) };
+    // while it lasts, the highlight of an erasing gesture is grey instead of the brush colour
+    el('calendar').classList.toggle('erasing', gesture.erase);
+}
+
+function onCalendarPointerUp() {
+    el('calendar').classList.remove('erasing');
+}
+
 function onCalendarSelect(info) {
     if (currentTool !== 'view') paintRange(info.startStr.slice(0, 10), info.endStr.slice(0, 10));
 }
@@ -2441,9 +2521,11 @@ function onCalendarDateClick(info) {
 }
 
 function onCalendarEventClick(info) {
-    const props = info.event.extendedProps;
-    const note = props.kind === 'mark' ? null : props.note; // a chip of mine opens its day as well
-    openDayPanel(info.event.startStr.slice(0, 10), note ? note.id : null);
+    const date = info.event.startStr.slice(0, 10);
+    if (currentTool !== 'view') return paintRange(date, addDaysIso(date, 1)); // under a brush, a chip is its day
+
+    const note = info.event.extendedProps.kind === 'mark' ? null : info.event.extendedProps.note; // a chip of mine opens its day as well
+    openDayPanel(date, note ? note.id : null);
 }
 
 function paintRange(startStr, endStr) {
@@ -2461,18 +2543,14 @@ function paintRange(startStr, endStr) {
         return;
     }
 
-    const count = dayCount(startStr, endStr);
-    if (count === 1) {
-        // A click on a day that already carries exactly this mark removes it; drags always set the range
-        const existing = myMarksOn(startStr).find(mark => mark.id > 0 && isSameSpan(mark, type, range));
-        if (existing) {
-            removeMyMarks([existing.id]);
-            if (window.appCalendar) window.appCalendar.unselect();
-            return;
-        }
-    }
+    // Decided when the gesture began (onCalendarPointerDown): a click or a drag started on my own
+    // mark of the brush type takes marks away, one started anywhere else puts them down
+    const begunOn = gesture && gesture.date >= startStr && gesture.date < endStr ? gesture : null;
+    gesture = null;
 
-    setMyMarks(Array.from({ length: count }, (_, i) => addDaysIso(startStr, i)), type, range);
+    const dates = Array.from({ length: dayCount(startStr, endStr) }, (_, i) => addDaysIso(startStr, i));
+    if (begunOn && begunOn.erase) eraseMyMarks(dates, type, range);
+    else setMyMarks(dates, type, range);
     if (window.appCalendar) window.appCalendar.unselect();
 }
 

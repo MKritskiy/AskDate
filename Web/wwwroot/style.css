@@ -905,6 +905,13 @@ select:focus {
 #calendar.tool-busy { cursor: crosshair; }
 #calendar.tool-free { --fc-highlight-color: rgba(82, 183, 136, 0.28); }
 #calendar.tool-busy { --fc-highlight-color: rgba(230, 57, 70, 0.26); }
+/* A gesture begun on a mark of the brush type takes marks away: its highlight is grey */
+#calendar.tool-free.erasing,
+#calendar.tool-busy.erasing { --fc-highlight-color: rgba(152, 193, 217, 0.22); }
+/* Under a brush the whole day belongs to the brush: chips of my intervals and event badges let the
+   pointer through, so that a click or a drag may begin on them like on the rest of the cell */
+#calendar.tool-free .fc-daygrid-event,
+#calendar.tool-busy .fc-daygrid-event { pointer-events: none; }
 
 /* --- Realtime connection status --- */
 .realtime-status {

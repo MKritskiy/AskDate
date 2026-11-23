@@ -11,7 +11,8 @@ public interface IAvailabilityMarkRepository
     /// <summary>
     /// Rewrites the member's marks on the touched days as a whole: the marks listed in
     /// <paramref name="removeIds"/> disappear, <paramref name="added"/> (when set) is painted on
-    /// top of what remains, and the result is stored normalized. Unchanged spans keep their ids.
+    /// top of what remains, <paramref name="erased"/> (when set) wipes the marks of its type where
+    /// it lies, and the result is stored normalized. Unchanged spans keep their ids.
     /// </summary>
     /// <returns>The member's marks on every day that was touched.</returns>
     Task<List<AvailabilityMark>> ApplyAsync(
@@ -19,7 +20,8 @@ public interface IAvailabilityMarkRepository
         int profileId,
         IReadOnlyCollection<DateOnly> dates,
         IReadOnlyCollection<int> removeIds,
-        AvailabilityDay.Span? added);
+        AvailabilityDay.Span? added,
+        AvailabilityDay.Span? erased);
 
     Task RemoveAllAsync(int groupId, int profileId);
 }
@@ -33,8 +35,9 @@ public interface IAvailabilityService
     Task<List<AvailabilityMarkDto>> GetByGroupAsync(int groupId, int profileId);
 
     /// <summary>
-    /// Adds a mark on every day. The result (the caller's marks on those days, normalized)
-    /// is returned so that the client can show exactly what was stored.
+    /// Adds a mark on every day, or wipes that mark from the days when <paramref name="erase"/>
+    /// is set (the brush was dragged over marks already there). The result (the caller's marks
+    /// on those days, normalized) is returned so that the client can show exactly what was stored.
     /// </summary>
     Task<List<AvailabilityMarkDto>> SetAsync(
         int groupId,
@@ -43,7 +46,8 @@ public interface IAvailabilityService
         AvailabilityType type,
         TimeOnly? start,
         TimeOnly? end,
-        IReadOnlyCollection<int>? replaceIds);
+        IReadOnlyCollection<int>? replaceIds,
+        bool erase);
 
     /// <summary>Removes own marks by id, or every own mark on the given days. Returns the marks left on the touched days.</summary>
     Task<List<AvailabilityMarkDto>> RemoveAsync(int groupId, int profileId, IReadOnlyCollection<int> ids, IReadOnlyCollection<DateOnly> dates);

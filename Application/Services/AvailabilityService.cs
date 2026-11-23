@@ -30,17 +30,23 @@ public class AvailabilityService(
         AvailabilityType type,
         TimeOnly? start,
         TimeOnly? end,
-        IReadOnlyCollection<int>? replaceIds)
+        IReadOnlyCollection<int>? replaceIds,
+        bool erase)
     {
         ValidateDates(dates);
         CheckIds(replaceIds);
         if (!Enum.IsDefined(type))
             throw new ArgumentException("Unknown availability type.", nameof(type));
+        if (dates.Count == 0)
+            throw new ArgumentException("At least one date is required.", nameof(dates));
+        if (erase && replaceIds is { Count: > 0 })
+            throw new ArgumentException("replaceIds cannot be combined with erase.", nameof(replaceIds));
 
-        var added = new AvailabilityDay.Span(type, start, end);
-        AvailabilityDay.Validate(added);
+        var span = new AvailabilityDay.Span(type, start, end);
+        AvailabilityDay.Validate(span);
 
-        var marks = await availabilityMarkRepository.ApplyAsync(groupId, profileId, dates, replaceIds ?? Array.Empty<int>(), added);
+        var marks = await availabilityMarkRepository.ApplyAsync(
+            groupId, profileId, dates, replaceIds ?? Array.Empty<int>(), erase ? null : span, erase ? span : null);
         await realtimeNotifier.NotifyAvailabilityChangedAsync(groupId);
         return marks.Select(Map).ToList();
     }
@@ -52,7 +58,7 @@ public class AvailabilityService(
         if (ids.Count == 0 && dates.Count == 0)
             throw new ArgumentException("Provide mark ids or dates to remove.", nameof(ids));
 
-        var marks = await availabilityMarkRepository.ApplyAsync(groupId, profileId, dates, ids, null);
+        var marks = await availabilityMarkRepository.ApplyAsync(groupId, profileId, dates, ids, null, null);
         await realtimeNotifier.NotifyAvailabilityChangedAsync(groupId);
         return marks.Select(Map).ToList();
     }
