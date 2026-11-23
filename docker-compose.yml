@@ -22,6 +22,7 @@ services:
       - Jwt__Issuer=${JWT_ISSUER:-AskDateIssuer}
       - Jwt__Audience=${JWT_AUDIENCE:-AskDateAudience}
       - Internal__ApiKey=${INTERNAL_API_KEY:-dev-internal-key-change-me}
+      - Admin__Email=${ADMIN_EMAIL:-}
     depends_on:
       - users.db
     ports:

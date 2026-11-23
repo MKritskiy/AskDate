@@ -2199,6 +2199,8 @@ async function saveNoteTitle() {
 
     const result = await apiCall(`/groups/${window.currentGroupId}/notes/${window.selectedNote.id}/title`, 'PUT', { title: newTitle || null });
     if (result) {
+        // Close the editor first — refreshOpenDayPanel skips re-render while editing
+        cancelEditNoteTitle();
         await fetchNotes();
     }
 }

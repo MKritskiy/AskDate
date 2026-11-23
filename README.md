@@ -56,6 +56,21 @@ docker compose -f docker-compose.prod.yml up -d
 
 Образы тянутся из Docker Hub. Watchtower автоматически обновляет контейнеры при появлении новых образов.
 
+#### Обновление версии на сервере
+
+Watchtower обновляет только образы. Для изменений в `nginx.conf` и переменных окружения
+(`docker-compose.prod.yml`) один раз после git pull выполните:
+
+```bash
+git pull
+docker compose -f docker-compose.prod.yml up -d   # пересоздаёт контейнеры с новым env и nginx
+```
+
+- Миграции БД применяются автоматически при старте (`AddAvailabilityMode` — только добавление
+  колонки, данные не затрагиваются).
+- Чтобы выдать права администратора на сервере с существующей БД, задайте `ADMIN_EMAIL=ваш@email`
+  в `.env` и пересоздайте контейнер users.web — роль выставится при старте.
+
 ### Переменные окружения
 
 Создайте `.env` файл (см. `.env.example`):
@@ -66,6 +81,11 @@ JWT_KEY=your_jwt_secret_key
 JWT_ISSUER=AskDateIssuer
 JWT_AUDIENCE=AskDateAudience
 DOCKERHUB_USERNAME=your_dockerhub_username
+# Email'ы (через запятую), получающие роль Administrator при старте users.web.
+# Безопасный способ выдать админа на сервере с уже существующей БД:
+ADMIN_EMAIL=you@example.com
+# Общий секрет межсервисных вызовов (одинаковое значение для обоих сервисов)
+INTERNAL_API_KEY=change_me_random_string
 ```
 
 ## Возможности
