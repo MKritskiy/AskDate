@@ -415,13 +415,24 @@ input.input-error {
 .close-btn {
   position: absolute;
   top: 10px;
-  right: 15px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0;
   cursor: pointer;
-  font-size: 18px;
   color: var(--text-secondary);
+  z-index: 2;
 }
+.close-btn .icon { width: 18px; height: 18px; }
 .close-btn:hover {
   color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .fc {
@@ -455,27 +466,56 @@ input.input-error {
   box-shadow: inset 0 0 0 1px var(--accent);
 }
 
-/* Availability day coloring (free = green, busy = red, all-free = green outline) */
+/* Tints of the existing palette hues (no new colors) */
+:root {
+  --danger-soft: #ff8a91;
+  --free-tint: rgba(82, 183, 136, 0.22);
+  --event-tint: rgba(238, 108, 77, 0.10);
+  --busy-hatch: rgba(230, 57, 70, 0.32);
+  --busy-hatch-soft: rgba(230, 57, 70, 0.08);
+  --unknown-tint: rgba(152, 193, 217, 0.35);
+}
+
+/* --- Day states ---
+   Precedence: my busy mark (red hatch) > my free mark (green tint) > day has events (soft accent).
+   Marks are personal and typed; events never change the tint. */
+.fc .fc-daygrid-day.fc-day-sat,
+.fc .fc-daygrid-day.fc-day-sun {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+.fc .fc-daygrid-day.day-has-events {
+  background-color: var(--event-tint) !important;
+}
 .fc .fc-daygrid-day.day-free {
-  background-color: rgba(82, 183, 136, 0.22) !important;
+  background-color: var(--free-tint) !important;
 }
 .fc .fc-daygrid-day.day-busy {
-  background-color: rgba(230, 57, 70, 0.20) !important;
+  background-color: transparent !important;
+  background-image: repeating-linear-gradient(135deg, var(--busy-hatch) 0 6px, var(--busy-hatch-soft) 6px 12px) !important;
+  box-shadow: inset 0 0 0 2px rgba(230, 57, 70, 0.55);
 }
 .fc .fc-daygrid-day.day-all-free {
   box-shadow: inset 0 0 0 2px var(--success);
 }
 
-/* Subtle weekend tint */
-.fc .fc-daygrid-day.fc-day-sat,
-.fc .fc-daygrid-day.fc-day-sun {
-  background-color: rgba(255, 255, 255, 0.02) !important;
+/* Group availability bar at the bottom of a day cell (element added by app.js):
+   green = free members, red = busy members, grey = have not marked. */
+.fc .fc-daygrid-day-frame { position: relative; }
+.avail-bar {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 5px;
+  height: 4px;
+  border-radius: 2px;
+  pointer-events: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
+  /* An outline rather than a background change, so marks stay visible under the cursor */
   .fc .fc-daygrid-day:hover {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-    transition: background-color 150ms ease;
+    outline: 2px solid rgba(224, 251, 252, 0.35);
+    outline-offset: -2px;
   }
 }
 
@@ -505,6 +545,16 @@ input.input-error {
 
 @media (max-width: 768px) {
   .fc-event-badge .badge-text {
+    display: none;
+  }
+}
+
+/* Narrow cells: a timed event shows its time, everything else the number of events */
+@media (max-width: 480px) {
+  .fc-event-badge { padding: 2px 3px; }
+  .fc-event-badge.has-time .badge-count,
+  .fc-event-badge.has-time .badge-sep,
+  .fc-event-badge .rec-glyph {
     display: none;
   }
 }
@@ -770,9 +820,26 @@ select:focus {
     gap: 4px;
   }
 }
+
 /* ============================================================
-   Toolbar, availability mode, legend, realtime & new UI (v2.1)
+   v2.2 — tools, availability marks, day panel, legend, admin, toasts
    ============================================================ */
+
+.group-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.group-heading {
+  min-width: 0;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+.group-heading:hover { background: rgba(255, 255, 255, 0.04); }
+.group-header .btn { flex-shrink: 0; margin-top: 4px; }
 
 .toolbar-row {
   display: flex;
@@ -783,29 +850,61 @@ select:focus {
   margin-top: var(--spacing);
 }
 
-/* --- Availability mode switch (free/busy marking) --- */
-.availability-switch {
+/* --- Tool switch: what a click on the calendar does --- */
+.tool-switch {
   display: inline-flex;
   background: var(--bg-base);
   border: 1px solid var(--bg-elevated);
   border-radius: var(--radius);
   overflow: hidden;
 }
-.mode-btn {
+.tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: transparent;
   border: none;
   color: var(--text-secondary);
-  font-size: 12px;
   font-family: var(--font-family);
+  font-size: 12px;
   padding: 0 12px;
   min-height: 36px;
   cursor: pointer;
+  white-space: nowrap;
   transition: background-color var(--transition), color var(--transition);
 }
-.mode-btn:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.04); }
-.mode-btn.active { background: var(--bg-elevated); font-weight: 600; }
-.mode-btn.active.free-active { color: var(--success); }
-.mode-btn.active.busy-active { color: var(--danger); }
+.tool-btn + .tool-btn { border-left: 1px solid var(--bg-elevated); }
+.tool-btn:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.04); }
+.tool-btn.active { background: var(--bg-elevated); color: var(--text-primary); font-weight: 600; }
+.tool-btn.tool-free.active { background: rgba(82, 183, 136, 0.18); color: var(--success); }
+.tool-btn.tool-busy.active { background: rgba(230, 57, 70, 0.16); color: var(--danger-soft); }
+
+.icon { width: 14px; height: 14px; flex-shrink: 0; display: inline-block; vertical-align: middle; }
+
+/* --- Hint strip above the calendar --- */
+.tool-hint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-elevated);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.tool-hint.hint-free { border-color: var(--success); background: rgba(82, 183, 136, 0.08); }
+.tool-hint.hint-busy { border-color: var(--danger); background: rgba(230, 57, 70, 0.08); }
+.tool-hint .tool-hint-icon { display: inline-flex; }
+.tool-hint.hint-free .tool-hint-icon { color: var(--success); }
+.tool-hint.hint-busy .tool-hint-icon { color: var(--danger-soft); }
+.tool-hint .btn { flex-shrink: 0; }
+
+/* Brush mode: crosshair cursor and a selection highlight in the brush colour */
+#calendar.tool-free,
+#calendar.tool-busy { cursor: crosshair; }
+#calendar.tool-free { --fc-highlight-color: rgba(82, 183, 136, 0.28); }
+#calendar.tool-busy { --fc-highlight-color: rgba(230, 57, 70, 0.26); }
 
 /* --- Realtime connection status --- */
 .realtime-status {
@@ -827,28 +926,37 @@ select:focus {
 .calendar-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 8px 16px;
   align-items: center;
   padding: 10px 4px 0 4px;
   font-size: 12px;
   color: var(--text-secondary);
 }
 .legend-item { display: inline-flex; align-items: center; gap: 6px; }
-.legend-swatch { width: 14px; height: 14px; border-radius: 4px; display: inline-block; flex-shrink: 0; }
-.swatch-free { background: rgba(82, 183, 136, 0.30); border: 1px solid var(--success); }
-.swatch-busy { background: rgba(230, 57, 70, 0.28); border: 1px solid var(--danger); }
-.swatch-allfree { background: rgba(82, 183, 136, 0.06); border: 1px dashed var(--success); }
+.legend-swatch { width: 16px; height: 14px; border-radius: 4px; display: inline-block; flex-shrink: 0; }
+.swatch-free { background: var(--free-tint); border: 1px solid var(--success); }
+.swatch-busy {
+  background: repeating-linear-gradient(135deg, var(--busy-hatch) 0 4px, var(--busy-hatch-soft) 4px 8px);
+  border: 1px solid var(--danger);
+}
+.swatch-event { background: var(--event-tint); border: 1px solid var(--accent); }
+.swatch-allfree { background: var(--free-tint); border: 1.5px solid var(--success); }
+.swatch-bar {
+  width: 30px;
+  background: linear-gradient(90deg, rgba(82, 183, 136, 0.85) 0 45%, rgba(230, 57, 70, 0.85) 45% 70%, var(--unknown-tint) 70% 100%);
+}
+.legend-toggle { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+.legend-toggle input {
+  width: 16px !important;
+  height: 16px !important;
+  min-height: 16px !important;
+  margin: 0 !important;
+  accent-color: var(--success);
+  flex-shrink: 0;
+}
 .availability-summary { margin-left: auto; font-size: 12px; }
 
-.calendar-hint {
-  margin-top: 10px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  text-align: center;
-  padding: 0 8px;
-}
-
-/* --- Skeleton loaders --- */
+/* --- Skeleton loaders (first load of a list) --- */
 .skeleton {
   position: relative;
   overflow: hidden;
@@ -866,8 +974,6 @@ select:focus {
 }
 @keyframes shimmer { 100% { transform: translateX(100%); } }
 .skeleton-line { height: 40px; margin-bottom: 8px; }
-.skeleton-block { height: 300px; margin-bottom: 12px; }
-#calendarSkeleton { position: absolute; inset: var(--spacing); z-index: 5; pointer-events: none; }
 
 /* --- Empty states --- */
 .empty-state { text-align: center; padding: 12px 0 4px 0; }
@@ -889,7 +995,30 @@ select:focus {
 }
 .avatar.avatar-small { width: 20px; height: 20px; font-size: 9px; }
 .participant-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.participant-row .participant-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Names wrap instead of being cut off — the row has room for a second line */
+.participant-name { color: var(--text-primary); overflow-wrap: anywhere; }
+
+/* --- Participants list in the group settings --- */
+.participants-list { max-height: 320px; overflow-y: auto; }
+.participant-item { cursor: default; gap: 10px; }
+.participant-item:hover { background-color: var(--bg-base); border-color: transparent; }
+.participant-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.participant-item .participant-name { font-size: 14px; line-height: 1.3; }
+.participant-meta { font-size: 11px; color: var(--text-secondary); }
+.btn-link {
+  background: none;
+  border: none;
+  padding: 4px 0;
+  font-family: var(--font-family);
+  font-size: 12px;
+  color: var(--danger-soft);
+  text-decoration: underline;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.btn-link:hover { color: #ffb3b8; }
+.settings-section { border-top: 1px solid var(--bg-elevated); padding-top: var(--spacing); margin-bottom: var(--spacing); }
+.settings-section h4 { font-size: 14px; }
 
 /* --- Time chip --- */
 .time-chip {
@@ -901,16 +1030,120 @@ select:focus {
   white-space: nowrap;
 }
 
-/* --- Toasts --- */
-.toast {
+/* --- Day panel: availability block (day scope, above the selected event) --- */
+.avail-label { font-size: 12px; color: var(--text-secondary); }
+.avail-warning { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11px; color: var(--danger-soft); }
+.day-availability { padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--bg-elevated); }
+
+/* --- Mark time: "whole day / from – to" controls (brush strip and day panel) --- */
+.range-control { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-left: auto; }
+.avail-form { display: flex; align-items: center; gap: 10px 14px; flex-wrap: wrap; }
+.avail-form-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.avail-form-actions .btn.seg-free { background: rgba(82, 183, 136, 0.18); color: var(--success); border: 1px solid var(--success); }
+.avail-form-actions .btn.seg-free:hover { background: rgba(82, 183, 136, 0.3); }
+.avail-form-actions .btn.seg-busy { background: rgba(230, 57, 70, 0.16); color: var(--danger-soft); border: 1px solid var(--danger); }
+.avail-form-actions .btn.seg-busy:hover { background: rgba(230, 57, 70, 0.28); }
+#panelEditing { display: inline-flex; align-items: center; gap: 8px; }
+.range-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.range-toggle input { width: 14px !important; height: 14px !important; min-height: 14px !important; margin: 0 !important; accent-color: var(--accent); flex-shrink: 0; }
+.range-times { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+.time-select { display: inline-flex; align-items: center; gap: 2px; }
+/* hours and minutes: compact 24-hour selects (the global select style is sized for whole forms) */
+.time-select select {
+  width: auto;
+  height: 30px;
+  min-height: 30px;
+  margin: 0;
+  padding: 0 20px 0 5px;
+  border-radius: 4px;
+  font-size: 12px;
+  background-color: var(--bg-base);
+  background-position: right 5px center;
+}
+.time-select select:disabled { opacity: 0.45; cursor: not-allowed; }
+.time-select-optional select.time-hour { min-width: 56px; }
+
+/* In the compact day sheet the sidebar's "no events" note only collides with the close button */
+#dayPanel.is-empty .day-event-empty { display: none; }
+
+/* --- My marks of the day --- */
+.my-marks { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+.my-mark { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 4px 8px; border-radius: 4px; border: 1px solid transparent; }
+.my-mark.is-pending { opacity: 0.75; }
+.my-mark-editing { border-color: var(--accent); background: rgba(238, 108, 77, 0.1); }
+.my-mark-text { flex: 1; min-width: 0; color: var(--text-primary); overflow-wrap: anywhere; }
+.my-mark-tools { display: flex; gap: 10px; flex-shrink: 0; }
+
+/* --- A mark as a small chip (in the calendar and in the list) --- */
+.mark-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.mark-chip .icon { width: 11px; height: 11px; }
+.mark-chip.mark-busy { background: rgba(230, 57, 70, 0.16); border: 1px solid var(--danger); color: var(--danger-soft); }
+.mark-chip.mark-free { background: rgba(82, 183, 136, 0.16); border: 1px solid var(--success); color: var(--success); }
+.mark-range-short { display: none; }
+/* FullCalendar's own event box is not needed around a chip */
+.fc .fc-daygrid-event.mark-event { background: transparent; border: none; color: inherit; }
+.fc .fc-daygrid-event.mark-event:hover { background: transparent; }
+
+/* --- Everyone's availability on the day --- */
+.day-group-avail { margin-top: 10px; }
+.avail-common { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; font-size: 12px; color: var(--success); }
+.avail-common .icon { flex-shrink: 0; }
+.member-rows { display: flex; flex-direction: column; gap: 6px; max-height: 150px; overflow-y: auto; scrollbar-width: thin; }
+.member-row {
+  display: grid;
+  grid-template-columns: minmax(96px, 150px) minmax(80px, 1fr) minmax(140px, auto);
+  align-items: center;
+  gap: 6px 10px;
+  font-size: 12px;
+}
+.member-name { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.member-name .participant-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.member-bar { height: 6px; border-radius: 3px; min-width: 60px; }
+.member-summary { color: var(--text-secondary); line-height: 1.35; overflow-wrap: anywhere; }
+.muted { opacity: 0.6; }
+
+/* Who is busy at the time of an event */
+.event-avail { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; font-size: 12px; color: var(--text-secondary); }
+.event-avail.is-busy { color: var(--danger-soft); }
+.event-avail .icon { flex-shrink: 0; }
+.day-empty { text-align: center; padding: 24px 0; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+
+/* --- Toasts (single host, one visible toast at a time) --- */
+.toast-host {
   position: fixed;
-  bottom: 20px;
   right: 20px;
+  bottom: 20px;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+  pointer-events: none;
+}
+.toast {
   background: var(--accent);
   color: #1b222d;
   padding: 10px 20px;
   border-radius: var(--radius);
-  z-index: 3000;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
   font-weight: 600;
   font-size: 14px;
@@ -922,12 +1155,29 @@ select:focus {
 .toast.toast-error { background: var(--danger); color: #fff; }
 
 /* --- Modal animation + wide modal --- */
-.modal { animation: modalIn 160ms ease; }
+.modal { animation: modalIn 160ms ease; max-height: 92vh; overflow-y: auto; }
 @keyframes modalIn {
   from { opacity: 0; transform: translate(-50%, -48%); }
   to { opacity: 1; transform: translate(-50%, -50%); }
 }
 .modal-wide { max-width: 580px; }
+
+/* --- Profile: read-only login row + labelled fields --- */
+.profile-login {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--bg-base);
+  border: 1px solid var(--bg-elevated);
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin-bottom: var(--spacing);
+}
+.profile-login-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.login-label { font-size: 12px; color: var(--text-secondary); }
+.login-value { font-size: 14px; color: var(--text-primary); overflow-wrap: anywhere; user-select: text; }
+.field-label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
 
 /* --- Admin panel --- */
 .admin-list { max-height: 420px; overflow-y: auto; padding-right: 4px; }
@@ -961,15 +1211,6 @@ select:focus {
 }
 .role-badge.role-admin { background: rgba(82, 183, 136, 0.15); color: var(--success); }
 .admin-actions { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
-.admin-generated {
-  background: var(--bg-elevated);
-  border-radius: var(--radius);
-  padding: 14px;
-  margin-bottom: 10px;
-  font-size: 13px;
-  word-break: break-all;
-}
-.admin-generated strong { color: var(--success); font-size: 15px; }
 
 /* --- Group stats --- */
 .stats-list { display: flex; flex-direction: column; gap: 8px; }
@@ -988,14 +1229,28 @@ select:focus {
 /* --- QR modal --- */
 #qrContainer canvas, #qrContainer img { border-radius: 4px; max-width: 100%; }
 
-/* --- Icon-only buttons (bell, etc.) --- */
-.btn.icon-only { min-width: 36px; padding: 0 8px; font-size: 14px; }
+/* --- Icon-only buttons (bell, day navigation) --- */
+.btn.icon-only { min-width: 36px; padding: 0 8px; }
 .btn.icon-only.toggled { border-color: var(--success); color: var(--success); }
 
 /* --- Focus visibility --- */
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
-/* --- Mobile: bottom-sheet day panel + toolbar stacking --- */
+/* --- Day panel: a little wider and taller to fit availability above the event --- */
+@media (min-width: 769px) {
+  #dayPanel { max-width: 800px; height: min(560px, calc(100vh - 40px)); }
+  #dayPanel.is-empty { height: auto; }                 /* nothing to show below the availability block */
+  #dayPanel.is-empty #dayAddNoteBtn { display: none; } /* the empty state has its own "create" button */
+  .day-panel-sidebar { min-width: 210px; max-width: 230px; }
+}
+.day-panel-actions { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+
+/* The full weekday and date fit on two lines; the arrows are icon buttons */
+.day-nav-row h3 { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.25; }
+.day-nav-row .btn.icon-only { width: 30px; min-width: 30px; padding: 0; }
+#dayParticipantsList { max-height: 140px; }
+
+/* --- Mobile --- */
 @media (max-width: 768px) {
   #dayPanel {
     top: auto;
@@ -1006,7 +1261,7 @@ select:focus {
     width: 100%;
     max-width: none;
     height: auto;
-    max-height: 88vh;
+    max-height: 92vh;
     border-radius: 14px 14px 0 0;
     animation: sheetUp 220ms ease;
   }
@@ -1014,11 +1269,126 @@ select:focus {
     from { transform: translateY(40px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
-  .day-panel-detail { max-height: 52vh; }
+  /* The sheet scrolls as a whole: the detail may shrink below its content height */
+  .day-panel-detail { max-height: none; min-height: 0; }
+  .day-panel-actions { flex-direction: row; }
+  .day-panel-actions .btn { flex: 1; }
   .toolbar-row { flex-direction: column; align-items: stretch; }
   .toolbar-row .flex-row { justify-content: center; }
-  .availability-switch { width: 100%; justify-content: stretch; }
-  .mode-btn { flex: 1; padding: 8px 6px; min-height: 44px; }
-  .availability-summary { margin-left: 0; }
+  .tool-switch { width: 100%; }
+  .tool-btn { flex: 1; justify-content: center; padding: 8px 6px; min-height: 44px; }
+  .availability-summary { margin-left: 0; width: 100%; }
+  .hide-mobile-legend { display: none; }
+  .tool-hint { flex-wrap: wrap; }
+  .range-control { margin-left: 0; width: 100%; }
+  .member-row { grid-template-columns: minmax(0, 1fr) minmax(60px, 90px); }
+  .member-summary { grid-column: 1 / -1; margin-top: -4px; }
   .admin-actions { flex: 1; }
+  .avail-bar { left: 4px; right: 4px; bottom: 3px; height: 3px; }
+  .toast-host { left: 12px; right: 12px; align-items: stretch; }
+  .toast { max-width: none; }
 }
+
+/* --- Confirm / alert dialog (kept apart from the generic .modal elements) --- */
+.app-dialog-overlay {
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.app-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: #2A2A2A;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  color: #fff;
+  animation: dialogIn 160ms ease;
+}
+@keyframes dialogIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+.app-dialog-text { margin-bottom: 20px; font-size: 16px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+.app-dialog-actions { justify-content: center; gap: 16px; }
+
+/* --- Pieces introduced with the v2.2 markup --- */
+.list-item-active {
+  border-color: var(--accent) !important;
+  background-color: rgba(238, 108, 77, 0.12) !important;
+}
+.fc-event-wrap { padding: 2px; text-align: center; }
+.rec-glyph { color: var(--accent); font-size: 11px; }
+.day-event-empty {
+  padding: 8px 10px !important;
+  margin-bottom: 4px !important;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: default;
+}
+.day-event-empty:hover { background-color: var(--bg-base); border-color: transparent; }
+.upcoming-empty { text-align: center; padding: 40px 12px; color: var(--text-secondary); font-size: 14px; }
+#recurrenceIndicator { display: flex; }
+.avail-empty { padding-top: 6px; font-size: 12px; color: var(--text-secondary); opacity: 0.8; }
+
+.btn-link.muted { color: var(--text-secondary); }
+.btn-link.muted:hover { color: var(--text-primary); }
+.btn-link:disabled { opacity: 0.4; cursor: not-allowed; text-decoration: none; }
+
+.note-title-area { margin-bottom: 8px; min-height: 22px; }
+.note-title-display {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0 0 2px;
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+button.note-title-display { cursor: pointer; }
+button.note-title-display:hover { color: var(--accent); }
+.note-title-display.is-placeholder { font-style: italic; font-weight: 400; color: var(--text-secondary); }
+.note-title-display.is-placeholder:hover { color: var(--text-primary); }
+span.note-title-display { cursor: default; }
+.note-title-edit { display: flex; gap: 4px; align-items: center; }
+.note-title-edit input { margin: 0; height: 26px; min-height: 26px; font-size: 12px; flex: 1; padding: 1px 6px; width: auto; }
+.note-title-edit .btn { font-size: 10px; padding: 0 8px; height: 26px; min-height: 26px; line-height: 26px; }
+
+.comment { margin-bottom: 8px; padding: 10px 12px; background-color: var(--bg-elevated); border-radius: var(--radius); }
+.comment-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.comment-author { display: flex; align-items: center; gap: 6px; min-width: 0; flex-wrap: wrap; }
+.comment-author-name { font-size: 12px; font-weight: bold; color: var(--accent); }
+.comment-date { font-size: 11px; color: var(--text-secondary); }
+.comment-tools { display: flex; gap: 10px; flex-shrink: 0; }
+.comment-text { margin-top: 6px; font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; }
+.comment-edit { margin-top: 8px; }
+.comment-edit input { margin-bottom: 8px; }
+.comments-empty { text-align: center; padding: 16px 0; font-size: 12px; color: var(--text-secondary); }
+.fc-event-badge .badge-time { font-weight: 600; }
+@media (max-width: 480px) {
+  .fc-event-badge { font-size: 10px; padding: 2px 2px; }
+}
+
+/* Header on narrow screens: the name wraps instead of pushing the buttons off the screen */
+@media (max-width: 480px) {
+  #headerUserName { margin: 0 6px !important; min-width: 0; max-width: 30vw; line-height: 1.15; }
+  #navMenu { min-width: 0; }
+}
+
+/* Narrow cells: a chip shows "9–12" instead of "09:00–12:00" */
+@media (max-width: 480px) {
+  .mark-range-long { display: none; }
+  .mark-range-short { display: inline; }
+  .mark-chip { padding: 1px 2px; gap: 2px; font-size: 10px; }
+}
+.time-select select.time-hour { min-width: 54px; }
+.time-select select.time-minute { min-width: 54px; }

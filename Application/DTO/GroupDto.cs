@@ -27,11 +27,6 @@ public class ParticipantDto
     public string ProfileName { get; set; } = string.Empty;
     public ParticipantRole Role { get; set; }
 
-    /// <summary>Free = marks mean available days; Busy = marks mean unavailable days.</summary>
-    public int AvailabilityMode { get; set; }
-}
-
-public class AvailabilityModeDto
-{
-    public int AvailabilityMode { get; set; }
+    /// <summary>The member is free on every day they did not mark as busy.</summary>
+    public bool UnmarkedDaysFree { get; set; }
 }

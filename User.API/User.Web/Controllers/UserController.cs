@@ -110,7 +110,8 @@ namespace Users.Web.Controllers
             return Ok(new
             {
                 userId = RequesterUserId,
-                email = User.FindFirst(ClaimTypes.Name)?.Value,
+                // Tokens carry the short "name" claim; the long form is kept for tokens issued before that change
+                email = User.FindFirst("name")?.Value ?? User.FindFirst(ClaimTypes.Name)?.Value,
                 role = User.FindFirst(ClaimTypes.Role)?.Value ?? Roles.User
             });
         }

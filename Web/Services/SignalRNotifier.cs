@@ -16,6 +16,9 @@ public class SignalRNotifier(IHubContext<GroupHub> hubContext) : IRealtimeNotifi
     public Task NotifyParticipantsChangedAsync(int groupId) =>
         hubContext.Clients.Group(GroupHub.GroupName(groupId)).SendAsync("participantsChanged", new { groupId });
 
+    public Task NotifyAvailabilityChangedAsync(int groupId) =>
+        hubContext.Clients.Group(GroupHub.GroupName(groupId)).SendAsync("availabilityChanged", new { groupId });
+
     public Task NotifyGroupUpdatedAsync(int groupId, bool deleted = false) =>
         hubContext.Clients.Group(GroupHub.GroupName(groupId)).SendAsync("groupUpdated", new { groupId, deleted });
 }

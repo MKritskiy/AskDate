@@ -1,5 +1,6 @@
 using AskDate.Application.Interfaces;
 using AskDate.Infra;
+using AskDate.Web;
 using AskDate.Web.Configurations;
 using AskDate.Web.Hubs;
 using AskDate.Web.Services;
@@ -57,6 +58,10 @@ var appLogger = new SerilogLoggerFactory(logger)
 builder.Services.AddSignalR();
 builder.Services.AddScoped<IRealtimeNotifier, SignalRNotifier>();
 
+// Expected refusals (404 / 403 / 400) become clean ProblemDetails responses
+builder.Services.AddExceptionHandler<DomainExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 builder.Services.AddInfrastructureServices(builder.Configuration, appLogger);
 
 builder.Services.AddSwaggerGen(c =>
@@ -98,6 +103,12 @@ builder.AddServiceDefaults();
 
 var app = builder.Build();
 
+// Outside Development the developer page is off, so route failures through the typed handler
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler();
+}
+
 await app.UseAppMiddlewareAndSeedDatabase();
 await app.UseAppSwaggerOpenApiServers(
     new List<OpenApiServer>
@@ -110,10 +121,9 @@ app.UseStaticFiles(new StaticFileOptions
 {
     OnPrepareResponse = ctx =>
     {
-        // Prevent aggressive browser caching so volume-mounted changes reflect immediately
-        ctx.Context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
-        ctx.Context.Response.Headers["Pragma"] = "no-cache";
-        ctx.Context.Response.Headers["Expires"] = "0";
+        // "no-cache" keeps volume-mounted edits visible immediately but still lets the browser
+        // reuse its copy through ETag revalidation (304) instead of re-downloading every file.
+        ctx.Context.Response.Headers["Cache-Control"] = "no-cache";
     }
 });
 

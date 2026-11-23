@@ -28,12 +28,12 @@ public class CommentService(
     public async Task<CommentDto> CreateAsync(int noteId, CommentCreateDto dto, int profileId)
     {
         var note = await noteRepository.GetByIdAsync(noteId);
-        if (note == null) throw new Exception("Note not found");
+        if (note == null) throw new KeyNotFoundException("Note not found");
 
         var group = await groupRepository.GetByIdAsync("Participants", note.GroupId);
         if (group == null || !group.Participants.Any(p => p.ProfileId == profileId))
         {
-            throw new Exception("You are not a participant of this group.");
+            throw new UnauthorizedAccessException("You are not a participant of this group.");
         }
 
         var comment = new AskDate.Domain.Entities.Comment
@@ -58,8 +58,8 @@ public class CommentService(
     public async Task UpdateAsync(int id, CommentUpdateDto dto, int profileId)
     {
         var comment = await commentRepository.GetByIdAsync(id);
-        if (comment == null) throw new Exception("Not found");
-        if (comment.AuthorProfileId != profileId) throw new Exception("Forbidden");
+        if (comment == null) throw new KeyNotFoundException("Comment not found");
+        if (comment.AuthorProfileId != profileId) throw new UnauthorizedAccessException("Only the author can edit a comment.");
 
         comment.Content = dto.Content;
         comment.LastModified = DateTimeOffset.UtcNow; // ensure updated

@@ -1,4 +1,4 @@
-﻿using AskDate.Application.Interfaces;
+using AskDate.Application.Interfaces;
 using AskDate.Infra.Repositories;
 using AskDate.Application.Services;
 using AskDate.Infra.Data;
@@ -16,11 +16,13 @@ public static class DependencyInjection
         services.AddScoped<IGroupRepository, GroupRepo>();
         services.AddScoped<IParticipantRepository, ParticipantRepo>();
         services.AddScoped<INoteConfirmationRepository, NoteConfirmationRepo>();
+        services.AddScoped<IAvailabilityMarkRepository, AvailabilityMarkRepo>();
         services.AddHttpClient<IProfileApiClient, AskDate.Infra.Services.ProfileApiClient>();
 
         services.AddScoped<IGroupService, GroupService>();
         services.AddScoped<INoteService, NoteService>();
         services.AddScoped<ICommentService, CommentService>();
+        services.AddScoped<IAvailabilityService, AvailabilityService>();
 
 
         logger.LogInformation("{Project} services registered", "Infrastructure");

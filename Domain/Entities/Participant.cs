@@ -6,17 +6,11 @@ public class Participant : BaseEntity
     public ParticipantRole Role { get; set; }
 
     /// <summary>
-    /// How this participant's calendar marks are interpreted:
-    /// Free = marks are the days they ARE available (default),
-    /// Busy = marks are the days they are NOT available (everything unmarked is available).
+    /// True when this member is free on every day they did not mark as busy
+    /// (for people who "can always, except fixed times"). It only affects the
+    /// group availability summary and never changes the meaning of existing marks.
     /// </summary>
-    public AvailabilityMode AvailabilityMode { get; set; } = AvailabilityMode.Free;
-}
-
-public enum AvailabilityMode
-{
-    Free = 0,
-    Busy = 1
+    public bool UnmarkedDaysFree { get; set; }
 }
 
 public enum ParticipantRole

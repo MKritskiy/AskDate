@@ -9,7 +9,9 @@ public interface IGroupService
     Task<GroupDto> CreateAsync(GroupCreateDto dto, int creatorProfileId);
     Task<GroupDto> UpdateAsync(int id, GroupUpdateDto dto);
     Task RemoveParticipantAsync(int groupId, int profileId, int currentProfileId);
-    Task AddParticipantAsync(int groupId, int profileId);
+
+    /// <exception cref="UnauthorizedAccessException">The caller is not a member and did not present a valid invite link.</exception>
+    Task AddParticipantAsync(int groupId, int profileId, string? inviteLink);
     Task DeleteAsync(int id, int currentProfileId);
-    Task SetAvailabilityModeAsync(int groupId, int profileId, int mode);
+    Task SetUnmarkedDaysFreeAsync(int groupId, int profileId, bool unmarkedDaysFree);
 }

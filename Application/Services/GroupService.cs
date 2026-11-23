@@ -32,25 +32,33 @@ public class GroupService(
             g => g.Participants.Any(p => p.ProfileId == profileId),
             includeProperties: "Participants");
 
-        var dtos = new List<GroupDto>();
-        foreach (var g in groups)
+        var dtos = groups.Select(Map).ToList();
+
+        // One profile lookup for all groups instead of one per group
+        var profileIds = dtos.SelectMany(d => d.Participants).Select(p => p.ProfileId).Distinct();
+        var names = await profileApiClient.GetProfileNamesAsync(profileIds);
+        foreach (var dto in dtos)
         {
-            dtos.Add(await MapWithNames(g));
+            foreach (var p in dto.Participants)
+            {
+                p.ProfileName = names.GetValueOrDefault(p.ProfileId, "Unknown");
+            }
         }
+
         return dtos;
     }
 
     public async Task<GroupDto> GetByIdAsync(int id)
     {
         var group = await groupRepository.GetByIdAsync("Participants", id);
-        if (group == null) throw new Exception("Group not found");
+        if (group == null) throw new KeyNotFoundException("Group not found");
         return await MapWithNames(group);
     }
 
     public async Task<GroupDto> GetByInviteLinkAsync(string link)
     {
         var group = await groupRepository.GetByInviteLinkAsync(link);
-        if (group == null) throw new Exception("Group not found");
+        if (group == null) throw new KeyNotFoundException("Group not found");
         return await MapWithNames(group);
     }
 
@@ -72,7 +80,7 @@ public class GroupService(
     public async Task<GroupDto> UpdateAsync(int id, GroupUpdateDto dto)
     {
         var group = await groupRepository.GetByIdAsync("Participants", id);
-        if (group == null) throw new Exception("Group not found");
+        if (group == null) throw new KeyNotFoundException("Group not found");
 
         group.Name = dto.Name;
         await groupRepository.UpdateAsync(group);
@@ -84,19 +92,26 @@ public class GroupService(
     public async Task DeleteAsync(int id, int currentProfileId)
     {
         var group = await groupRepository.GetByIdAsync(id);
-        if (group?.CreatorProfileId == currentProfileId)
-        {
-            await groupRepository.DeleteByIdAsync(id);
-            await realtimeNotifier.NotifyGroupUpdatedAsync(id, deleted: true);
-        }
+        if (group == null) throw new KeyNotFoundException("Group not found");
+        if (group.CreatorProfileId != currentProfileId)
+            throw new UnauthorizedAccessException("Only the group creator can delete the group.");
+
+        await groupRepository.DeleteByIdAsync(id);
+        await realtimeNotifier.NotifyGroupUpdatedAsync(id, deleted: true);
     }
 
-    public async Task AddParticipantAsync(int groupId, int profileId)
+    public async Task AddParticipantAsync(int groupId, int profileId, string? inviteLink)
     {
         var group = await groupRepository.GetByIdAsync("Participants", groupId);
-        if (group == null) throw new Exception("Group not found");
+        if (group == null) throw new KeyNotFoundException("Group not found");
 
+        // Already a member — joining again is a no-op
         if (group.Participants.Any(p => p.ProfileId == profileId)) return;
+
+        // Groups are private: joining needs the invite link, not just the numeric id
+        var presented = inviteLink?.Trim();
+        if (string.IsNullOrEmpty(presented) || !string.Equals(presented, group.InviteLink, StringComparison.OrdinalIgnoreCase))
+            throw new UnauthorizedAccessException("A valid invite link is required to join this group.");
 
         var participant = new Participant { GroupId = groupId, ProfileId = profileId, Role = ParticipantRole.Member };
         await participantRepository.AddAsync(participant);
@@ -106,30 +121,33 @@ public class GroupService(
     public async Task RemoveParticipantAsync(int groupId, int profileId, int currentProfileId)
     {
         var group = await groupRepository.GetByIdAsync(groupId);
-        if (group == null) return;
+        if (group == null) throw new KeyNotFoundException("Group not found");
 
         // Non-creators can only remove themselves
-        if (group.CreatorProfileId != currentProfileId && profileId != currentProfileId) return;
+        if (group.CreatorProfileId != currentProfileId && profileId != currentProfileId)
+            throw new UnauthorizedAccessException("Only the group creator can remove other participants.");
+
+        // A group without its creator could never be deleted or managed again
+        if (group.CreatorProfileId == currentProfileId && profileId == currentProfileId)
+            throw new UnauthorizedAccessException("The creator cannot leave the group. Delete the group instead.");
 
         var participants = await participantRepository.Get(p => p.GroupId == groupId && p.ProfileId == profileId);
         var p = participants.FirstOrDefault();
-        if (p != null)
-        {
-            await participantRepository.DeleteByIdAsync(p.Id);
-            await realtimeNotifier.NotifyParticipantsChangedAsync(groupId);
-        }
+        if (p == null) return;
+
+        await participantRepository.DeleteByIdAsync(p.Id);
+        await realtimeNotifier.NotifyParticipantsChangedAsync(groupId);
     }
 
-    public async Task SetAvailabilityModeAsync(int groupId, int profileId, int mode)
+    public async Task SetUnmarkedDaysFreeAsync(int groupId, int profileId, bool unmarkedDaysFree)
     {
-        if (mode is not ((int)AvailabilityMode.Free) and not ((int)AvailabilityMode.Busy))
-            throw new ArgumentException("Invalid availability mode");
-
         var participants = await participantRepository.Get(p => p.GroupId == groupId && p.ProfileId == profileId);
         var participant = participants.FirstOrDefault();
-        if (participant == null) throw new Exception("You are not a participant of this group.");
+        if (participant == null) throw new KeyNotFoundException("You are not a participant of this group.");
 
-        participant.AvailabilityMode = (AvailabilityMode)mode;
+        if (participant.UnmarkedDaysFree == unmarkedDaysFree) return;
+
+        participant.UnmarkedDaysFree = unmarkedDaysFree;
         await participantRepository.UpdateAsync(participant);
         await realtimeNotifier.NotifyParticipantsChangedAsync(groupId);
     }
@@ -147,7 +165,7 @@ public class GroupService(
                 ProfileId = p.ProfileId,
                 ProfileName = "", // Names resolved via ProfileApiClient
                 Role = p.Role,
-                AvailabilityMode = (int)p.AvailabilityMode
+                UnmarkedDaysFree = p.UnmarkedDaysFree
             }).ToList() ?? new List<ParticipantDto>()
         };
     }

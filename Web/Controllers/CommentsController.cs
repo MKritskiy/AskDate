@@ -8,6 +8,7 @@ namespace AskDate.Web.Controllers;
 [ApiController]
 [Route("api/notes/{noteId}/comments")]
 [Authorize]
+[MemberOfNoteGroup]
 public class CommentsController(ICommentService commentService, INoteService noteService, ILogger<CommentsController> logger) : ControllerBase
 {
     private int ProfileId => this.GetProfileId();

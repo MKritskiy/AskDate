@@ -12,8 +12,11 @@ public interface IRealtimeNotifier
     /// <summary>A comment was added/edited/deleted on a note.</summary>
     Task NotifyCommentsChangedAsync(int groupId, int noteId);
 
-    /// <summary>Participants of the group changed (join/leave/mode/role).</summary>
+    /// <summary>Participants of the group changed (join/leave/preferences/role).</summary>
     Task NotifyParticipantsChangedAsync(int groupId);
+
+    /// <summary>A member set, changed or removed availability marks.</summary>
+    Task NotifyAvailabilityChangedAsync(int groupId);
 
     /// <summary>Group metadata changed (name) or group was deleted.</summary>
     Task NotifyGroupUpdatedAsync(int groupId, bool deleted = false);

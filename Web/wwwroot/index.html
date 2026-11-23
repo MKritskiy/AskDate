@@ -23,7 +23,9 @@
     <div id="navMenu" class="hidden flex-row">
         <span id="realtimeStatus" class="realtime-status offline" title=""></span>
         <span id="headerUserName" class="text-small" style="margin: 0 12px; color: var(--text-primary); font-weight: bold;"></span>
-        <button class="btn btn-outline btn-small icon-only" id="notifyToggleBtn" onclick="toggleNotifications()" title="" data-title-i18n="nav.notifications">&#128276;</button>
+        <button type="button" class="btn btn-outline btn-small icon-only" id="notifyToggleBtn" onclick="toggleNotifications()" title="" data-title-i18n="nav.notifications" data-aria-i18n="nav.notifications">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
         <button class="btn btn-outline btn-small hide-mobile hidden" id="adminBtn" data-i18n="nav.admin" onclick="openAdminModal()">Админ</button>
         <button class="btn btn-outline btn-small hide-mobile" data-i18n="nav.profile" onclick="openProfileModal()">Профиль</button>
         <button class="btn btn-small hide-mobile" data-i18n="nav.logout" onclick="logoutUser()">Выйти</button>
@@ -48,8 +50,8 @@
     <section id="loginView" class="auth-container">
         <div class="card">
             <h2 data-i18n="login.title">Вход</h2>
-            <input type="email" id="loginEmail" data-i18n-placeholder="login.email" placeholder="Email">
-            <input type="password" id="loginPassword" data-i18n-placeholder="login.password" placeholder="Пароль">
+            <input type="email" id="loginEmail" data-i18n-placeholder="login.email" placeholder="Email" autocomplete="username" onkeydown="if (event.key === 'Enter') loginUser()">
+            <input type="password" id="loginPassword" data-i18n-placeholder="login.password" placeholder="Пароль" autocomplete="current-password" onkeydown="if (event.key === 'Enter') loginUser()">
             <button class="btn w-full mb-var" data-i18n="login.submit" onclick="loginUser()">Войти</button>
             <p class="text-small"><span data-i18n="login.noAccount">Нет аккаунта?</span> <a href="#" data-i18n="login.toRegister" onclick="showView('registerView')">Регистрация</a></p>
         </div>
@@ -59,11 +61,11 @@
     <section id="registerView" class="auth-container hidden">
         <div class="card">
             <h2 data-i18n="reg.title">Регистрация</h2>
-            <input type="email" id="regEmail" data-i18n-placeholder="reg.email" placeholder="Email">
-            <input type="password" id="regPassword" data-i18n-placeholder="reg.password" placeholder="Пароль">
-            <input type="password" id="regConfirmPassword" data-i18n-placeholder="reg.confirmPassword" placeholder="Повторите пароль">
-            <input type="text" id="regFirstName" data-i18n-placeholder="reg.firstName" placeholder="Имя">
-            <input type="text" id="regLastName" data-i18n-placeholder="reg.lastName" placeholder="Фамилия">
+            <input type="email" id="regEmail" data-i18n-placeholder="reg.email" placeholder="Email" autocomplete="username">
+            <input type="password" id="regPassword" data-i18n-placeholder="reg.password" placeholder="Пароль" autocomplete="new-password">
+            <input type="password" id="regConfirmPassword" data-i18n-placeholder="reg.confirmPassword" placeholder="Повторите пароль" autocomplete="new-password">
+            <input type="text" id="regFirstName" data-i18n-placeholder="reg.firstName" placeholder="Имя" autocomplete="given-name">
+            <input type="text" id="regLastName" data-i18n-placeholder="reg.lastName" placeholder="Фамилия" autocomplete="family-name" onkeydown="if (event.key === 'Enter') registerUser()">
             <button class="btn w-full mb-var" data-i18n="reg.submit" onclick="registerUser()">Зарегистрироваться</button>
             <p class="text-small"><span data-i18n="reg.hasAccount">Уже есть аккаунт?</span> <a href="#" data-i18n="reg.toLogin" onclick="showView('loginView')">Войти</a></p>
         </div>
@@ -88,9 +90,12 @@
 
             <section class="content">
                 <div class="card hidden" id="groupDetails">
-                    <div style="cursor: pointer; padding: 4px; border-radius: 4px; transition: background-color 0.2s;" onclick="openModal('groupEditModal')">
-                        <h2 id="groupTitle" style="margin-bottom:4px;">Group Title</h2>
-                        <span id="groupParticipantCount" class="text-small" style="color: var(--accent);">0</span> <span id="groupParticipantCountLabel" class="text-small" data-i18n="js.participants" style="color: var(--accent);">участников</span>
+                    <div class="group-header">
+                        <div class="group-heading" role="button" tabindex="0" onclick="openGroupSettings()" onkeydown="if (event.key === 'Enter') openGroupSettings()">
+                            <h2 id="groupTitle" style="margin-bottom:4px;">Group Title</h2>
+                            <span id="groupParticipantCount" class="text-small" style="color: var(--accent);">0</span> <span id="groupParticipantCountLabel" class="text-small" data-i18n="js.participants" style="color: var(--accent);">участников</span>
+                        </div>
+                        <button type="button" class="btn btn-outline btn-small" data-i18n="group.settings" onclick="openGroupSettings()">Настройки</button>
                     </div>
 
                     <p class="text-small mb-var mt-var" style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
@@ -105,32 +110,59 @@
                             <button id="tabUpcoming" class="btn btn-outline btn-small tab-btn" onclick="switchTab('upcoming')" data-i18n="nav.upcoming">Предстоящие</button>
                         </div>
 
-                        <div id="availabilitySwitch" class="availability-switch" title="">
-                            <button id="modeFreeBtn" class="mode-btn active" data-i18n="mode.free" onclick="setAvailabilityMode(0)">Отмечаю свободные дни</button>
-                            <button id="modeBusyBtn" class="mode-btn" data-i18n="mode.busy" onclick="setAvailabilityMode(1)">Отмечаю занятые дни</button>
+                        <!-- Инструмент: чем действует клик по календарю -->
+                        <div class="tool-switch" role="group" data-aria-i18n="tool.label">
+                            <button type="button" id="toolView" class="tool-btn active" onclick="setTool('view')" aria-pressed="true" data-title-i18n="tool.viewTip">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <span data-i18n="tool.view">Просмотр</span>
+                            </button>
+                            <button type="button" id="toolFree" class="tool-btn tool-free" onclick="setTool('free')" aria-pressed="false" data-title-i18n="tool.freeTip">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span data-i18n="tool.free">Свободен</span>
+                            </button>
+                            <button type="button" id="toolBusy" class="tool-btn tool-busy" onclick="setTool('busy')" aria-pressed="false" data-title-i18n="tool.busyTip">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                <span data-i18n="tool.busy">Занят</span>
+                            </button>
                         </div>
 
                         <div class="flex-row">
                             <button class="btn btn-outline btn-small" data-i18n="toolbar.stats" onclick="openStatsModal()">Статистика</button>
-                            <button class="btn btn-outline btn-small" data-i18n="toolbar.export" onclick="exportIcal()">iCal</button>
+                            <button class="btn btn-outline btn-small" data-i18n="toolbar.export" onclick="exportIcal()">Экспорт iCal</button>
                         </div>
                     </div>
 
-                    <div id="calendarTab" class="calendar-layout mt-var" style="position: relative;">
-                        <div id="calendarWrapper" style="flex: 1; position: relative;">
-                            <div id="calendar"></div>
-                            <div id="calendarSkeleton" class="hidden">
-                                <div class="skeleton skeleton-block"></div>
-                                <div class="skeleton skeleton-block"></div>
-                            </div>
-                            <div id="calendarHint" class="calendar-hint hidden">
-                                <span data-i18n="hint.calendar">Кликните на день, чтобы создать отметку. Выделите диапазон мышью — создадутся сразу несколько.</span>
-                            </div>
+                    <div id="calendarTab" class="calendar-layout mt-var">
+                        <!-- Подсказка о текущем инструменте -->
+                        <div id="toolHint" class="tool-hint hidden" role="status">
+                            <span id="toolHintIcon" class="tool-hint-icon" aria-hidden="true"></span>
+                            <span id="toolHintText"></span>
+                            <!-- what the brush puts on a day: the whole day or a time interval -->
+                            <span id="brushRange" class="range-control hidden" role="group" aria-label="Время отметки" data-aria-i18n="range.label">
+                                <label class="range-toggle"><input type="checkbox" id="brushAllDay" onchange="onRangeAllDayChange('brush')"><span data-i18n="range.allDay">весь день</span></label>
+                                <span class="range-times">
+                                    <span class="time-select" role="group" aria-label="с" data-aria-i18n="range.from"><select class="time-hour" id="brushStartHour" aria-label="час" data-aria-i18n="time.hour" onchange="onRangeTimeChange('brush')"></select><span aria-hidden="true">:</span><select class="time-minute" id="brushStartMinute" aria-label="минуты" data-aria-i18n="time.minute" onchange="onRangeTimeChange('brush')"></select></span>
+                                    <span aria-hidden="true">–</span>
+                                    <span class="time-select" role="group" aria-label="до" data-aria-i18n="range.to"><select class="time-hour" id="brushEndHour" aria-label="час" data-aria-i18n="time.hour" onchange="onRangeTimeChange('brush')"></select><span aria-hidden="true">:</span><select class="time-minute" id="brushEndMinute" aria-label="минуты" data-aria-i18n="time.minute" onchange="onRangeTimeChange('brush')"></select></span>
+                                </span>
+                            </span>
+                            <button type="button" id="toolDoneBtn" class="btn btn-small hidden" onclick="setTool('view')" data-i18n="tool.done">Готово</button>
                         </div>
+
+                        <div id="calendarWrapper">
+                            <div id="calendar"></div>
+                        </div>
+
                         <div id="calendarLegend" class="calendar-legend hidden">
                             <span class="legend-item"><span class="legend-swatch swatch-free"></span><span data-i18n="legend.free">Мои свободные дни</span></span>
                             <span class="legend-item"><span class="legend-swatch swatch-busy"></span><span data-i18n="legend.busy">Мои занятые дни</span></span>
-                            <span class="legend-item"><span class="legend-swatch swatch-allfree"></span><span data-i18n="legend.allFree">Все участники свободны</span></span>
+                            <span class="legend-item hide-mobile-legend"><span class="legend-swatch swatch-event"></span><span data-i18n="legend.event">События группы</span></span>
+                            <span class="legend-item"><span class="legend-swatch swatch-allfree"></span><span data-i18n="legend.allFree">Все свободны</span></span>
+                            <span class="legend-item hide-mobile-legend" data-title-i18n="legend.groupBarTip"><span class="legend-swatch swatch-bar"></span><span data-i18n="legend.groupBar">Доступность группы</span></span>
+                            <label class="legend-toggle" data-title-i18n="legend.defaultFreeTip">
+                                <input type="checkbox" id="defaultFreeToggle" onchange="setDefaultFree(this.checked)">
+                                <span data-i18n="legend.defaultFree">Неотмеченные дни считать свободными</span>
+                            </label>
                             <span id="availabilitySummary" class="availability-summary"></span>
                         </div>
                     </div>
@@ -143,41 +175,84 @@
                         <div id="upcomingEventsList"></div>
                     </div>
 
-                    <div id="dayPanel" class="hidden">
+                    <!-- Панель дня: доступность (уровень дня) сверху, ниже — выбранное событие -->
+                    <div id="dayPanel" class="hidden" role="dialog" aria-labelledby="dayTitle">
                         <div class="day-panel-inner">
-                            <span class="close-btn" onclick="closeDayPanel()">X</span>
+                            <button type="button" class="close-btn" onclick="closeDayPanel()" data-aria-i18n="common.close">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
                             <div class="day-panel-sidebar">
                                 <div class="day-nav-row">
-                                    <button id="dayNavPrev" class="btn btn-outline btn-small" onclick="navigateDay(-1)" title="&#8592;">&#9664;</button>
+                                    <button type="button" id="dayNavPrev" class="btn btn-outline btn-small icon-only" onclick="navigateDay(-1)" data-aria-i18n="day.prev">
+                                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+                                    </button>
                                     <h3 id="dayTitle" style="margin:0; text-align:center; flex:1;">Date</h3>
-                                    <button id="dayNavNext" class="btn btn-outline btn-small" onclick="navigateDay(1)" title="&#8594;">&#9654;</button>
+                                    <button type="button" id="dayNavNext" class="btn btn-outline btn-small icon-only" onclick="navigateDay(1)" data-aria-i18n="day.next">
+                                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                                    </button>
                                 </div>
                                 <ul id="dayEventsList" class="list day-events-list"></ul>
-                                <button id="dayAddNoteBtn" class="btn btn-outline btn-small w-full" style="margin-top:8px;" onclick="createNoteForDate(window._currentDayDateStr)"></button>
-                                <button id="dayCopyBtn" class="btn btn-outline btn-small w-full" style="margin-top:6px;" data-i18n="day.copy" onclick="copyDaySummary()">Копировать день</button>
+                                <div class="day-panel-actions">
+                                    <button id="dayAddNoteBtn" class="btn btn-outline btn-small" onclick="createNoteForDate(window._currentDayDateStr)"></button>
+                                    <button id="dayCopyBtn" class="btn btn-outline btn-small" data-i18n="day.copy" onclick="copyDaySummary()">Копировать день</button>
+                                </div>
                             </div>
                             <div class="day-panel-detail" id="dayViewDetails">
-                                <div id="dayActions" class="mb-var"></div>
-
-                                <div class="mb-var">
-                                    <h4 style="margin: 0 0 8px 0;" data-i18n="day.participants">Участники</h4>
-                                    <ul id="dayParticipantsList" class="list" style="margin-bottom: 16px;"></ul>
-                                </div>
-
-                                <div id="recurrenceIndicator" class="hidden mb-var" style="align-items:center; gap:6px; padding:8px; background:var(--bg-elevated); border-radius:var(--radius); font-size:12px;">
-                                    <span style="color:var(--accent); font-size:14px;">&#x21bb;</span>
-                                    <span id="recurrenceIndicatorText" style="color:var(--text-secondary);"></span>
-                                    <div id="recurrenceActions" style="margin-left:auto; display:flex; gap:4px;"></div>
-                                </div>
-
-                                <div class="mb-var">
-                                    <div class="flex-row" style="margin-top: 16px; margin-bottom: 8px; justify-content: space-between; align-items: center;">
-                                        <h4 style="margin: 0;" data-i18n="day.comments">Комментарии</h4>
+                                <!-- My marks for this day and everyone's availability. The form is static: it holds
+                                     what a new mark covers (the whole day or an interval); the buttons apply it. -->
+                                <div id="dayAvailability" class="day-availability">
+                                    <div class="avail-form">
+                                        <span class="avail-label" data-i18n="day.myAvailability">Я</span>
+                                    <label class="range-toggle"><input type="checkbox" id="panelAllDay" onchange="onRangeAllDayChange('panel')"><span data-i18n="range.allDay">весь день</span></label>
+                                    <span class="range-times">
+                                        <span class="time-select" role="group" aria-label="с" data-aria-i18n="range.from"><select class="time-hour" id="panelStartHour" aria-label="час" data-aria-i18n="time.hour" onchange="onRangeTimeChange('panel')"></select><span aria-hidden="true">:</span><select class="time-minute" id="panelStartMinute" aria-label="минуты" data-aria-i18n="time.minute" onchange="onRangeTimeChange('panel')"></select></span>
+                                        <span aria-hidden="true">–</span>
+                                        <span class="time-select" role="group" aria-label="до" data-aria-i18n="range.to"><select class="time-hour" id="panelEndHour" aria-label="час" data-aria-i18n="time.hour" onchange="onRangeTimeChange('panel')"></select><span aria-hidden="true">:</span><select class="time-minute" id="panelEndMinute" aria-label="минуты" data-aria-i18n="time.minute" onchange="onRangeTimeChange('panel')"></select></span>
+                                    </span>
                                     </div>
-                                    <div id="dayCommentsList" style="max-height:200px; overflow-y:auto;"></div>
-                                    <div id="newCommentContainer" class="flex-row mt-var">
-                                        <input type="text" id="newCommentText" data-i18n-placeholder="day.addComment" placeholder="Добавить комментарий..." style="margin:0;">
-                                        <button class="btn btn-small" data-i18n="day.send" onclick="addCommentToCurrentDay()">Отправить</button>
+                                    <div class="avail-form-actions">
+                                        <button type="button" class="btn btn-small seg-free" onclick="addMarkFromPanel(1)">
+                                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                                            <span data-i18n="day.free">Свободен</span>
+                                        </button>
+                                        <button type="button" class="btn btn-small seg-busy" onclick="addMarkFromPanel(2)">
+                                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                            <span data-i18n="day.busy">Занят</span>
+                                        </button>
+                                        <span id="panelEditing" class="hidden"><span class="text-small" data-i18n="day.editingMark">Изменение отметки</span><button type="button" class="btn-link muted" onclick="cancelMarkEdit()" data-i18n="js.cancel">Отмена</button></span>
+                                    </div>
+                                    <div id="dayMyMarks" class="my-marks"></div>
+                                    <div id="dayGroupAvail" class="day-group-avail"></div>
+                                </div>
+
+                                <div id="dayEmpty" class="day-empty hidden">
+                                    <p class="text-small" data-i18n="day.noEvents">В этот день нет событий</p>
+                                    <button class="btn btn-small" onclick="createNoteForDate(window._currentDayDateStr)" data-i18n="day.createEvent">+ Создать событие</button>
+                                </div>
+
+                                <div id="dayEventSection" class="hidden">
+                                    <div id="dayActions" class="mb-var"></div>
+
+                                    <div class="mb-var">
+                                        <h4 style="margin: 0 0 8px 0;" data-i18n="day.participants">Участники</h4>
+                                        <ul id="dayParticipantsList" class="list" style="margin-bottom: 16px;"></ul>
+                                    </div>
+
+                                    <div id="recurrenceIndicator" class="hidden mb-var" style="align-items:center; gap:6px; padding:8px; background:var(--bg-elevated); border-radius:var(--radius); font-size:12px;">
+                                        <span style="color:var(--accent); font-size:14px;">&#x21bb;</span>
+                                        <span id="recurrenceIndicatorText" style="color:var(--text-secondary);"></span>
+                                        <div id="recurrenceActions" style="margin-left:auto; display:flex; gap:4px;"></div>
+                                    </div>
+
+                                    <div class="mb-var">
+                                        <div class="flex-row" style="margin-top: 16px; margin-bottom: 8px; justify-content: space-between; align-items: center;">
+                                            <h4 style="margin: 0;" data-i18n="day.comments">Комментарии</h4>
+                                        </div>
+                                        <div id="dayCommentsList" style="max-height:200px; overflow-y:auto;"></div>
+                                        <div id="newCommentContainer" class="flex-row mt-var">
+                                            <input type="text" id="newCommentText" data-i18n-placeholder="day.addComment" placeholder="Добавить комментарий..." style="margin:0;" onkeydown="if (event.key === 'Enter') addCommentToCurrentDay()">
+                                            <button class="btn btn-small" data-i18n="day.send" onclick="addCommentToCurrentDay()">Отправить</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -193,80 +268,92 @@
 <!-- Modals -->
 <div id="appOverlay" class="overlay hidden" onclick="closeAllModals()"></div>
 
-<div id="createGroupModal" class="modal hidden">
-    <span class="close-btn" onclick="closeAllModals()">X</span>
-    <h3 data-i18n="modal.createTitle">Создать группу</h3>
-    <input type="text" id="newGroupName" data-i18n-placeholder="modal.createName" placeholder="Имя группы">
+<div id="createGroupModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="createGroupTitle">
+    <button type="button" class="close-btn" onclick="closeAllModals()" data-aria-i18n="common.close"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h3 id="createGroupTitle" data-i18n="modal.createTitle">Создать группу</h3>
+    <input type="text" id="newGroupName" data-i18n-placeholder="modal.createName" placeholder="Имя группы" onkeydown="if (event.key === 'Enter') createGroup()">
     <button class="btn w-full" data-i18n="modal.createBtn" onclick="createGroup()">Создать</button>
 </div>
 
-<div id="joinGroupModal" class="modal hidden">
-    <span class="close-btn" onclick="closeAllModals()">X</span>
-    <h3 data-i18n="modal.joinTitle">Присоединиться</h3>
-    <input type="text" id="inviteLinkInput" data-i18n-placeholder="modal.joinLink" placeholder="Ссылка или код">
+<div id="joinGroupModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="joinGroupTitle">
+    <button type="button" class="close-btn" onclick="closeAllModals()" data-aria-i18n="common.close"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h3 id="joinGroupTitle" data-i18n="modal.joinTitle">Присоединиться</h3>
+    <input type="text" id="inviteLinkInput" data-i18n-placeholder="modal.joinLink" placeholder="Ссылка или код" onkeydown="if (event.key === 'Enter') joinGroupFromModal()">
     <button class="btn w-full" data-i18n="modal.joinBtn" onclick="joinGroupFromModal()">Вступить</button>
 </div>
 
-<div id="groupEditModal" class="modal hidden">
-    <span class="close-btn" onclick="closeAllModals()">X</span>
-    <h3 style="margin-bottom: 16px;" data-i18n="modal.editTitle">Настройки группы</h3>
+<div id="groupEditModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="groupEditTitle">
+    <button type="button" class="close-btn" onclick="closeAllModals()" data-aria-i18n="common.close"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h3 id="groupEditTitle" style="margin-bottom: 16px;" data-i18n="modal.editTitle">Настройки группы</h3>
     <div class="flex-row mb-var">
-        <input type="text" id="editGroupNameInput" oninput="document.getElementById('saveGroupNameBtn').style.display='block'" style="margin:0; flex:1;">
+        <input type="text" id="editGroupNameInput" aria-label="Имя группы" oninput="document.getElementById('saveGroupNameBtn').style.display='block'" onkeydown="if (event.key === 'Enter') saveGroupName()" style="margin:0; flex:1;">
         <button class="btn btn-small" id="saveGroupNameBtn" data-i18n="modal.editSave" onclick="saveGroupName()" style="display:none;">Сохранить</button>
     </div>
     <h4 class="mb-var" data-i18n="modal.editParticipants">Участники</h4>
-    <ul id="modalGroupParticipantsList" class="list mb-var" style="max-height: 200px; overflow-y: auto;"></ul>
+    <ul id="modalGroupParticipantsList" class="list mb-var participants-list"></ul>
+
+    <div class="settings-section">
+        <h4 class="mb-var" data-i18n="settings.myMarks">Мои отметки доступности</h4>
+        <button class="btn btn-outline btn-small w-full" onclick="clearAllMyMarks()" data-i18n="settings.clearMarks">Очистить мои отметки</button>
+    </div>
+
     <button class="btn w-full hidden" id="deleteGroupBtn" style="background-color: #CF6679; color: #fff;" data-i18n="modal.editDelete" onclick="deleteCurrentGroup()">Удалить группу</button>
 </div>
 
-<div id="profileModal" class="modal hidden">
-    <span class="close-btn" onclick="closeAllModals()">X</span>
-    <h3 style="margin-bottom: 16px;" data-i18n="modal.profTitle">Настройки профиля</h3>
-    <input type="text" id="profFirstName" data-i18n-placeholder="modal.profFirst" placeholder="Имя">
-    <input type="text" id="profLastName" data-i18n-placeholder="modal.profLast" placeholder="Фамилия">
-    <h4 style="margin-bottom: 16px; margin-top: 16px; border-top: 1px solid var(--bg-surface); padding-top: 16px;" data-i18n="modal.profPassTitle">Обновить пароль</h4>
-    <input type="password" id="profNewPassword" data-i18n-placeholder="modal.profPass" placeholder="Новый пароль (оставьте пустым для сохранения текущего)">
+<div id="profileModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+    <button type="button" class="close-btn" onclick="closeAllModals()" data-aria-i18n="common.close"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h3 id="profileTitle" style="margin-bottom: 16px;" data-i18n="modal.profTitle">Настройки профиля</h3>
+
+    <div class="profile-login">
+        <div class="profile-login-text">
+            <span class="login-label" data-i18n="modal.profLogin">Логин</span>
+            <span class="login-value" id="profLogin">&nbsp;</span>
+        </div>
+        <span id="profRoleBadge" class="role-badge role-admin hidden" data-i18n="role.admin">Администратор</span>
+    </div>
+
+    <label class="field-label" for="profFirstName" data-i18n="modal.profFirst">Имя</label>
+    <input type="text" id="profFirstName" autocomplete="given-name">
+    <label class="field-label" for="profLastName" data-i18n="modal.profLast">Фамилия</label>
+    <input type="text" id="profLastName" autocomplete="family-name">
+    <label class="field-label" for="profNewPassword" data-i18n="modal.profPassTitle">Обновить пароль</label>
+    <input type="password" id="profNewPassword" data-i18n-placeholder="modal.profPass" placeholder="Новый пароль (оставьте пустым для сохранения текущего)" autocomplete="new-password" onkeydown="if (event.key === 'Enter') saveProfile()">
     <button class="btn w-full" data-i18n="modal.profSave" onclick="saveProfile()">Сохранить</button>
 </div>
 
-<div id="adminModal" class="modal hidden modal-wide">
-    <span class="close-btn" onclick="closeAllModals()">X</span>
-    <h3 style="margin-bottom: 16px;" data-i18n="modal.adminTitle">Админ-панель</h3>
-    <div id="adminUsersList" class="admin-list">
-        <div class="skeleton skeleton-line"></div>
-        <div class="skeleton skeleton-line"></div>
-    </div>
+<div id="adminModal" class="modal hidden modal-wide" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+    <button type="button" class="close-btn" onclick="closeAllModals()" data-aria-i18n="common.close"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h3 id="adminTitle" style="margin-bottom: 16px;" data-i18n="modal.adminTitle">Админ-панель</h3>
+    <div id="adminUsersList" class="admin-list"></div>
 </div>
 
-<div id="statsModal" class="modal hidden">
-    <span class="close-btn" onclick="closeAllModals()">X</span>
-    <h3 style="margin-bottom: 16px;" data-i18n="modal.statsTitle">Статистика группы</h3>
+<div id="statsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
+    <button type="button" class="close-btn" onclick="closeAllModals()" data-aria-i18n="common.close"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h3 id="statsTitle" style="margin-bottom: 16px;" data-i18n="modal.statsTitle">Статистика группы</h3>
     <div id="statsContent" class="stats-list"></div>
 </div>
 
-<div id="qrModal" class="modal hidden">
-    <span class="close-btn" onclick="closeAllModals()">X</span>
-    <h3 data-i18n="modal.qrTitle">QR-код приглашения</h3>
+<div id="qrModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
+    <button type="button" class="close-btn" onclick="closeAllModals()" data-aria-i18n="common.close"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h3 id="qrTitle" data-i18n="modal.qrTitle">QR-код приглашения</h3>
     <p class="text-small mb-var" id="qrInviteCode" style="word-break:break-all;"></p>
     <div id="qrContainer" style="display:flex; justify-content:center; padding:8px; background:#E0FBFC; border-radius:8px;"></div>
     <button class="btn w-full" style="margin-top:16px;" data-i18n="group.copyLink" onclick="copyInviteLink()">Копировать ссылку</button>
 </div>
 
-<div id="recurrenceModal" class="modal hidden">
-    <span class="close-btn" onclick="closeAllModals()">X</span>
-    <h3 style="margin-bottom: 16px;" data-i18n="modal.recurrenceTitle">Повторение</h3>
+<div id="recurrenceModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="recurrenceTitle">
+    <button type="button" class="close-btn" onclick="closeAllModals()" data-aria-i18n="common.close"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h3 id="recurrenceTitle" style="margin-bottom: 16px;" data-i18n="modal.recurrenceTitle">Новое событие</h3>
 
-    <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.noteTitle">Название (необязательно)</label>
-    <input type="text" id="recNoteTitle" data-i18n-placeholder="rec.noteTitlePlaceholder" placeholder="Название отметки" style="margin-bottom:12px;">
+    <label class="field-label" for="recNoteTitle" data-i18n="rec.noteTitle">Название (необязательно)</label>
+    <input type="text" id="recNoteTitle" data-i18n-placeholder="rec.noteTitlePlaceholder" placeholder="Название события" style="margin-bottom:12px;">
 
-    <div class="rec-time-row">
-        <div style="flex:1; min-width:0;">
-            <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.time">Время (необязательно)</label>
-            <input type="time" id="recNoteTime" value="" style="margin-bottom:12px;">
-        </div>
-    </div>
+    <span class="field-label" data-i18n="rec.time">Время (необязательно)</span>
+    <span class="time-select time-select-optional" id="recNoteTimeSelect" style="margin-bottom:12px;">
+        <select class="time-hour" id="recNoteTimeHour" data-optional="true" aria-label="час" data-aria-i18n="time.hour" onchange="onEventTimeChange()"></select><span aria-hidden="true">:</span><select class="time-minute" id="recNoteTimeMinute" aria-label="минуты" data-aria-i18n="time.minute"></select>
+    </span>
 
-    <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.type">Тип повторения</label>
+    <label class="field-label" for="recType" data-i18n="rec.type">Тип повторения</label>
     <select id="recType" onchange="onRecurrenceTypeChange()">
         <option value="none" data-i18n="rec.none">Без повторения</option>
         <option value="daily" data-i18n="rec.daily">Ежедневно</option>
@@ -275,12 +362,12 @@
     </select>
 
     <div id="recIntervalGroup" class="hidden">
-        <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.interval">Интервал (каждые N)</label>
+        <label class="field-label" for="recInterval" data-i18n="rec.interval">Интервал (каждые N)</label>
         <input type="number" id="recInterval" min="1" value="1" style="width:80px;">
     </div>
 
     <div id="recDaysGroup" class="hidden">
-        <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.daysOfWeek">Дни недели</label>
+        <span class="field-label" data-i18n="rec.daysOfWeek">Дни недели</span>
         <div class="rec-days-row">
             <label class="rec-day-label"><input type="checkbox" class="rec-day-cb" id="recDay1" value="1"> <span data-i18n="rec.dayMon">Пн</span></label>
             <label class="rec-day-label"><input type="checkbox" class="rec-day-cb" id="recDay2" value="2"> <span data-i18n="rec.dayTue">Вт</span></label>
@@ -293,7 +380,7 @@
     </div>
 
     <div id="recEndGroup" class="hidden">
-        <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.endType">Окончание</label>
+        <label class="field-label" for="recEndType" data-i18n="rec.endType">Окончание</label>
         <select id="recEndType" onchange="onRecurrenceEndTypeChange()">
             <option value="never" data-i18n="rec.endNever">Без окончания</option>
             <option value="date" data-i18n="rec.endDate">По дате</option>
@@ -301,28 +388,30 @@
         </select>
 
         <div id="recEndDateGroup" class="hidden" style="margin-top:8px;">
-            <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.endDateLabel">Дата окончания</label>
+            <label class="field-label" for="recEndDate" data-i18n="rec.endDateLabel">Дата окончания</label>
             <input type="date" id="recEndDate">
         </div>
 
         <div id="recEndCountGroup" class="hidden" style="margin-top:8px;">
-            <label class="text-small" style="display:block; margin-bottom:4px;" data-i18n="rec.endCountLabel">Количество повторений</label>
+            <label class="field-label" for="recEndCount" data-i18n="rec.endCountLabel">Количество повторений</label>
             <input type="number" id="recEndCount" min="1" value="4" style="width:80px;">
         </div>
     </div>
 
-    <button class="btn w-full" style="margin-top:16px;" data-i18n="rec.apply" onclick="applyRecurrenceAndCreate()">Применить и создать</button>
+    <button class="btn w-full" style="margin-top:16px;" data-i18n="rec.apply" onclick="applyRecurrenceAndCreate()">Создать</button>
 </div>
 
-<div id="customDialogOverlay" class="overlay hidden" style="z-index: 9999;">
-    <div class="modal" id="customDialogBox" style="background:#2A2A2A; border-radius:12px; padding:24px; text-align:center; color: #fff; z-index: 10000;">
-        <p id="customDialogText" style="margin-bottom: 20px; font-size: 16px; white-space: pre-wrap;"></p>
-        <div class="flex-row" style="justify-content: center; gap: 16px;">
+<div id="customDialogOverlay" class="overlay app-dialog-overlay hidden">
+    <div id="customDialogBox" class="app-dialog" role="dialog" aria-modal="true" aria-labelledby="customDialogText">
+        <p id="customDialogText" class="app-dialog-text"></p>
+        <div class="flex-row app-dialog-actions">
             <button id="customDialogOk" class="btn" data-i18n="dialog.ok">ОК</button>
             <button id="customDialogCancel" class="btn btn-outline hidden" data-i18n="dialog.cancel">Отмена</button>
         </div>
     </div>
 </div>
+
+<div id="toastHost" class="toast-host" role="status" aria-live="polite"></div>
 
 <script src="app.js"></script>
 </body>
